@@ -5,5 +5,7 @@ urlpatterns = [
     path('', views.getData),
     path('add/', views.addItem),
     path('posts/', views.getPosts),
-    path('add-post', views.addPost),
+    path('add-post/', views.addPost),
+    path('get-students/', views.getStudents),
+    path('add-student/', views.addStudent),
 ]
