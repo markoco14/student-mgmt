@@ -48,3 +48,11 @@ def addStudent(request):
         serializer.save()
     return Response(serializer.data)
 
+@api_view(['DELETE'])
+def deleteStudent(request, pk):
+    student = Student.objects.get(id=pk)
+    student.delete()
+    return Response('Item successfully delete!')
+    # serializer - StudentSerializesr(data=request.data)
+    # if
+
