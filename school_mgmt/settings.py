@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-)msn*#)h4@#2=he2t*60!2p&cnjz$sh&_2=h-hnhl2b#k8=g+i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['54.95.13.158']
+ALLOWED_HOSTS = ['54.95.13.158', 'api.cramschoolcloud.com']
 
 
 # Application definition
@@ -149,9 +149,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://127.0.0.1:3000",
+#     "http://localhost:8000",
+#     "http://127.0.0.1:8000",
+# ]
+
+CORS_ALLOW_ALL_ORIGINS = True
