@@ -8,7 +8,7 @@ from .serializers import StudentSerializer, SchoolSerializer
 @api_view(['GET'])
 def helloWorld(request):
 
-    return Response({ "message": "Hello World" })
+    return Response("Hello World")
 
 # SCHOOL VIEWS
 @api_view(['GET'])

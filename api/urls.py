@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     # GREETING ROUTE
-    path('/', views.helloWorld, name="hello-world"),
+    path('', views.helloWorld),
     # SCHOOL ROUTES
     path('list-schools/', views.listSchools, name="list-schools"),
     # STUDENT ROUTES
