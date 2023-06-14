@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    # GREETING ROUTE
+    path('/', views.helloWorld, name="hello-world"),
     # SCHOOL ROUTES
     path('list-schools/', views.listSchools, name="list-schools"),
     # STUDENT ROUTES

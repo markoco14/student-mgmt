@@ -4,6 +4,12 @@ from student.models import Student
 from core.models import School
 from .serializers import StudentSerializer, SchoolSerializer
 
+# GREETING VIEW
+@api_view(['GET'])
+def helloWorld(request):
+
+    return Response({ "message": "Hello World" })
+
 # SCHOOL VIEWS
 @api_view(['GET'])
 def listSchools(request):
