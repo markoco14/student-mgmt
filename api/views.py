@@ -1,8 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from student.models import Student
-from core.models import School
-from .serializers import StudentSerializer, SchoolSerializer
+from .serializers import StudentSerializer
 
 # GREETING VIEW
 @api_view(['GET'])
@@ -11,12 +10,6 @@ def helloWorld(request):
     return Response({ "message": "Hello World" })
 
 # SCHOOL VIEWS
-@api_view(['GET'])
-def listSchools(request):
-    schools = School.objects.all()
-    serializer = SchoolSerializer(schools, many=True)
-
-    return Response(serializer.data)
 
 
 # STUDENT VIEWS
