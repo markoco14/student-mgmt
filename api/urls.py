@@ -4,6 +4,9 @@ from . import views
 urlpatterns = [
     # GREETING ROUTE
     path('', views.helloWorld, name="hello-world"),
+    # USER ROUTES
+    path('get-users/', views.getUsers, name="get-users"),
+    path('add-user/', views.addUser, name="add-user"),
 
     # SCHOOL ROUTES
     path('get-schools/', views.getSchools, name="get-schools"),

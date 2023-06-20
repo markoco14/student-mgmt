@@ -2,7 +2,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from student.models import Student
 from school.models import School
-from .serializers import StudentSerializer, SchoolSerializer
+from user.models import User
+from .serializers import StudentSerializer, SchoolSerializer, UserSerializer
 
 # GREETING VIEW
 
@@ -12,9 +13,26 @@ def helloWorld(request):
 
     return Response({"message": "Hello World"})
 
+# USER VIEWS
+# GET ALL USERS
+@api_view(['GET'])
+def getUsers(request):
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)
+
+    return Response(serializer.data)
+
+# ADD NEW USER
+@api_view(['POST'])
+def addUser(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response({"data": serializer.data, "status": 200})
+
 # SCHOOL VIEWS
-
-
+# GET ALL SCHOOLS
 @api_view(['GET'])
 def getSchools(request):
     schools = School.objects.all()
@@ -22,7 +40,7 @@ def getSchools(request):
 
     return Response(serializer.data)
 
-
+# ADD NEW SCHOOL
 @api_view(['POST'])
 def addSchool(request):
     serializer = SchoolSerializer(data=request.data)
@@ -31,13 +49,15 @@ def addSchool(request):
 
     return Response({"data": serializer.data, "status": 200})
 
+# DELETE SCHOOL
 @api_view(['DELETE'])
 def deleteSchool(request, pk):
     school = School.objects.get(id=pk)
     school.delete()
 
-    return Response({ "message": "School deleted.", "status": 204 })
+    return Response({"message": "School deleted.", "status": 204})
 
+# UPDATE SCHOOL
 @api_view(['POST'])
 def updateSchool(request, pk):
     school = School.objects.get(id=pk)
@@ -46,10 +66,9 @@ def updateSchool(request, pk):
         serializer.save()
 
     return Response(serializer.data)
-    
+
 # STUDENT VIEWS
 # GET ALL STUDENTS
-
 @api_view(['GET'])
 def getStudents(request):
     students = Student.objects.all()
@@ -58,8 +77,6 @@ def getStudents(request):
     return Response(serializer.data)
 
 # GET STUDENT BY ID
-
-
 @api_view(['GET'])
 def getStudentById(request, pk):
     student = Student.objects.get(id=pk)
