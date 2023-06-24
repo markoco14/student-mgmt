@@ -15,6 +15,8 @@ def helloWorld(request):
 
 # USER VIEWS
 # GET ALL USERS
+
+
 @api_view(['GET'])
 def getUsers(request):
     users = User.objects.all()
@@ -23,6 +25,8 @@ def getUsers(request):
     return Response(serializer.data)
 
 # ADD NEW USER
+
+
 @api_view(['POST'])
 def addUser(request):
     serializer = UserSerializer(data=request.data)
@@ -33,14 +37,18 @@ def addUser(request):
 
 # SCHOOL VIEWS
 # GET ALL SCHOOLS
+
+
 @api_view(['GET'])
-def getSchools(request):
-    schools = School.objects.all()
+def getSchools(request, pk):
+    schools = School.objects.filter(owner=pk)
     serializer = SchoolSerializer(schools, many=True)
 
-    return Response(serializer.data)
+    return Response({"data": serializer.data, "status": 200})
 
 # ADD NEW SCHOOL
+
+
 @api_view(['POST'])
 def addSchool(request):
     serializer = SchoolSerializer(data=request.data)
@@ -50,6 +58,8 @@ def addSchool(request):
     return Response({"data": serializer.data, "status": 200})
 
 # DELETE SCHOOL
+
+
 @api_view(['DELETE'])
 def deleteSchool(request, pk):
     school = School.objects.get(id=pk)
@@ -58,6 +68,8 @@ def deleteSchool(request, pk):
     return Response({"message": "School deleted.", "status": 204})
 
 # UPDATE SCHOOL
+
+
 @api_view(['POST'])
 def updateSchool(request, pk):
     school = School.objects.get(id=pk)
@@ -69,6 +81,8 @@ def updateSchool(request, pk):
 
 # STUDENT VIEWS
 # GET ALL STUDENTS
+
+
 @api_view(['GET'])
 def getStudents(request):
     students = Student.objects.all()
@@ -77,6 +91,8 @@ def getStudents(request):
     return Response(serializer.data)
 
 # GET STUDENT BY ID
+
+
 @api_view(['GET'])
 def getStudentById(request, pk):
     student = Student.objects.get(id=pk)
