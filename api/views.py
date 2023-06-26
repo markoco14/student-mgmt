@@ -33,7 +33,7 @@ def addUser(request):
     if serializer.is_valid():
         serializer.save()
 
-    return Response({"data": serializer.data, "status": 200})
+    return Response(serializer.data)
 
 # SCHOOL VIEWS
 # GET ALL SCHOOLS
