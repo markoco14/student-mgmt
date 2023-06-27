@@ -65,7 +65,7 @@ def deleteSchool(request, pk):
     school = School.objects.get(id=pk)
     school.delete()
 
-    return Response({"message": "School deleted.", "status": 204})
+    return Response({"message": "School successfully deleted."})
 
 # UPDATE SCHOOL
 
@@ -130,4 +130,4 @@ def deleteStudent(request, pk):
     student = Student.objects.get(id=pk)
     student.delete()
 
-    return Response('Item successfully deleted!')
+    return Response({"message": "Student successfully deleted."})
