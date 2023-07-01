@@ -9,5 +9,5 @@ class Student(models.Model):
     last_name = models.CharField(max_length=255)
     age = models.SmallIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-    school = models.ForeignKey(School, on_delete=models.CASCADE, default="")
+    updated_at = models.DateTimeField(auto_now=True)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
