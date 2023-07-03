@@ -4,6 +4,7 @@ from student.models import Student
 from school.models import School
 from user.models import User
 from .serializers import StudentSerializer, SchoolSerializer, UserSerializer
+from django.db.models import Subquery
 
 # GREETING VIEW
 
@@ -97,6 +98,26 @@ def getStudents(request):
 def getStudentById(request, pk):
     student = Student.objects.get(id=pk)
     serializer = StudentSerializer(student, many=False)
+
+    return Response(serializer.data)
+
+# GET STUDENTS BY OWNER ID
+
+
+@api_view(['GET'])
+def getStudentsByOwner(request, pk):
+    students = Student.objects.filter(school__owner_id=pk)
+    serializer = StudentSerializer(students, many=True)
+
+    return Response(serializer.data)
+
+# GET STUDENTS BY SCHOOL ID
+
+
+@api_view(['GET'])
+def getStudentsBySchoolId(request, pk):
+    students = Student.objects.filter(school=pk)
+    serializer = StudentSerializer(students, many=True)
 
     return Response(serializer.data)
 
