@@ -19,6 +19,7 @@ urlpatterns = [
     path('get-students/', views.getStudents, name="get-students"),
     path('get-student/<str:pk>/', views.getStudentById, name="get-student"),
     path('get-students-by-school/<str:pk>/', views.getStudentsBySchoolId, name="get-students-by-school"),
+    path('get-students-by-owner/<str:pk>/', views.getStudentsByOwner, name="get-students-by-owner"),
     path('add-student/', views.addStudent, name="add-student"),
     path('update-student/<str:pk>/', views.updateStudent, name="update-student"),
     path('delete-student/<str:pk>/', views.deleteStudent, name="delete-student"),
