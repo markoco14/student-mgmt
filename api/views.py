@@ -2,9 +2,27 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from student.models import Student
 from school.models import School
-from user.models import User
+from user.models import CustomUser
 from .serializers import StudentSerializer, SchoolSerializer, UserSerializer
 from django.db.models import Subquery
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['name'] = user.first_name
+        # ...
+
+        return token
+    
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 # GREETING VIEW
 
@@ -20,7 +38,7 @@ def helloWorld(request):
 
 @api_view(['GET'])
 def getUsers(request):
-    users = User.objects.all()
+    users = CustomUser.objects.all()
     serializer = UserSerializer(users, many=True)
 
     return Response(serializer.data)
