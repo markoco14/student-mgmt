@@ -8,6 +8,8 @@ from .managers import CustomUserManager
 
 class CustomUser(AbstractUser):
     username = None
+    first_name = models.CharField(max_length=50, default="")
+    last_name = models.CharField(max_length=50, default="")
     email = models.EmailField(_("email address"), unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
