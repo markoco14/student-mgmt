@@ -131,6 +131,14 @@ def registerStudentInClass(request):
 
     return Response(serializer.data)
 
+@api_view(['GET'])
+def listStudentsByClass(request, pk):
+    students = Student.objects.filter(classstudent__class_id=pk)
+    serializer = StudentSerializer(students, many=True)
+    
+    return Response(serializer.data)
+
+
 # STUDENT VIEWS
 # GET ALL STUDENTS
 
@@ -171,7 +179,6 @@ def getStudentsBySchoolId(request, pk):
     serializer = StudentSerializer(students, many=True)
 
     return Response(serializer.data)
-
 
 # CREATE NEW STUDENT
 @api_view(['POST'])
