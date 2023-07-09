@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .managers import CustomUserManager
 
-class CustomUser(AbstractUser):
+class User(AbstractUser):
     username = None
     first_name = models.CharField(max_length=50, default="")
     last_name = models.CharField(max_length=50, default="")

@@ -23,6 +23,9 @@ urlpatterns = [
     path('delete-school/<str:pk>/', views.deleteSchool, name="delete-school"),
     path('update-school/<str:pk>/', views.updateSchool, name="update-school"),
 
+    # CLASS ROUTES
+    path('get-classes/', views.getClasses, name="get-classes"),
+
     # STUDENT ROUTES
     path('get-students/', views.getStudents, name="get-students"),
     path('get-student/<str:pk>/', views.getStudentById, name="get-student"),
@@ -31,4 +34,12 @@ urlpatterns = [
     path('add-student/', views.addStudent, name="add-student"),
     path('update-student/<str:pk>/', views.updateStudent, name="update-student"),
     path('delete-student/<str:pk>/', views.deleteStudent, name="delete-student"),
+
+
+    # REPORT ROUTES
+    path('get-reports-all/', views.getReportsAll, name="get-reports-all"),
+    path('get-today-report-by-student-id/<str:pk>', views.getTodayReportByStudentId, name="get-today-report-by-student-id"),
+    path('create-report/', views.createReport, name="create-report"),
+    path('update-report/<str:pk>/', views.updateReport, name="update-report"),
+    path('delete-report/<str:pk>/', views.deleteReport, name="delete-report"),
 ]

@@ -1,9 +1,12 @@
+from datetime import date, timedelta
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from student.models import Student
-from school.models import School
-from user.models import CustomUser
-from .serializers import StudentSerializer, SchoolSerializer, UserSerializer
+from reports.models import Report
+from students.models import Student
+from schools.models import School
+from classes.models import Class
+from users.models import User
+from .serializers import ReportSerializer, StudentSerializer, SchoolSerializer, UserSerializer, ClassSerializer
 from django.db.models import Subquery
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -20,7 +23,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # ...
 
         return token
-    
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
@@ -38,7 +41,7 @@ def helloWorld(request):
 
 @api_view(['GET'])
 def getUsers(request):
-    users = CustomUser.objects.all()
+    users = User.objects.all()
     serializer = UserSerializer(users, many=True)
 
     return Response(serializer.data)
@@ -60,21 +63,22 @@ def addUser(request):
 
 @api_view(['GET'])
 def getSchools(request, pk):
-    schools = School.objects.filter(owner=pk)
+    schools = School.objects.filter(owner_id=pk)
     serializer = SchoolSerializer(schools, many=True)
 
-    return Response({"data": serializer.data, "status": 200})
+    return Response(serializer.data)
 
 # ADD NEW SCHOOL
 
 
 @api_view(['POST'])
 def addSchool(request):
+    # return Response({"message": "hit the backend"})
     serializer = SchoolSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
 
-    return Response({"data": serializer.data, "status": 200})
+    return Response(serializer.data)
 
 # DELETE SCHOOL
 
@@ -95,6 +99,14 @@ def updateSchool(request, pk):
     serializer = SchoolSerializer(instance=school, data=request.data)
     if serializer.is_valid():
         serializer.save()
+
+    return Response(serializer.data)
+
+# CLASS VIEWS
+@api_view(['GET'])
+def getClasses(request):
+    classes = Class.objects.all()
+    serializer = ClassSerializer(classes, many=True)
 
     return Response(serializer.data)
 
@@ -170,3 +182,52 @@ def deleteStudent(request, pk):
     student.delete()
 
     return Response({"message": "Student successfully deleted."})
+
+# REPORT ROUTES
+
+
+@api_view(['GET'])
+def getReportsAll(request):
+    reports = Report.objects.all()
+    serializer = ReportSerializer(reports, many=True)
+
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def getTodayReportByStudentId(request, pk):
+    startdate = date.today()
+    enddate = startdate + timedelta(days=1)
+
+    report = Report.objects.filter(student_id=pk).filter(
+        created_at__gte=startdate).filter(created_at__lt=enddate)
+    serializer = ReportSerializer(report, many=True)
+
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def createReport(request):
+    serializer = ReportSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def updateReport(request, pk):
+    report = Report.objects.get(id=pk)
+    serializer = ReportSerializer(instance=report, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+def deleteReport(request, pk):
+    report = Report.objects.get(id=pk)
+    report.delete()
+
+    return Response({"message": "Report successfully deleted."})

@@ -1,6 +1,6 @@
 from django.db import models
 
-from school.models import School
+from schools.models import School
 
 # Create your models here.
 
@@ -10,4 +10,4 @@ class Student(models.Model):
     age = models.SmallIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    school_id = models.ForeignKey(School, on_delete=models.CASCADE, db_column='school_id')
