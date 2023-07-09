@@ -136,7 +136,7 @@ def getStudentById(request, pk):
 
 @api_view(['GET'])
 def getStudentsByOwner(request, pk):
-    students = Student.objects.filter(school__owner_id=pk)
+    students = Student.objects.filter(school_id__owner_id=pk)
     serializer = StudentSerializer(students, many=True)
 
     return Response(serializer.data)
@@ -146,7 +146,7 @@ def getStudentsByOwner(request, pk):
 
 @api_view(['GET'])
 def getStudentsBySchoolId(request, pk):
-    students = Student.objects.filter(school=pk)
+    students = Student.objects.filter(school_id=pk)
     serializer = StudentSerializer(students, many=True)
 
     return Response(serializer.data)
