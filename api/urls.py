@@ -26,6 +26,7 @@ urlpatterns = [
     # CLASS ROUTES
     path('get-classes/', views.getClasses, name="get-classes"),
     path('add-class/', views.addClass, name="add-class"),
+    path('register-student-in-class/', views.registerStudentInClass, name='register-student'),
 
     # STUDENT ROUTES
     path('get-students/', views.getStudents, name="get-students"),

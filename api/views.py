@@ -4,9 +4,9 @@ from rest_framework.decorators import api_view
 from reports.models import Report
 from students.models import Student
 from schools.models import School
-from classes.models import Class
+from classes.models import Class, ClassStudent
 from users.models import User
-from .serializers import ReportSerializer, StudentSerializer, SchoolSerializer, UserSerializer, ClassSerializer
+from .serializers import ReportSerializer, StudentSerializer, SchoolSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
 from django.db.models import Subquery
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -23,6 +23,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # ...
 
         return token
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -103,6 +104,8 @@ def updateSchool(request, pk):
     return Response(serializer.data)
 
 # CLASS VIEWS
+
+
 @api_view(['GET'])
 def getClasses(request):
     classes = Class.objects.all()
@@ -110,9 +113,19 @@ def getClasses(request):
 
     return Response(serializer.data)
 
+
 @api_view(['POST'])
 def addClass(request):
     serializer = ClassSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def registerStudentInClass(request):
+    serializer = ClassStudentSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
 
