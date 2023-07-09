@@ -110,6 +110,14 @@ def getClasses(request):
 
     return Response(serializer.data)
 
+@api_view(['POST'])
+def addClass(request):
+    serializer = ClassSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
 # STUDENT VIEWS
 # GET ALL STUDENTS
 
