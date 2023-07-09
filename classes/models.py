@@ -11,7 +11,7 @@ class Class(models.Model):
     school_id = models.ForeignKey(
         School, db_column='school_id', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.TimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class ClassStudent(models.Model):
@@ -20,7 +20,7 @@ class ClassStudent(models.Model):
     student_id = models.ForeignKey(
         Student, db_column='student_id', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.TimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'classes_class_students'
