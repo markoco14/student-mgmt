@@ -25,6 +25,10 @@ urlpatterns = [
 
     # CLASS ROUTES
     path('get-classes/', views.getClasses, name="get-classes"),
+    path('add-class/', views.addClass, name="add-class"),
+    path('register-student-in-class/', views.registerStudentInClass, name='register-student'),
+    path('get-students-by-class/<str:pk>/', views.listStudentsByClass, name="list-students-by-class"),
+    path('remove-student-from-class/<str:class_pk>/<str:student_pk>/', views.removeStudentFromClassStudentById, name="remove-student"),
 
     # STUDENT ROUTES
     path('get-students/', views.getStudents, name="get-students"),
