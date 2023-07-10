@@ -113,6 +113,14 @@ def getClasses(request):
 
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getClassById(request, pk):
+    thisClass = Class.objects.get(id=pk)
+    serializer = ClassSerializer(thisClass, many=False)
+
+    return Response(serializer.data)
+
+
 
 @api_view(['POST'])
 def addClass(request):
