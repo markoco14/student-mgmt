@@ -122,6 +122,8 @@ def addClass(request):
 
     return Response(serializer.data)
 
+# CLASS LIST VIEWS
+
 
 @api_view(['POST'])
 def registerStudentInClass(request):
@@ -131,12 +133,21 @@ def registerStudentInClass(request):
 
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def listStudentsByClass(request, pk):
     students = Student.objects.filter(classstudent__class_id=pk)
     serializer = StudentSerializer(students, many=True)
-    
+
     return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+def removeStudentFromClassStudentById(request, class_pk, student_pk):
+    classStudent = ClassStudent.objects.filter(class_id=class_pk).filter(student_id=student_pk)
+    classStudent.delete()
+    
+    return Response({"message": "Student successfully removed from class."})
 
 
 # STUDENT VIEWS
@@ -181,6 +192,8 @@ def getStudentsBySchoolId(request, pk):
     return Response(serializer.data)
 
 # CREATE NEW STUDENT
+
+
 @api_view(['POST'])
 def addStudent(request):
     serializer = StudentSerializer(data=request.data)
