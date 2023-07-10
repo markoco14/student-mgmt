@@ -24,3 +24,5 @@ class ClassStudent(models.Model):
 
     class Meta:
         db_table = 'classes_class_students'
+        unique_together = ['class_id', 'student_id']
+        
