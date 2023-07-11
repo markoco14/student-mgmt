@@ -242,6 +242,16 @@ def getReportsAll(request):
 
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getReportByClassAndDate(request, class_pk, date_pk):
+    report = Report.objects.filter(
+        class_id=class_pk,
+        date=date_pk
+        ).get()
+    serializer = ReportSerializer(report, many=False)
+
+    return Response(serializer.data)
+
 
 @api_view(['GET'])
 def getTodayReportByStudentId(request, pk):
