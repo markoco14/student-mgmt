@@ -113,13 +113,13 @@ def getClasses(request):
 
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getClassById(request, pk):
     thisClass = Class.objects.get(id=pk)
     serializer = ClassSerializer(thisClass, many=False)
 
     return Response(serializer.data)
-
 
 
 @api_view(['POST'])
@@ -152,9 +152,10 @@ def listStudentsByClass(request, pk):
 
 @api_view(['DELETE'])
 def removeStudentFromClassStudentById(request, class_pk, student_pk):
-    classStudent = ClassStudent.objects.filter(class_id=class_pk).filter(student_id=student_pk)
+    classStudent = ClassStudent.objects.filter(
+        class_id=class_pk).filter(student_id=student_pk)
     classStudent.delete()
-    
+
     return Response({"message": "Student successfully removed from class."})
 
 
@@ -242,17 +243,18 @@ def getReportsAll(request):
 
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getReportByClassAndDate(request, class_pk, date_pk):
-    
+
     report = Report.objects.filter(
         class_id=class_pk,
         date=date_pk
-        )
-    
+    )
+
     if not report.exists():
         return Response({})
-    
+
     serializer = ReportSerializer(report, many=True)
 
     return Response(serializer.data[0])
