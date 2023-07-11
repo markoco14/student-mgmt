@@ -244,13 +244,18 @@ def getReportsAll(request):
 
 @api_view(['GET'])
 def getReportByClassAndDate(request, class_pk, date_pk):
+    
     report = Report.objects.filter(
         class_id=class_pk,
         date=date_pk
-        ).get()
-    serializer = ReportSerializer(report, many=False)
+        )
+    
+    if not report.exists():
+        return Response({})
+    
+    serializer = ReportSerializer(report, many=True)
 
-    return Response(serializer.data)
+    return Response(serializer.data[0])
 
 
 @api_view(['GET'])
