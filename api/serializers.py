@@ -3,7 +3,7 @@ from classes.models import Class, ClassStudent
 from students.models import Student
 from schools.models import School
 from users.models import User
-from reports.models import Report
+from reports.models import Report, ReportDetails
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,4 +42,10 @@ class ReportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=Report
+        fields='__all__'
+
+class ReportDetailsSerializer(serializers.ModelSerializer):
+    student_id = StudentSerializer()
+    class Meta:
+        model=ReportDetails
         fields='__all__'
