@@ -48,4 +48,8 @@ urlpatterns = [
     path('create-report/', views.createReport, name="create-report"),
     path('update-report/<str:pk>/', views.updateReport, name="update-report"),
     path('delete-report/<str:pk>/', views.deleteReport, name="delete-report"),
+
+
+    # REPORT DETAILS ROUTES
+    path('get-report-details-by-report-id/<str:report_pk>/', views.getReportsDetailsByReportId, name="get-report-details")
 ]
