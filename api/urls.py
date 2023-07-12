@@ -46,10 +46,12 @@ urlpatterns = [
     path('get-report-by-date/<str:class_pk>/<str:date_pk>/', views.getReportByClassAndDate, name="get-report-by-date"),
     path('get-today-report-by-student-id/<str:pk>/', views.getTodayReportByStudentId, name="get-today-report-by-student-id"),
     path('create-report/', views.createReport, name="create-report"),
-    path('update-report/<str:pk>/', views.updateReport, name="update-report"),
+    # path('update-report/<str:pk>/', views.updateReport, name="update-report"),
     path('delete-report/<str:pk>/', views.deleteReport, name="delete-report"),
 
 
     # REPORT DETAILS ROUTES
-    path('get-report-details-by-report-id/<str:report_pk>/', views.getReportsDetailsByReportId, name="get-report-details")
+    path('get-report-details-by-report-id/<str:report_pk>/', views.getReportsDetailsByReportId, name="get-report-details"),
+    path('delete-report-details/<str:pk>/', views.deleteReportDetails, name="delete-report-details")
+
 ]

@@ -37,13 +37,13 @@ def helloWorld(request):
 
     return Response({"message": "Hello World"})
 
-# 
-# 
-# 
+#
+#
+#
 # USER ROUTES
-# 
-# 
-# 
+#
+#
+#
 # GET ALL USERS
 
 
@@ -65,13 +65,13 @@ def addUser(request):
 
     return Response(serializer.data)
 
-# 
-# 
-# 
+#
+#
+#
 # SCHOOLL ROUTES
-# 
-# 
-# 
+#
+#
+#
 # GET ALL SCHOOLS
 
 
@@ -116,13 +116,13 @@ def updateSchool(request, pk):
 
     return Response(serializer.data)
 
-# 
-# 
-# 
+#
+#
+#
 # CLASS ROUTES
-# 
-# 
-# 
+#
+#
+#
 
 
 @api_view(['GET'])
@@ -149,13 +149,14 @@ def addClass(request):
 
     return Response(serializer.data)
 
-# 
-# 
-# 
+#
+#
+#
 # CLASS LIST ROUTES
-# 
-# 
-# 
+#
+#
+#
+
 
 @api_view(['POST'])
 def registerStudentInClass(request):
@@ -183,13 +184,13 @@ def removeStudentFromClassStudentById(request, class_pk, student_pk):
     return Response({"message": "Student successfully removed from class."})
 
 
-# 
-# 
-# 
+#
+#
+#
 # STUDENT ROUTES
-# 
-# 
-# 
+#
+#
+#
 # GET ALL STUDENTS
 
 
@@ -268,13 +269,13 @@ def deleteStudent(request, pk):
 
     return Response({"message": "Student successfully deleted."})
 
-# 
-# 
-# 
+#
+#
+#
 # REPORT ROUTES
-# 
-# 
-# 
+#
+#
+#
 
 
 @api_view(['GET'])
@@ -293,7 +294,7 @@ def getReportByClassAndDate(request, class_pk, date_pk):
 
         return Response(serializer.data)
     except ObjectDoesNotExist:
-        
+
         return Response({})
 
 
@@ -318,14 +319,14 @@ def createReport(request):
     return Response(serializer.data)
 
 
-@api_view(['POST'])
-def updateReport(request, pk):
-    report = Report.objects.get(id=pk)
-    serializer = ReportSerializer(instance=report, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
+# @api_view(['POST'])
+# def updateReport(request, pk):
+#     report = Report.objects.get(id=pk)
+#     serializer = ReportSerializer(instance=report, data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
 
-    return Response(serializer.data)
+#     return Response(serializer.data)
 
 
 @api_view(['DELETE'])
@@ -336,16 +337,24 @@ def deleteReport(request, pk):
     return Response({"message": "Report successfully deleted."})
 
 
-# 
-# 
-# 
+#
+#
+#
 # REPORT DETAILS ROUTES
-# 
-# 
-# 
+#
+#
+#
 @api_view(['GET'])
 def getReportsDetailsByReportId(request, report_pk):
-    reportDetails = ReportDetails.objects.filter(report_id=report_pk).prefetch_related('student_id')
+    reportDetails = ReportDetails.objects.filter(
+        report_id=report_pk).prefetch_related('student_id')
     serializer = ReportDetailsSerializer(reportDetails, many=True)
 
     return Response(serializer.data)
+
+@api_view(['DELETE'])
+def deleteReportDetails(request, pk):
+    reportDetails = ReportDetails.objects.get(id=pk)
+    reportDetails.delete()
+
+    return Response({"message": "Report details deleted"})
