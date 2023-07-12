@@ -8,6 +8,7 @@ from classes.models import Class, ClassStudent
 from users.models import User
 from .serializers import ReportSerializer, StudentSerializer, SchoolSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
 from django.db.models import Subquery
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -200,6 +201,11 @@ def getStudentsBySchoolId(request, pk):
 
     return Response(serializer.data)
 
+# GET STUDENTS BY CLASS ID
+# @api_view(['GET'])
+# def getStudentsByClassId(request, pk):
+#     students = Student.objects.filter()
+
 # CREATE NEW STUDENT
 
 
@@ -246,18 +252,14 @@ def getReportsAll(request):
 
 @api_view(['GET'])
 def getReportByClassAndDate(request, class_pk, date_pk):
+    try:
+        report = Report.objects.get(class_id=class_pk, date=date_pk)
+        serializer = ReportSerializer(report, many=False)
 
-    report = Report.objects.filter(
-        class_id=class_pk,
-        date=date_pk
-    )
-
-    if not report.exists():
+        return Response(serializer.data)
+    except ObjectDoesNotExist:
+        
         return Response({})
-
-    serializer = ReportSerializer(report, many=True)
-
-    return Response(serializer.data[0])
 
 
 @api_view(['GET'])
