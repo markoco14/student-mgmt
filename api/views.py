@@ -358,3 +358,13 @@ def deleteReportDetails(request, pk):
     reportDetails.delete()
 
     return Response({"message": "Report details deleted"})
+
+@api_view(['PUT'])
+def updateReportDetails(request, pk):
+    reportDetail = ReportDetails.objects.get(id=pk)
+    serializer = ReportDetailsSerializer(reportDetail, request.data, partial=True)
+
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)

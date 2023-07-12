@@ -52,6 +52,7 @@ urlpatterns = [
 
     # REPORT DETAILS ROUTES
     path('get-report-details-by-report-id/<str:report_pk>/', views.getReportsDetailsByReportId, name="get-report-details"),
-    path('delete-report-details/<str:pk>/', views.deleteReportDetails, name="delete-report-details")
+    path('delete-report-details/<str:pk>/', views.deleteReportDetails, name="delete-report-details"),
+    path('update-report-details/<str:pk>/', views.updateReportDetails, name="delete-report-details")
 
 ]
