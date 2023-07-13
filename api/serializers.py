@@ -60,8 +60,14 @@ class ReportSerializer(serializers.ModelSerializer):
 
 
 class ReportDetailsSerializer(serializers.ModelSerializer):
-    student_id = StudentSerializer()
+    student_info = serializers.SerializerMethodField()
 
     class Meta:
         model = ReportDetails
         fields = '__all__'
+
+    def get_student_info(self, obj):
+        print('printing obj', obj.student_id.id)
+        student = Student.objects.get(id=obj.student_id.id)
+        serializer = StudentSerializer(student, many=False)
+        return serializer.data
