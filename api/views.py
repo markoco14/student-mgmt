@@ -140,6 +140,12 @@ def getClassById(request, pk):
 
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getClassesWithClassLists(request):
+    classes = Class.objects.all()
+    serializer = ClassSerializer(classes, many=True)
+
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def addClass(request):
@@ -349,6 +355,14 @@ def getReportsDetailsByReportId(request, report_pk):
     reportDetails = ReportDetails.objects.filter(
         report_id=report_pk).prefetch_related('student_id')
     serializer = ReportDetailsSerializer(reportDetails, many=True)
+
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createReportDetails(request):
+    serializer = ReportDetailsSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
 
     return Response(serializer.data)
 
