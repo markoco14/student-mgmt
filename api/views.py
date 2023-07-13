@@ -140,12 +140,14 @@ def getClassById(request, pk):
 
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getClassesWithClassLists(request):
     classes = Class.objects.all()
     serializer = ClassSerializer(classes, many=True)
 
     return Response(serializer.data)
+
 
 @api_view(['POST'])
 def addClass(request):
@@ -358,13 +360,19 @@ def getReportsDetailsByReportId(request, report_pk):
 
     return Response(serializer.data)
 
+
 @api_view(['POST'])
 def createReportDetails(request):
     serializer = ReportDetailsSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
 
-    return Response(serializer.data)
+        return Response(serializer.data)
+
+    else:
+
+        return Response({'message': 'something went wrong'})
+
 
 @api_view(['DELETE'])
 def deleteReportDetails(request, pk):
@@ -373,10 +381,12 @@ def deleteReportDetails(request, pk):
 
     return Response({"message": "Report details deleted"})
 
+
 @api_view(['PUT'])
 def updateReportDetails(request, pk):
     reportDetail = ReportDetails.objects.get(id=pk)
-    serializer = ReportDetailsSerializer(reportDetail, request.data, partial=True)
+    serializer = ReportDetailsSerializer(
+        reportDetail, request.data, partial=True)
 
     if serializer.is_valid():
         serializer.save()
