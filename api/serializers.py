@@ -5,47 +5,63 @@ from schools.models import School
 from users.models import User
 from reports.models import Report, ReportDetails
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model=User
-        fields='__all__'
+        model = User
+        fields = '__all__'
 
-    def create(self,validated_data):
-        user = User.objects.create(email = validated_data['email'], first_name = validated_data['first_name'], last_name = validated_data['last_name'])
+    def create(self, validated_data):
+        user = User.objects.create(
+            email=validated_data['email'], first_name=validated_data['first_name'], last_name=validated_data['last_name'])
         user.set_password(validated_data['password'])
         user.save()
         return user
-        
+
+
 class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
-        model=School
-        fields='__all__'
+        model = School
+        fields = '__all__'
+
 
 class ClassSerializer(serializers.ModelSerializer):
+    class_list = serializers.SerializerMethodField()
+
     class Meta:
-        model=Class
-        fields='__all__'
+        model = Class
+        fields = ['id', 'name', 'class_list']
+
+    def get_class_list(self, obj):
+        print(obj)
+        class_list = ClassStudent.objects.filter(class_id=obj.id)
+        serializer = ClassStudentSerializer(class_list, many=True)
+
+        return serializer.data
+
 
 class ClassStudentSerializer(serializers.ModelSerializer):
     class Meta:
-        model=ClassStudent
-        fields='__all__'
+        model = ClassStudent
+        fields = ['id', 'class_id', 'student_id']
 
-    
+
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Student
-        fields='__all__'
+        model = Student
+        fields = '__all__'
 
 
 class ReportSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model=Report
-        fields='__all__'
+        model = Report
+        fields = '__all__'
+
 
 class ReportDetailsSerializer(serializers.ModelSerializer):
     student_id = StudentSerializer()
+
     class Meta:
-        model=ReportDetails
-        fields='__all__'
+        model = ReportDetails
+        fields = '__all__'
