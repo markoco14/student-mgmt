@@ -1,4 +1,5 @@
 from django.db import models
+from levels.models import Level
 
 from schools.models import School
 from students.models import Student
@@ -7,9 +8,10 @@ from students.models import Student
 
 
 class Class(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=200)
     school_id = models.ForeignKey(
         School, db_column='school_id', on_delete=models.CASCADE)
+    level = models.ForeignKey(Level, db_column="level", related_name="classes", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
