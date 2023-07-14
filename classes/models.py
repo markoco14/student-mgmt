@@ -1,4 +1,5 @@
 from django.db import models
+from core.models import Weekday
 from levels.models import Level
 
 from schools.models import School
@@ -12,6 +13,7 @@ class Class(models.Model):
     school_id = models.ForeignKey(
         School, db_column='school_id', on_delete=models.CASCADE)
     level = models.ForeignKey(Level, db_column="level", related_name="classes", on_delete=models.CASCADE, default="")
+    day = models.ManyToManyField(Weekday, related_name="classes")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
