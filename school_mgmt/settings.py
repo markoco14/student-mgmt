@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'reports',
     'classes',
     'levels',
+    'core',
 ]
 
 REST_FRAMEWORK = {
