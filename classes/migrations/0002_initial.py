@@ -9,28 +9,24 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('reports', '0001_initial'),
+        ('classes', '0001_initial'),
+        ('schools', '0001_initial'),
         ('students', '0001_initial'),
-        ('classes', '0002_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='reportdetails',
+            model_name='classstudent',
             name='student_id',
             field=models.ForeignKey(db_column='student_id', on_delete=django.db.models.deletion.CASCADE, to='students.student'),
         ),
         migrations.AddField(
-            model_name='report',
-            name='class_id',
-            field=models.ForeignKey(db_column='class_id', on_delete=django.db.models.deletion.CASCADE, to='classes.class'),
+            model_name='class',
+            name='school_id',
+            field=models.ForeignKey(db_column='school_id', on_delete=django.db.models.deletion.CASCADE, to='schools.school'),
         ),
         migrations.AlterUniqueTogether(
-            name='reportdetails',
-            unique_together={('report_id', 'student_id')},
-        ),
-        migrations.AlterUniqueTogether(
-            name='report',
-            unique_together={('class_id', 'date')},
+            name='classstudent',
+            unique_together={('class_id', 'student_id')},
         ),
     ]
