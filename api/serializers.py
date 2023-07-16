@@ -30,7 +30,7 @@ class ClassSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Class
-        fields = ['id', 'name', 'class_list']
+        fields = '__all__'
 
     def get_class_list(self, obj):
         print(obj)
@@ -43,7 +43,7 @@ class ClassSerializer(serializers.ModelSerializer):
 class ClassStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassStudent
-        fields = ['id', 'class_id', 'student_id']
+        fields = '__all__'
 
 
 class StudentSerializer(serializers.ModelSerializer):

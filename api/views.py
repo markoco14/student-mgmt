@@ -107,10 +107,10 @@ def deleteSchool(request, pk):
 # UPDATE SCHOOL
 
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def updateSchool(request, pk):
     school = School.objects.get(id=pk)
-    serializer = SchoolSerializer(instance=school, data=request.data)
+    serializer = SchoolSerializer(instance=school, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
 
@@ -150,12 +150,19 @@ def getClassesWithClassLists(request):
 
 
 @api_view(['POST'])
-def addClass(request):
-    serializer = ClassSerializer(data=request.data)
+def addClass(request):    
+    serializer = ClassSerializer(data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
 
     return Response(serializer.data)
+
+@api_view(['DELETE'])
+def deleteClass(request, pk):
+    this_class = Class.objects.get(id=pk)
+    this_class.delete()
+
+    return Response({"message": "School successfully deleted."})
 
 #
 #
@@ -258,10 +265,10 @@ def addStudent(request):
 # UPDATE STUDENT
 
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def updateStudent(request, pk):
     student = Student.objects.get(id=pk)
-    serializer = StudentSerializer(instance=student, data=request.data)
+    serializer = StudentSerializer(instance=student, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
 
