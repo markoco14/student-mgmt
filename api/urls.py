@@ -59,6 +59,9 @@ urlpatterns = [
     path('get-report-details-by-report-id/<str:report_pk>/', views.getReportsDetailsByReportId, name="get-report-details"),
     path('create-report-details/', views.createReportDetails, name="create-report-details"),
     path('delete-report-details/<str:pk>/', views.deleteReportDetails, name="delete-report-details"),
-    path('update-report-details/<str:pk>/', views.updateReportDetails, name="delete-report-details")
+    path('update-report-details/<str:pk>/', views.updateReportDetails, name="delete-report-details"),
 
+
+    # LEVEL ROUTES
+    path('get-levels', views.getAllLevels, name='get-levels')
 ]

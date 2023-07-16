@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from classes.models import Class, ClassStudent
+from levels.models import Level
 from students.models import Student
 from schools.models import School
 from users.models import User
@@ -71,3 +72,9 @@ class ReportDetailsSerializer(serializers.ModelSerializer):
         student = Student.objects.get(id=obj.student_id.id)
         serializer = StudentSerializer(student, many=False)
         return serializer.data
+
+
+class LevelSerializser(serializers.ModelSerializer):
+    class Meta:
+        model = Level
+        fields = '__all__'

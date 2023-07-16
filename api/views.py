@@ -1,12 +1,13 @@
 from datetime import date, timedelta
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from levels.models import Level
 from reports.models import Report, ReportDetails
 from students.models import Student
 from schools.models import School
 from classes.models import Class, ClassStudent
 from users.models import User
-from .serializers import ReportDetailsSerializer, ReportSerializer, StudentSerializer, SchoolSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
+from .serializers import LevelSerializser, ReportDetailsSerializer, ReportSerializer, StudentSerializer, SchoolSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
 from django.db.models import Subquery, Prefetch
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -399,3 +400,18 @@ def updateReportDetails(request, pk):
         serializer.save()
 
     return Response(serializer.data)
+
+#
+#
+#
+# LEVELS ROUTES
+#
+#
+#
+@api_view(['GET'])
+def getAllLevels(request):
+    levels = Level.objects.all()
+    serializer = LevelSerializser(levels, many=True)
+
+    return Response(serializer.data)
+
