@@ -63,5 +63,5 @@ urlpatterns = [
 
 
     # LEVEL ROUTES
-    path('get-levels', views.getAllLevels, name='get-levels')
+    path('get-levels/', views.getAllLevels, name='get-levels')
 ]
