@@ -1,12 +1,13 @@
 from datetime import date, timedelta
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from levels.models import Level
 from reports.models import Report, ReportDetails
 from students.models import Student
 from schools.models import School
 from classes.models import Class, ClassStudent
 from users.models import User
-from .serializers import ReportDetailsSerializer, ReportSerializer, StudentSerializer, SchoolSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
+from .serializers import LevelSerializser, ReportDetailsSerializer, ReportSerializer, StudentSerializer, SchoolSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
 from django.db.models import Subquery, Prefetch
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -107,10 +108,10 @@ def deleteSchool(request, pk):
 # UPDATE SCHOOL
 
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def updateSchool(request, pk):
     school = School.objects.get(id=pk)
-    serializer = SchoolSerializer(instance=school, data=request.data)
+    serializer = SchoolSerializer(instance=school, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
 
@@ -150,12 +151,19 @@ def getClassesWithClassLists(request):
 
 
 @api_view(['POST'])
-def addClass(request):
-    serializer = ClassSerializer(data=request.data)
+def addClass(request):    
+    serializer = ClassSerializer(data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
 
     return Response(serializer.data)
+
+@api_view(['DELETE'])
+def deleteClass(request, pk):
+    this_class = Class.objects.get(id=pk)
+    this_class.delete()
+
+    return Response({"message": "School successfully deleted."})
 
 #
 #
@@ -258,10 +266,10 @@ def addStudent(request):
 # UPDATE STUDENT
 
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def updateStudent(request, pk):
     student = Student.objects.get(id=pk)
-    serializer = StudentSerializer(instance=student, data=request.data)
+    serializer = StudentSerializer(instance=student, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
 
@@ -392,3 +400,18 @@ def updateReportDetails(request, pk):
         serializer.save()
 
     return Response(serializer.data)
+
+#
+#
+#
+# LEVELS ROUTES
+#
+#
+#
+@api_view(['GET'])
+def getAllLevels(request):
+    levels = Level.objects.all()
+    serializer = LevelSerializser(levels, many=True)
+
+    return Response(serializer.data)
+
