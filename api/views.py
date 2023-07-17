@@ -133,6 +133,13 @@ def getClasses(request):
 
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getClassesBySchoolId(request, pk):
+    classes = Class.objects.filter(school_id=pk)
+    serializer = ClassSerializer(classes, many=True)
+
+    return Response(serializer.data)
+
 
 @api_view(['GET'])
 def getClassById(request, pk):

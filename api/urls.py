@@ -25,8 +25,8 @@ urlpatterns = [
 
     # CLASS ROUTES
     path('get-classes/', views.getClasses, name="get-classes"),
-    path('get-class-by-id/<str:pk>', views.getClassById, name="get-class-by-id"),
-    path('get-students-by-class/<str:pk>/', views.listStudentsByClass, name="list-students-by-class"),
+    path('get-classes-by-school-id/<str:pk>/', views.getClassesBySchoolId, name="get-classes-by-school-id"),
+    path('get-class-by-id/<str:pk>/', views.getClassById, name="get-class-by-id"),
     path('add-class/', views.addClass, name="add-class"),
     path('delete-class/<str:pk>/', views.deleteClass, name="delete-class"),
     path('get-classes-with-class-lists/', views.getClassesWithClassLists, name="classes-with-class-lists"),
@@ -38,6 +38,7 @@ urlpatterns = [
 
 
     # STUDENT ROUTES
+    path('get-students-by-class/<str:pk>/', views.listStudentsByClass, name="list-students-by-class"),
     path('get-students/', views.getStudents, name="get-students"),
     path('get-student/<str:pk>/', views.getStudentById, name="get-student"),
     path('get-students-by-school/<str:pk>/', views.getStudentsBySchoolId, name="get-students-by-school"),
