@@ -7,7 +7,7 @@ from students.models import Student
 from schools.models import School
 from classes.models import Class, ClassStudent
 from users.models import User
-from .serializers import LevelSerializser, ReportDetailsSerializer, ReportSerializer, StudentSerializer, SchoolSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
+from .serializers import LevelSerializer, ReportDetailsSerializer, ReportSerializer, StudentSerializer, SchoolSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
 from django.db.models import Subquery, Prefetch
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -424,7 +424,7 @@ def updateReportDetails(request, pk):
 @api_view(['GET'])
 def getAllLevels(request):
     levels = Level.objects.all()
-    serializer = LevelSerializser(levels, many=True)
+    serializer = LevelSerializer(levels, many=True)
 
     return Response(serializer.data)
 
@@ -432,7 +432,15 @@ def getAllLevels(request):
 @api_view(['GET'])
 def getLevelsBySchoolId(request, pk):
     levels = Level.objects.filter(school_id=pk)
-    serializer = LevelSerializser(levels, many=True)
+    serializer = LevelSerializer(levels, many=True)
+
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def addLevel(request):
+    serializer = LevelSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
 
     return Response(serializer.data)
 
