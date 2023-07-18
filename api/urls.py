@@ -63,6 +63,10 @@ urlpatterns = [
     path('update-report-details/<str:pk>/', views.updateReportDetails, name="delete-report-details"),
 
 
-    # LEVEL ROUTES
-    path('get-levels/', views.getAllLevels, name='get-levels')
+    # ADMIN ROUTES
+    path('get-levels/', views.getAllLevels, name='get-levels'),
+    path('get-levels-by-school-id/<str:pk>/', views.getLevelsBySchoolId, name='get-levels-by-school'),
+    path('add-level/', views.addLevel, name='add-level'),
+    path('delete-level/<str:pk>/', views.deleteLevel, name='delete-level'),
+
 ]

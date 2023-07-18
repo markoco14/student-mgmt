@@ -74,7 +74,7 @@ class ReportDetailsSerializer(serializers.ModelSerializer):
         return serializer.data
 
 
-class LevelSerializser(serializers.ModelSerializer):
+class LevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Level
         fields = '__all__'
