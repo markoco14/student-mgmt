@@ -66,5 +66,6 @@ urlpatterns = [
     # ADMIN ROUTES
     path('get-levels/', views.getAllLevels, name='get-levels'),
     path('get-levels-by-school-id/<str:pk>/', views.getLevelsBySchoolId, name='get-levels-by-school'),
+    path('delete-level/<str:pk>/', views.deleteLevel, name='delete-level'),
 
 ]

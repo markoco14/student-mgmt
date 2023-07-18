@@ -111,7 +111,8 @@ def deleteSchool(request, pk):
 @api_view(['PUT'])
 def updateSchool(request, pk):
     school = School.objects.get(id=pk)
-    serializer = SchoolSerializer(instance=school, data=request.data, partial=True)
+    serializer = SchoolSerializer(
+        instance=school, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
 
@@ -132,6 +133,7 @@ def getClasses(request):
     serializer = ClassSerializer(classes, many=True)
 
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def getClassesBySchoolId(request, pk):
@@ -158,12 +160,13 @@ def getClassesWithClassLists(request):
 
 
 @api_view(['POST'])
-def addClass(request):    
+def addClass(request):
     serializer = ClassSerializer(data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
 
     return Response(serializer.data)
+
 
 @api_view(['DELETE'])
 def deleteClass(request, pk):
@@ -276,7 +279,8 @@ def addStudent(request):
 @api_view(['PUT'])
 def updateStudent(request, pk):
     student = Student.objects.get(id=pk)
-    serializer = StudentSerializer(instance=student, data=request.data, partial=True)
+    serializer = StudentSerializer(
+        instance=student, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
 
@@ -415,6 +419,8 @@ def updateReportDetails(request, pk):
 #
 #
 #
+
+
 @api_view(['GET'])
 def getAllLevels(request):
     levels = Level.objects.all()
@@ -422,9 +428,18 @@ def getAllLevels(request):
 
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getLevelsBySchoolId(request, pk):
     levels = Level.objects.filter(school_id=pk)
     serializer = LevelSerializser(levels, many=True)
 
     return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+def deleteLevel(request, pk):
+    level = Level.objects.get(id=pk)
+    level.delete()
+
+    return Response({"message": "Level deleted."})
