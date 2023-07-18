@@ -422,3 +422,9 @@ def getAllLevels(request):
 
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getLevelsBySchoolId(request, pk):
+    levels = Level.objects.filter(school_id=pk)
+    serializer = LevelSerializser(levels, many=True)
+
+    return Response(serializer.data)
