@@ -338,12 +338,24 @@ def getTodayReportByStudentId(request, pk):
 
 
 @api_view(['POST'])
-def createReport(request):
-    serializer = ReportSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
+def createReportAndReportDetails(request):
+    
+    report_serializer = ReportSerializer(data=request.data)
+    if report_serializer.is_valid():
+        report_serializer.save()
 
-    return Response(serializer.data)
+    class_list = ClassStudent.objects.filter(class_id=report_serializer.data['class_id'])
+    for student in class_list:
+        details_data = {
+            "content": "",
+            "report_id": report_serializer.data['id'],
+            "student_id": student.student_id.id
+        }
+        details_serializer = ReportDetailsSerializer(data=details_data)
+        if details_serializer.is_valid():
+            details_serializer.save()
+        
+    return Response(report_serializer.data)
 
 
 # @api_view(['POST'])
