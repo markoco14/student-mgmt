@@ -30,7 +30,7 @@ urlpatterns = [
     path('add-class/', views.addClass, name="add-class"),
     path('delete-class/<str:pk>/', views.deleteClass, name="delete-class"),
     path('get-classes-with-class-lists/', views.getClassesWithClassLists, name="classes-with-class-lists"),
-    path('get-classes-by-date/<str:pk>/', views.getClassByDate, name='get-classes-by-date'),
+    path('get-classes-by-school-and-date/<str:school_pk>/<str:date_pk>/', views.getClassBySchoolAndDate, name='get-classes-by-school-and-date'),
 
 
     # CLASS STUDENT REGISTRATION ROUTES

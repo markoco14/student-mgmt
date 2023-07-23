@@ -151,8 +151,8 @@ def getClassById(request, pk):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def getClassByDate(request, pk):
-    thisClass = Class.objects.filter(day=pk)
+def getClassBySchoolAndDate(request, school_pk, date_pk):
+    thisClass = Class.objects.filter(school_id=school_pk).filter(day=date_pk)
     serializer = ClassSerializer(thisClass, many=True)
 
     return Response(serializer.data)
