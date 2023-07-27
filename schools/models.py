@@ -11,7 +11,7 @@ class School(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class SchoolUsers(models.Model):
+class SchoolUser(models.Model):
     school_id = models.ForeignKey(School, db_column='school', on_delete=models.DO_NOTHING)
     user_id = models.ForeignKey(User, db_column='user', on_delete=models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)
