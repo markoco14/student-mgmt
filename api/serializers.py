@@ -3,7 +3,7 @@ from classes.models import Class, ClassStudent
 from levels.models import Level
 from students.models import Student
 from schools.models import School
-from users.models import User
+from users.models import Teacher, User
 from reports.models import Report, ReportDetails
 
 
@@ -15,6 +15,18 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create(
             email=validated_data['email'], first_name=validated_data['first_name'], last_name=validated_data['last_name'])
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+    
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        fields = '__all__'
+
+    def create(self, validated_data):
+        user = Teacher.objects.create(
+            email=validated_data['email'])
         user.set_password(validated_data['password'])
         user.save()
         return user
