@@ -7,7 +7,7 @@ from students.models import Student
 from schools.models import School
 from classes.models import Class, ClassStudent
 from users.models import User
-from .serializers import LevelSerializer, ReportDetailsSerializer, ReportSerializer, StudentSerializer, SchoolSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
+from .serializers import LevelSerializer, ReportDetailsSerializer, ReportSerializer, StudentSerializer, SchoolSerializer, TeacherSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
 from django.db.models import Subquery, Prefetch
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -61,6 +61,14 @@ def getUsers(request):
 @api_view(['POST'])
 def addUser(request):
     serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def addTeacher(request):
+    serializer = TeacherSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
 

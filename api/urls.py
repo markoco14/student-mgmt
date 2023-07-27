@@ -16,6 +16,7 @@ urlpatterns = [
     # USER ROUTES
     path('get-users/', views.getUsers, name="get-users"),
     path('add-user/', views.addUser, name="add-user"),
+    path('add-teacher/', views.addTeacher, name="add-teacher"),
 
     # SCHOOL ROUTES
     path('get-schools/<str:pk>/', views.getSchools, name="get-schools-by-owner"),
