@@ -20,3 +20,4 @@ class SchoolUsers(models.Model):
     class Meta:
         db_table = 'schools_school_users'
         unique_together = ['school_id', 'user_id']
+        verbose_name_plural = 'School users'
