@@ -38,7 +38,7 @@ class User(AbstractUser):
 
 class OwnerManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
-        return super().get_queryset(*args, **kwargs).filter(type=User.Roles.OWNER)
+        return super().get_queryset(*args, **kwargs).filter(role=User.Roles.OWNER)
     
 class Owner(User):
     base_role = User.Roles.OWNER
@@ -47,4 +47,14 @@ class Owner(User):
     class Meta:
         proxy = True
 
+class TeacherManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        return super().get_queryset(*args, **kwargs).filter(role=User.Roles.TEACHER)
+
+class Teacher(User):
+    base_role = User.Roles.TEACHER
+    objects = TeacherManager()
+
+    class Meta:
+        proxy = True
 
