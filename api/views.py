@@ -6,7 +6,7 @@ from reports.models import Report, ReportDetails
 from students.models import Student
 from schools.models import School
 from classes.models import Class, ClassStudent
-from users.models import User
+from users.models import Teacher, User
 from .serializers import LevelSerializer, ReportDetailsSerializer, ReportSerializer, StudentSerializer, SchoolSerializer, TeacherSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
 from django.db.models import Subquery, Prefetch
 from django.core.exceptions import ObjectDoesNotExist
@@ -68,11 +68,15 @@ def addUser(request):
 
 @api_view(['POST'])
 def addTeacher(request):
-    serializer = TeacherSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
+    try:
+        teacher = User.objects.get(email=request.data['email'])
+        return Response("Teacher already exists")
+    except User.DoesNotExist:
+        serializer = TeacherSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
 
-    return Response(serializer.data)
+        return Response(serializer.data)
 
 #
 #
