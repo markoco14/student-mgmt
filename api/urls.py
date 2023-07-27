@@ -16,12 +16,16 @@ urlpatterns = [
     # USER ROUTES
     path('get-users/', views.getUsers, name="get-users"),
     path('add-user/', views.addUser, name="add-user"),
+    path('add-teacher/', views.addTeacher, name="add-teacher"),
 
     # SCHOOL ROUTES
     path('get-schools/<str:pk>/', views.getSchools, name="get-schools-by-owner"),
     path('add-school/', views.addSchool, name="add-school"),
     path('delete-school/<str:pk>/', views.deleteSchool, name="delete-school"),
     path('update-school/<str:pk>/', views.updateSchool, name="update-school"),
+
+    # SCHOOL USER ROUTES
+    path('get-schools-by-user-access/<str:pk>/', views.getSchoolsByUserAccess, name='get-schools-by-user-access'),
 
     # CLASS ROUTES
     path('get-classes/', views.getClasses, name="get-classes"),

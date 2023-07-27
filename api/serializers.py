@@ -2,8 +2,8 @@ from rest_framework import serializers
 from classes.models import Class, ClassStudent
 from levels.models import Level
 from students.models import Student
-from schools.models import School
-from users.models import User
+from schools.models import School, SchoolUser
+from users.models import Teacher, User
 from reports.models import Report, ReportDetails
 
 
@@ -18,11 +18,28 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+    
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        fields = '__all__'
+
+    def create(self, validated_data):
+        user = Teacher.objects.create(
+            email=validated_data['email'])
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
 
 class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
+        fields = '__all__'
+
+class SchoolUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SchoolUser
         fields = '__all__'
 
 
