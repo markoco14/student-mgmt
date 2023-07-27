@@ -4,10 +4,10 @@ from rest_framework.decorators import api_view
 from levels.models import Level
 from reports.models import Report, ReportDetails
 from students.models import Student
-from schools.models import School
+from schools.models import School, SchoolUser
 from classes.models import Class, ClassStudent
 from users.models import Teacher, User
-from .serializers import LevelSerializer, ReportDetailsSerializer, ReportSerializer, StudentSerializer, SchoolSerializer, TeacherSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
+from .serializers import LevelSerializer, ReportDetailsSerializer, ReportSerializer, SchoolUserSerializer, StudentSerializer, SchoolSerializer, TeacherSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
 from django.db.models import Subquery, Prefetch
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -69,15 +69,30 @@ def addUser(request):
 @api_view(['POST'])
 def addTeacher(request):
     try:
-        teacher = User.objects.get(email=request.data['email'])
-        return Response("Teacher already exists")
+        user = User.objects.get(email=request.data['email'])
+        school_user = {
+            "school": request.data['school'],
+            "user": user.id
+        }
+        serializer = SchoolUserSerializer(data=school_user)
+        if serializer.is_valid():
+            serializer.save()
+            return Response("Teacher already exists, sharing access with them.")
+
     except User.DoesNotExist:
         serializer = TeacherSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            school_user = {
+                "school": request.data['school'],
+                "user": serializer.data['id']
+            }
+            school_user_serializer = SchoolUserSerializer(data=school_user)
+            if school_user_serializer.is_valid():
+                school_user_serializer.save()
 
-        return Response(serializer.data)
-
+            return Response(serializer.data)
+        
 #
 #
 #
