@@ -116,12 +116,23 @@ def getSchools(request, pk):
 
 @api_view(['POST'])
 def addSchool(request):
-    # return Response({"message": "hit the backend"})
+    owner = request.data['owner_id']
     serializer = SchoolSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
+        school = serializer.data['id']
+        school_user = {
+            "school": school,
+            "user": owner
+        }
+        school_user_serializer = SchoolUserSerializer(data=school_user)
+        if school_user_serializer.is_valid():
+            school_user_serializer.save()
+            return Response('school user serializer valid')
+        else:
+            return Response('school user serializer not valid')
 
-    return Response(serializer.data)
+    # return Response(serializer.data)
 
 # DELETE SCHOOL
 
