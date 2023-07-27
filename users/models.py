@@ -36,4 +36,15 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
+class OwnerManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        return super().get_queryset(*args, **kwargs).filter(type=User.Roles.OWNER)
+    
+class Owner(User):
+    base_role = User.Roles.OWNER
+    objects = OwnerManager()
+
+    class Meta:
+        proxy = True
+
 
