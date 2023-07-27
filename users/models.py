@@ -19,6 +19,20 @@ class User(AbstractUser):
 
     objects = CustomUserManager()
 
+    class Roles(models.TextChoices):
+        OWNER = "OWNER", "Owner"
+        ADMIN = "ADMIN", "Admin"
+        TEACHER = "TEACHER", "Teacher"
+
+    base_role = Roles.OWNER
+
+    role = models.CharField(_("Role"), max_length=50, choices=Roles.choices, default=base_role)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.role = self.base_role
+        return super().save(*args, **kwargs)
+
     def __str__(self):
         return self.email
 
