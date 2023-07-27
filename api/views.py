@@ -149,6 +149,20 @@ def updateSchool(request, pk):
 #
 #
 #
+# SCHOOL USER ACCESS ROUTES
+#
+#
+#
+@api_view(['GET'])
+def getSchoolsByUserAccess(request, pk):
+    schools = School.objects.filter(school_users__user=pk)
+    serializer = SchoolSerializer(schools, many=True)
+
+    return Response(serializer.data)
+
+#
+#
+#
 # CLASS ROUTES
 #
 #

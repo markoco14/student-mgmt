@@ -24,6 +24,9 @@ urlpatterns = [
     path('delete-school/<str:pk>/', views.deleteSchool, name="delete-school"),
     path('update-school/<str:pk>/', views.updateSchool, name="update-school"),
 
+    # SCHOOL USER ROUTES
+    path('get-schools-by-user-access/<str:pk>/', views.getSchoolsByUserAccess, name='get-schools-by-user-access'),
+
     # CLASS ROUTES
     path('get-classes/', views.getClasses, name="get-classes"),
     path('get-classes-by-school-id/<str:pk>/', views.getClassesBySchoolId, name="get-classes-by-school-id"),
