@@ -94,6 +94,14 @@ def addTeacher(request):
 
             return Response(serializer.data)
         
+@api_view(['GET'])
+def getTeachersBySchool(request, school_pk, owner_pk):
+    school_users = SchoolUser.objects.filter(school=school_pk).exclude(user=owner_pk)
+    serializer = SchoolUserSerializer(school_users, many=True)
+
+    return Response(serializer.data)
+
+        
 #
 #
 #
