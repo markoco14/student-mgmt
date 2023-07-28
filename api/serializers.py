@@ -38,9 +38,18 @@ class SchoolSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SchoolUserSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    
     class Meta:
         model = SchoolUser
         fields = '__all__'
+    
+    def get_user(self, obj):
+        teacher = Teacher.objects.get(id=obj.user.id)
+        serializer = TeacherSerializer(teacher, many=False)
+        return serializer.data
+
+
 
 
 class ClassSerializer(serializers.ModelSerializer):
