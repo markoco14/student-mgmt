@@ -13,7 +13,7 @@ class School(models.Model):
 
 class SchoolUser(models.Model):
     school = models.ForeignKey(School, db_column='school', related_name='school_users', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, db_column='user', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, db_column='user', related_name='su_user', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
