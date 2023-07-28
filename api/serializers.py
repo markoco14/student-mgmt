@@ -26,7 +26,7 @@ class TeacherSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = Teacher.objects.create(
-            email=validated_data['email'])
+            email=validated_data['email'], first_name=validated_data['first_name'])
         user.set_password(validated_data['password'])
         user.save()
         return user
@@ -38,9 +38,18 @@ class SchoolSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SchoolUserSerializer(serializers.ModelSerializer):
+    # user = serializers.SerializerMethodField()
+    
     class Meta:
         model = SchoolUser
         fields = '__all__'
+    
+    # def get_user(self, obj):
+    #     teacher = Teacher.objects.get(id=obj.user.id)
+    #     serializer = TeacherSerializer(teacher, many=False)
+    #     return serializer.data
+
+
 
 
 class ClassSerializer(serializers.ModelSerializer):

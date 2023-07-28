@@ -23,6 +23,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['name'] = user.first_name
         token['role'] = user.role
+        token['email'] = user.email
         # ...
 
         return token
@@ -70,6 +71,7 @@ def addUser(request):
 @api_view(['POST'])
 def addTeacher(request):
     try:
+        # check if the user exists at all
         user = User.objects.get(email=request.data['email'])
         school_user = {
             "school": request.data['school'],
@@ -78,7 +80,20 @@ def addTeacher(request):
         serializer = SchoolUserSerializer(data=school_user)
         if serializer.is_valid():
             serializer.save()
-            return Response("Teacher already exists, sharing access with them.")
+        
+        user_data = {
+            "id": user.id,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name
+        }
+
+        teacher_serializer = TeacherSerializer(data=user_data, many=False)
+        
+        if teacher_serializer.is_valid():
+            print('ok')
+
+        return Response(teacher_serializer.data)
 
     except User.DoesNotExist:
         serializer = TeacherSerializer(data=request.data)
@@ -93,6 +108,21 @@ def addTeacher(request):
                 school_user_serializer.save()
 
             return Response(serializer.data)
+
+        
+@api_view(['GET'])
+def getTeachersBySchool(request, school_pk, owner_pk):
+    school_users = SchoolUser.objects.filter(school=school_pk).exclude(user=owner_pk)
+    
+    user_ids = []
+    for school_user in school_users:
+        user_ids.append(school_user.user)
+
+    users = Teacher.objects.filter(email__in=user_ids)
+    serializer = TeacherSerializer(users, many=True)
+
+    return Response(serializer.data)
+
         
 #
 #
