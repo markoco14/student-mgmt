@@ -70,6 +70,7 @@ def addUser(request):
 @api_view(['POST'])
 def addTeacher(request):
     try:
+        # check if the user exists at all
         user = User.objects.get(email=request.data['email'])
         school_user = {
             "school": request.data['school'],
@@ -79,7 +80,19 @@ def addTeacher(request):
         if serializer.is_valid():
             serializer.save()
         
-        return Response("Teacher already exists")
+        user_data = {
+            "id": user.id,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name
+        }
+
+        teacher_serializer = TeacherSerializer(data=user_data, many=False)
+        
+        if teacher_serializer.is_valid():
+            print('ok')
+
+        return Response(teacher_serializer.data)
 
     except User.DoesNotExist:
         serializer = TeacherSerializer(data=request.data)
