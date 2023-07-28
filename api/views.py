@@ -78,7 +78,8 @@ def addTeacher(request):
         serializer = SchoolUserSerializer(data=school_user)
         if serializer.is_valid():
             serializer.save()
-            return Response("Teacher already exists, sharing access with them.")
+        
+        return Response("Teacher already exists")
 
     except User.DoesNotExist:
         serializer = TeacherSerializer(data=request.data)
@@ -93,11 +94,18 @@ def addTeacher(request):
                 school_user_serializer.save()
 
             return Response(serializer.data)
+
         
 @api_view(['GET'])
 def getTeachersBySchool(request, school_pk, owner_pk):
     school_users = SchoolUser.objects.filter(school=school_pk).exclude(user=owner_pk)
-    serializer = SchoolUserSerializer(school_users, many=True)
+    
+    user_ids = []
+    for school_user in school_users:
+        user_ids.append(school_user.user)
+
+    users = Teacher.objects.filter(email__in=user_ids)
+    serializer = TeacherSerializer(users, many=True)
 
     return Response(serializer.data)
 
