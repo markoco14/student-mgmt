@@ -137,30 +137,33 @@ WSGI_APPLICATION = 'school_mgmt.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# LOCAL DB DEVELOPMENT CREDENTIALS
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': os.environ.get('DEV_DB_NAME'),
-#         'USER': os.environ.get('DEV_DB_USER'),
-#         'PASSWORD': os.environ.get('DEV_DB_PASSWORD'),
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
+ENV = os.environ.get('ENV')
 
-# PSCALE DEVELOPMENT DB CREDENTIALS
-DATABASES = {
-    'default': {
-        'ENGINE': 'django_psdb_engine',
-        'NAME': os.environ.get('DB_NAME'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'OPTIONS': {'ssl': {'ca': os.environ.get('MYSQL_ATTR_SSL_CA')}}
+if (ENV == 'development'):
+    # LOCAL DB DEVELOPMENT CREDENTIALS
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('DEV_DB_NAME'),
+            'USER': os.environ.get('DEV_DB_USER'),
+            'PASSWORD': os.environ.get('DEV_DB_PASSWORD'),
+            'HOST': 'localhost',
+            'PORT': '3306',
+        }
     }
-}
+else:
+    # PSCALE DEVELOPMENT DB CREDENTIALS
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django_psdb_engine',
+            'NAME': os.environ.get('DB_NAME'),
+            'HOST': os.environ.get('DB_HOST'),
+            'PORT': os.environ.get('DB_PORT'),
+            'USER': os.environ.get('DB_USER'),
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
+            'OPTIONS': {'ssl': {'ca': os.environ.get('MYSQL_ATTR_SSL_CA')}}
+        }
+    }
 
 
 # Password validation
