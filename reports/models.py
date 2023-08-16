@@ -17,7 +17,7 @@ class Report(models.Model):
 class ReportDetails(models.Model):
     report_id = models.ForeignKey(Report, db_column='report_id', on_delete=models.CASCADE)
     student_id = models.ForeignKey(Student, db_column='student_id', on_delete=models.CASCADE)
-    content = models.TextField(max_length=250, default='', blank=True)
+    content = models.JSONField(blank=True, default=dict)  # Using a callable default to ensure a new dictionary is created for each instance
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
