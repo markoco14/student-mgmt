@@ -440,11 +440,10 @@ def createReportAndReportDetails(request):
     class_list = ClassStudent.objects.filter(class_id=report_serializer.data['class_id'])
     for student in class_list:
         details_data = {
-            "content": "",
             "report_id": report_serializer.data['id'],
             "student_id": student.student_id.id
         }
-        details_serializer = ReportDetailsSerializer(data=details_data)
+        details_serializer = ReportDetailsSerializer(data=details_data, partial=True)
         if details_serializer.is_valid():
             details_serializer.save()
         

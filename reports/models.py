@@ -15,13 +15,13 @@ class Report(models.Model):
         unique_together=['class_id', 'date']
 
 class ReportDetails(models.Model):
-    report_id = models.ForeignKey(Report, db_column='report_id', on_delete=models.CASCADE)
-    student_id = models.ForeignKey(Student, db_column='student_id', on_delete=models.CASCADE)
-    content = models.JSONField(blank=True, default=dict)  # Using a callable default to ensure a new dictionary is created for each instance
+    report = models.ForeignKey(Report, db_column='report_id', on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, db_column='student_id', on_delete=models.CASCADE)
+    details = models.JSONField(blank=True, default=dict)  # Using a callable default to ensure a new dictionary is created for each instance
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table="reports_report_details"
-        unique_together = ['report_id', 'student_id']
+        unique_together = ['report', 'student']
         verbose_name_plural = 'Report details'
