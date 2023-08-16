@@ -2,4 +2,4 @@ __pycache__
 .env
 db.sqlite3
 venv
-django_psdb_engine
+django_psdb_engine/

@@ -10,6 +10,7 @@ from users.models import Teacher, User
 from .serializers import LevelSerializer, ReportDetailsSerializer, ReportSerializer, SchoolUserSerializer, StudentSerializer, SchoolSerializer, TeacherSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
 from django.db.models import Subquery, Prefetch
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.pagination import PageNumberPagination
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -342,9 +343,12 @@ def getStudentsByOwner(request, pk):
 @api_view(['GET'])
 def getStudentsBySchoolId(request, pk):
     students = Student.objects.filter(school_id=pk)
-    serializer = StudentSerializer(students, many=True)
 
-    return Response(serializer.data)
+    paginator = PageNumberPagination()
+    paginated_students = paginator.paginate_queryset(students, request)
+    serializer = StudentSerializer(paginated_students, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
 
 # GET STUDENTS BY CLASS ID
 # @api_view(['GET'])
