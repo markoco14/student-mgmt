@@ -342,7 +342,7 @@ def getStudentsByOwner(request, pk):
 
 @api_view(['GET'])
 def getStudentsBySchoolId(request, pk):
-    students = Student.objects.filter(school_id=pk)
+    students = Student.objects.filter(school_id=pk).order_by('last_name')
 
     paginator = PageNumberPagination()
     paginated_students = paginator.paginate_queryset(students, request)
