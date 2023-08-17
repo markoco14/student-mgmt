@@ -17,6 +17,7 @@ urlpatterns = [
     path('get-users/', user_views.getUsers, name="get-users"),
     path('add-user/', user_views.addUser, name="add-user"),
     path('users/<str:user_pk>/update/', user_views.updateUser, name="update-user"),
+    path('users/<str:user_pk>/change-password/', user_views.changePassword, name="change-password"),
     path('add-teacher/', user_views.addTeacher, name="add-teacher"),
     path('get-teachers-by-school/<str:school_pk>/<str:owner_pk>/', user_views.getTeachersBySchool, name="get-teachers-by-school"),
 

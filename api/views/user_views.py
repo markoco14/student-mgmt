@@ -1,4 +1,5 @@
-from api.serializers import SchoolUserSerializer, TeacherSerializer, UserSerializer
+from api.serializers.serializers import SchoolUserSerializer, TeacherSerializer, UserSerializer
+from api.serializers.user_serializers import ChangePasswordSerializer
 from schools.models import SchoolUser
 from users.models import Teacher, User
 from rest_framework.response import Response
@@ -38,6 +39,24 @@ def updateUser(request, user_pk):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# UPDATE PASSWORD
+@api_view(['POST'])
+def changePassword(request, user_pk):
+    try:
+        user = User.objects.get(id=user_pk)
+    except User.DoesNotExist:
+        return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = ChangePasswordSerializer(data=request.data)
+    if serializer.is_valid():
+        if not user.check_password(serializer.validated_data['current_password']):
+            return Response({"current_password": "Wrong password."}, status=status.HTTP_400_BAD_REQUEST)
+        user.set_password(serializer.validated_data['new_password'])
+        user.save()
+        return Response({"detail": "Password updated successfully."})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # ADD NEW TEACHER
 
