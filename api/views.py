@@ -432,17 +432,17 @@ def getTodayReportByStudentId(request, pk):
 
 @api_view(['POST'])
 def createReportAndReportDetails(request):
-    
     report_serializer = ReportSerializer(data=request.data)
     if report_serializer.is_valid():
         report_serializer.save()
 
+    print('report id', report_serializer.data['id'])
     class_list = ClassStudent.objects.filter(class_id=report_serializer.data['class_id'])
     for student in class_list:
+        print('student id', student.student_id.id)
         details_data = {
-            "content": "",
-            "report_id": report_serializer.data['id'],
-            "student_id": student.student_id.id
+            "report": report_serializer.data['id'],
+            "student": student.student_id.id
         }
         details_serializer = ReportDetailsSerializer(data=details_data)
         if details_serializer.is_valid():
@@ -479,7 +479,7 @@ def deleteReport(request, pk):
 @api_view(['GET'])
 def getReportsDetailsByReportId(request, report_pk):
     reportDetails = ReportDetails.objects.filter(
-        report_id=report_pk).prefetch_related('student_id')
+        report=report_pk).prefetch_related('student')
     serializer = ReportDetailsSerializer(reportDetails, many=True)
 
     return Response(serializer.data)

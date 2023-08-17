@@ -94,8 +94,7 @@ class ReportDetailsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_student_info(self, obj):
-        print('printing obj', obj.student_id.id)
-        student = Student.objects.get(id=obj.student_id.id)
+        student = Student.objects.get(id=obj.student_id)
         serializer = StudentSerializer(student, many=False)
         return serializer.data
 
