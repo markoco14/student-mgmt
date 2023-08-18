@@ -53,7 +53,7 @@ def updateUser(request, user_pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # UPDATE PASSWORD
-@api_view(['POST'])
+@api_view(['PATCH'])
 def changePassword(request, user_pk):
     try:
         user = User.objects.get(id=user_pk)
