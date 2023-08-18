@@ -36,29 +36,5 @@ def getSchoolsByUserAccess(request, pk):
     return Response(serializer.data)
 
 
-#
-#
-#
-# CLASS LIST ROUTES
-#
-#
-#
 
-
-@api_view(['POST'])
-def registerStudentInClass(request):
-    serializer = ClassStudentSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-
-    return Response(serializer.data)
-
-
-@api_view(['DELETE'])
-def removeStudentFromClassStudentById(request, class_pk, student_pk):
-    classStudent = ClassStudent.objects.filter(
-        class_id=class_pk).filter(student_id=student_pk)
-    classStudent.delete()
-
-    return Response({"message": "Student successfully removed from class."})
 

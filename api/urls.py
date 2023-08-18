@@ -42,8 +42,8 @@ urlpatterns = [
 
 
     # CLASS STUDENT REGISTRATION ROUTES
-    path('register-student-in-class/', views.registerStudentInClass, name='register-student'),
-    path('remove-student-from-class/<str:class_pk>/<str:student_pk>/', views.removeStudentFromClassStudentById, name="remove-student"),
+    path('register-student-in-class/', class_views.registerStudentInClass, name='register-student'),
+    path('remove-student-from-class/<str:class_pk>/<str:student_pk>/', class_views.removeStudentFromClassStudentById, name="remove-student"),
 
 
     # STUDENT ROUTES
