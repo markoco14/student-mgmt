@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import views, user_views, jwt_views
+from .views import views, user_views, jwt_views, school_views
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
@@ -23,10 +23,10 @@ urlpatterns = [
     path('get-teachers-by-school/<str:school_pk>/<str:owner_pk>/', user_views.getTeachersBySchool, name="get-teachers-by-school"),
 
     # SCHOOL ROUTES
-    path('get-schools/<str:pk>/', views.getSchools, name="get-schools-by-owner"),
-    path('add-school/', views.addSchool, name="add-school"),
-    path('delete-school/<str:pk>/', views.deleteSchool, name="delete-school"),
-    path('update-school/<str:pk>/', views.updateSchool, name="update-school"),
+    path('get-schools/<str:pk>/', school_views.getSchools, name="get-schools-by-owner"),
+    path('add-school/', school_views.addSchool, name="add-school"),
+    path('delete-school/<str:pk>/', school_views.deleteSchool, name="delete-school"),
+    path('update-school/<str:pk>/', school_views.updateSchool, name="update-school"),
 
     # SCHOOL USER ROUTES
     path('get-schools-by-user-access/<str:pk>/', views.getSchoolsByUserAccess, name='get-schools-by-user-access'),
