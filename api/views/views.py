@@ -7,31 +7,10 @@ from students.models import Student
 from schools.models import School, SchoolUser
 from classes.models import Class, ClassStudent
 from users.models import Teacher, User
-from .serializers import LevelSerializer, ReportDetailsSerializer, ReportSerializer, SchoolUserSerializer, StudentSerializer, SchoolSerializer, TeacherSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
+from ..serializers.serializers import LevelSerializer, ReportDetailsSerializer, ReportSerializer, SchoolUserSerializer, StudentSerializer, SchoolSerializer, TeacherSerializer, UserSerializer, ClassSerializer, ClassStudentSerializer
 from django.db.models import Subquery, Prefetch
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.pagination import PageNumberPagination
-
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
-
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        token['name'] = user.first_name
-        token['role'] = user.role
-        token['email'] = user.email
-        # ...
-
-        return token
-
-
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
 
 # GREETING VIEW
 
@@ -40,91 +19,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 def helloWorld(request):
 
     return Response({"message": "Hello World"})
-
-#
-#
-#
-# USER ROUTES
-#
-#
-#
-# GET ALL USERS
-
-
-@api_view(['GET'])
-def getUsers(request):
-    users = User.objects.all()
-    serializer = UserSerializer(users, many=True)
-
-    return Response(serializer.data)
-
-# ADD NEW USER
-
-
-@api_view(['POST'])
-def addUser(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-
-    return Response(serializer.data)
-
-@api_view(['POST'])
-def addTeacher(request):
-    try:
-        # check if the user exists at all
-        user = User.objects.get(email=request.data['email'])
-        school_user = {
-            "school": request.data['school'],
-            "user": user.id
-        }
-        serializer = SchoolUserSerializer(data=school_user)
-        if serializer.is_valid():
-            serializer.save()
-        
-        user_data = {
-            "id": user.id,
-            "email": user.email,
-            "first_name": user.first_name,
-            "last_name": user.last_name
-        }
-
-        teacher_serializer = TeacherSerializer(data=user_data, many=False)
-        
-        if teacher_serializer.is_valid():
-            print('ok')
-
-        return Response(teacher_serializer.data)
-
-    except User.DoesNotExist:
-        serializer = TeacherSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            school_user = {
-                "school": request.data['school'],
-                "user": serializer.data['id']
-            }
-            school_user_serializer = SchoolUserSerializer(data=school_user)
-            if school_user_serializer.is_valid():
-                school_user_serializer.save()
-
-            return Response(serializer.data)
-
-        
-@api_view(['GET'])
-def getTeachersBySchool(request, school_pk, owner_pk):
-    school_users = SchoolUser.objects.filter(school=school_pk).exclude(user=owner_pk)
-    
-    user_ids = []
-    for school_user in school_users:
-        user_ids.append(school_user.user)
-
-    users = Teacher.objects.filter(email__in=user_ids)
-    serializer = TeacherSerializer(users, many=True)
-
-    return Response(serializer.data)
-
-        
+     
 #
 #
 #

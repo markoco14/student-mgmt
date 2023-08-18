@@ -1,6 +1,6 @@
 from django.urls import path
-from . import views
-from .views import MyTokenObtainPairView
+
+from .views import views, user_views, jwt_views
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
@@ -10,14 +10,17 @@ urlpatterns = [
     path('', views.helloWorld, name="hello-world"),
 
     # AUTH ROUTES
-    path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/', jwt_views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # USER ROUTES
-    path('get-users/', views.getUsers, name="get-users"),
-    path('add-user/', views.addUser, name="add-user"),
-    path('add-teacher/', views.addTeacher, name="add-teacher"),
-    path('get-teachers-by-school/<str:school_pk>/<str:owner_pk>/', views.getTeachersBySchool, name="get-teachers-by-school"),
+    path('get-users/', user_views.getUsers, name="get-users"),
+    path('users/<str:user_pk>/get/', user_views.getUserProfileById, name="get-user-profile"),
+    path('add-user/', user_views.addUser, name="add-user"),
+    path('users/<str:user_pk>/update/', user_views.updateUser, name="update-user"),
+    path('users/<str:user_pk>/change-password/', user_views.changePassword, name="change-password"),
+    path('add-teacher/', user_views.addTeacher, name="add-teacher"),
+    path('get-teachers-by-school/<str:school_pk>/<str:owner_pk>/', user_views.getTeachersBySchool, name="get-teachers-by-school"),
 
     # SCHOOL ROUTES
     path('get-schools/<str:pk>/', views.getSchools, name="get-schools-by-owner"),
