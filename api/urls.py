@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import views, user_views, jwt_views, school_views, class_views, student_views
+from .views import views, user_views, jwt_views, school_views, class_views, student_views, report_views
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
@@ -58,18 +58,18 @@ urlpatterns = [
 
 
     # REPORT ROUTES
-    path('get-reports-all/', views.getReportsAll, name="get-reports-all"),
-    path('get-report-by-date/<str:class_pk>/<str:date_pk>/', views.getReportByClassAndDate, name="get-report-by-date"),
-    path('get-today-report-by-student-id/<str:pk>/', views.getTodayReportByStudentId, name="get-today-report-by-student-id"),
-    path('create-report/', views.createReportAndReportDetails, name="create-report"),
-    path('delete-report/<str:pk>/', views.deleteReport, name="delete-report"),
+    path('get-reports-all/', report_views.getReportsAll, name="get-reports-all"),
+    path('get-report-by-date/<str:class_pk>/<str:date_pk>/', report_views.getReportByClassAndDate, name="get-report-by-date"),
+    path('get-today-report-by-student-id/<str:pk>/', report_views.getTodayReportByStudentId, name="get-today-report-by-student-id"),
+    path('create-report/', report_views.createReportAndReportDetails, name="create-report"),
+    path('delete-report/<str:pk>/', report_views.deleteReport, name="delete-report"),
 
 
     # REPORT DETAILS ROUTES
-    path('get-report-details-by-report-id/<str:report_pk>/', views.getReportsDetailsByReportId, name="get-report-details"),
-    path('create-report-details/', views.createReportDetails, name="create-report-details"),
-    path('delete-report-details/<str:pk>/', views.deleteReportDetails, name="delete-report-details"),
-    path('update-report-details/<str:pk>/', views.updateReportDetails, name="delete-report-details"),
+    path('get-report-details-by-report-id/<str:report_pk>/', report_views.getReportsDetailsByReportId, name="get-report-details"),
+    path('create-report-details/', report_views.createReportDetails, name="create-report-details"),
+    path('delete-report-details/<str:pk>/', report_views.deleteReportDetails, name="delete-report-details"),
+    path('update-report-details/<str:pk>/', report_views.updateReportDetails, name="delete-report-details"),
 
 
     # ADMIN ROUTES
