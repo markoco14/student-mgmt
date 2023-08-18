@@ -112,19 +112,3 @@ def addTeacher(request):
                 school_user_serializer.save()
 
             return Response(serializer.data)
-
-        
-# GET TEACHERS FOR SPECIFIC SCHOOL
-
-@api_view(['GET'])
-def getTeachersBySchool(request, school_pk, owner_pk):
-    school_users = SchoolUser.objects.filter(school=school_pk).exclude(user=owner_pk)
-    
-    user_ids = []
-    for school_user in school_users:
-        user_ids.append(school_user.user)
-
-    users = Teacher.objects.filter(email__in=user_ids)
-    serializer = TeacherSerializer(users, many=True)
-
-    return Response(serializer.data)

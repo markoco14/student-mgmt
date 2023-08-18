@@ -49,6 +49,11 @@ class SchoolUserSerializer(serializers.ModelSerializer):
     #     serializer = TeacherSerializer(teacher, many=False)
     #     return serializer.data
 
+class SchoolTeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        fields = ['first_name', 'last_name']
+
 
 
 
