@@ -16,7 +16,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 @api_view(['GET'])
-def getReportsAll(request):
+def listReports(request):
     reports = Report.objects.all()
     serializer = ReportSerializer(reports, many=True)
 
@@ -35,16 +35,16 @@ def getReportByClassAndDate(request, class_pk, date_pk):
         return Response({})
 
 
-@api_view(['GET'])
-def getTodayReportByStudentId(request, pk):
-    startdate = date.today()
-    enddate = startdate + timedelta(days=1)
+# @api_view(['GET'])
+# def getTodayReportByStudentId(request, pk):
+#     startdate = date.today()
+#     enddate = startdate + timedelta(days=1)
 
-    report = Report.objects.filter(student_id=pk).filter(
-        created_at__gte=startdate).filter(created_at__lt=enddate)
-    serializer = ReportSerializer(report, many=True)
+#     report = Report.objects.filter(student_id=pk).filter(
+#         created_at__gte=startdate).filter(created_at__lt=enddate)
+#     serializer = ReportSerializer(report, many=True)
 
-    return Response(serializer.data)
+#     return Response(serializer.data)
 
 
 @api_view(['POST'])

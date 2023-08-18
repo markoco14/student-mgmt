@@ -62,13 +62,17 @@ urlpatterns = [
     path('students/<str:student_pk>/update/', student_views.updateStudent, name="update-student"),
     path('students/<str:student_pk>/delete/', student_views.deleteStudent, name="delete-student"),
 
-
+    # 
     # REPORT ROUTES
-    path('get-reports-all/', report_views.getReportsAll, name="get-reports-all"),
-    path('get-report-by-date/<str:class_pk>/<str:date_pk>/', report_views.getReportByClassAndDate, name="get-report-by-date"),
-    path('get-today-report-by-student-id/<str:pk>/', report_views.getTodayReportByStudentId, name="get-today-report-by-student-id"),
-    path('create-report/', report_views.createReportAndReportDetails, name="create-report"),
-    path('delete-report/<str:pk>/', report_views.deleteReport, name="delete-report"),
+    # 
+    path('reports/', report_views.listReports, name="list-reports"),
+    path('classes/<str:class_pk>/reports/date/<str:date_pk>/', report_views.getReportByClassAndDate, name="get-report-by-date"),
+    path('reports/create/', report_views.createReportAndReportDetails, name="create-report"),
+    path('reports/<str:pk>/delete/', report_views.deleteReport, name="delete-report"),
+    
+    # TODO: STUDENT-REPORT ROUTES FOR LATER 
+    # path('students/<str:student_pk>/reports/', report_views.getTodayReportByStudentId, name="get-today-report-by-student-id"),
+    # path('get-today-report-by-student-id/<str:pk>/', report_views.getTodayReportByStudentId, name="get-today-report-by-student-id"),
 
 
     # REPORT DETAILS ROUTES
