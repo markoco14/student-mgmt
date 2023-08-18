@@ -1,7 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from schools.models import School
-from ..serializers.serializers import SchoolUserSerializer, SchoolSerializer
+from schools.models import School, SchoolUser
+from users.models import Teacher
+from ..serializers.serializers import SchoolTeacherSerializer, SchoolUserSerializer, SchoolSerializer, TeacherSerializer
 
 # GET ALL SCHOOLS
 
@@ -73,6 +74,21 @@ def updateSchool(request, pk):
 def getSchoolsByUserAccess(request, pk):
     schools = School.objects.filter(school_users__user=pk)
     serializer = SchoolSerializer(schools, many=True)
+
+    return Response(serializer.data)
+
+
+# SCHOOL-TEACHER ROUTES
+@api_view(['GET'])
+def getSchoolTeachers(request, school_pk):
+    school_users = SchoolUser.objects.filter(school=school_pk)
+
+    user_ids = []
+    for school_user in school_users:
+        user_ids.append(school_user.user)
+    
+    teachers = Teacher.objects.filter(email__in=user_ids)
+    serializer = SchoolTeacherSerializer(teachers, many=True)
 
     return Response(serializer.data)
 
