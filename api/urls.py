@@ -29,7 +29,7 @@ urlpatterns = [
     path('update-school/<str:pk>/', school_views.updateSchool, name="update-school"),
 
     # SCHOOL USER ROUTES
-    path('get-schools-by-user-access/<str:pk>/', views.getSchoolsByUserAccess, name='get-schools-by-user-access'),
+    path('get-schools-by-user-access/<str:pk>/', school_views.getSchoolsByUserAccess, name='get-schools-by-user-access'),
 
     # CLASS ROUTES
     path('get-classes/', class_views.getClasses, name="get-classes"),

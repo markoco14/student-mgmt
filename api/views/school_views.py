@@ -58,3 +58,24 @@ def updateSchool(request, pk):
         serializer.save()
 
     return Response(serializer.data)
+
+
+#
+#
+#
+# SCHOOL USER ACCESS ROUTES
+# THESE ROUTES ANSWER WHO CAN ACCESS THE SCHOOLS
+# AND TO WHAT LEVEL CAN THEY ACCESS THE SCHOOLS
+#
+#
+#
+@api_view(['GET'])
+def getSchoolsByUserAccess(request, pk):
+    schools = School.objects.filter(school_users__user=pk)
+    serializer = SchoolSerializer(schools, many=True)
+
+    return Response(serializer.data)
+
+
+
+
