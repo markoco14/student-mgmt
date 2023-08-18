@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import views, user_views, jwt_views, school_views, class_views
+from .views import views, user_views, jwt_views, school_views, class_views, student_views
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
@@ -47,14 +47,14 @@ urlpatterns = [
 
 
     # STUDENT ROUTES
-    path('get-students-by-class/<str:pk>/', views.listStudentsByClass, name="list-students-by-class"),
-    path('get-students/', views.getStudents, name="get-students"),
-    path('get-student/<str:pk>/', views.getStudentById, name="get-student"),
-    path('get-students-by-school/<str:pk>/', views.getStudentsBySchoolId, name="get-students-by-school"),
-    path('get-students-by-owner/<str:pk>/', views.getStudentsByOwner, name="get-students-by-owner"),
-    path('add-student/', views.addStudent, name="add-student"),
-    path('update-student/<str:pk>/', views.updateStudent, name="update-student"),
-    path('delete-student/<str:pk>/', views.deleteStudent, name="delete-student"),
+    path('get-students/', student_views.getStudents, name="get-students"),
+    path('get-student/<str:pk>/', student_views.getStudentById, name="get-student"),
+    path('get-students-by-school/<str:pk>/', student_views.getStudentsBySchoolId, name="get-students-by-school"),
+    path('get-students-by-owner/<str:pk>/', student_views.getStudentsByOwner, name="get-students-by-owner"),
+    path('get-students-by-class/<str:pk>/', student_views.listStudentsByClass, name="list-students-by-class"),
+    path('add-student/', student_views.addStudent, name="add-student"),
+    path('update-student/<str:pk>/', student_views.updateStudent, name="update-student"),
+    path('delete-student/<str:pk>/', student_views.deleteStudent, name="delete-student"),
 
 
     # REPORT ROUTES
