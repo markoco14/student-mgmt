@@ -9,9 +9,11 @@ urlpatterns = [
     # GREETING ROUTE
     path('', views.helloWorld, name="hello-world"),
 
+
     # AUTH ROUTES
     path('token/', jwt_views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
 
     # USER ROUTES
     path('users/', user_views.getUsers, name="get-users"),
@@ -20,8 +22,10 @@ urlpatterns = [
     path('users/<str:user_pk>/update/', user_views.updateUser, name="update-user"),
     path('users/<str:user_pk>/change-password/', user_views.changePassword, name="change-password"),
 
+
     # TEACHER-USER ROUTES
     path('users/teachers/add/', user_views.addTeacher, name="add-teacher"),
+
 
     # SCHOOL ROUTES
     path('schools/', school_views.listSchools, name="list-schools"),
@@ -30,11 +34,14 @@ urlpatterns = [
     path('schools/<str:school_pk>/update/', school_views.updateSchool, name="update-school"),
     path('schools/<str:school_pk>/delete/', school_views.deleteSchool, name="delete-school"),
 
+
     # SCHOOL-USER ROUTES
     path('users/<str:user_pk>/schools/', school_views.listUserSchools, name='get-schools-by-user-access'),
     
+
     # SCHOOL-TEACHER ROUTES
     path('schools/<str:school_pk>/teachers/', school_views.getSchoolTeachers, name="get-teachers-by-school"),
+
 
     # SCHOOL-CLASS ROUTES
     path('schools/<str:school_pk>/classes/', class_views.listSchoolClasses, name="list-school-classes"),
@@ -72,14 +79,13 @@ urlpatterns = [
     
     # TODO: STUDENT-REPORT ROUTES FOR LATER 
     # path('students/<str:student_pk>/reports/', report_views.getTodayReportByStudentId, name="get-today-report-by-student-id"),
-    # path('get-today-report-by-student-id/<str:pk>/', report_views.getTodayReportByStudentId, name="get-today-report-by-student-id"),
-
+    
 
     # REPORT DETAILS ROUTES
-    path('get-report-details-by-report-id/<str:report_pk>/', report_views.getReportsDetailsByReportId, name="get-report-details"),
-    path('create-report-details/', report_views.createReportDetails, name="create-report-details"),
-    path('delete-report-details/<str:pk>/', report_views.deleteReportDetails, name="delete-report-details"),
-    path('update-report-details/<str:pk>/', report_views.updateReportDetails, name="delete-report-details"),
+    path('reports/<str:report_pk>/details/', report_views.listReportsDetailsByReportId, name="get-report-details"),
+    # path('reports/details/create/', report_views.createReportDetails, name="create-report-details"),
+    path('reports/details/<str:detail_pk>/', report_views.updateReportDetails, name="delete-report-details"),
+    # path('reports/details/<str:detail_pk>/delete/', report_views.deleteReportDetails, name="delete-report-details"),
 
 
     # ADMIN ROUTES

@@ -94,7 +94,7 @@ def deleteReport(request, pk):
 #
 #
 @api_view(['GET'])
-def getReportsDetailsByReportId(request, report_pk):
+def listReportsDetailsByReportId(request, report_pk):
     reportDetails = ReportDetails.objects.filter(
         report=report_pk).prefetch_related('student')
     serializer = ReportDetailsSerializer(reportDetails, many=True)
@@ -124,8 +124,8 @@ def deleteReportDetails(request, pk):
 
 
 @api_view(['PUT'])
-def updateReportDetails(request, pk):
-    reportDetail = ReportDetails.objects.get(id=pk)
+def updateReportDetails(request, detail_pk):
+    reportDetail = ReportDetails.objects.get(id=detail_pk)
     serializer = ReportDetailsSerializer(
         reportDetail, request.data, partial=True)
 
