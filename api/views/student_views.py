@@ -8,7 +8,7 @@ from rest_framework.pagination import PageNumberPagination
 
 
 @api_view(['GET'])
-def getStudents(request):
+def listStudents(request):
     students = Student.objects.all()
     serializer = StudentSerializer(students, many=True)
 
@@ -18,46 +18,12 @@ def getStudents(request):
 
 
 @api_view(['GET'])
-def getStudentById(request, pk):
-    student = Student.objects.get(id=pk)
+def getStudent(request, student_pk):
+    student = Student.objects.get(id=student_pk)
     serializer = StudentSerializer(student, many=False)
 
     return Response(serializer.data)
 
-# GET STUDENTS BY OWNER ID
-
-
-@api_view(['GET'])
-def getStudentsByOwner(request, pk):
-    students = Student.objects.filter(school_id__owner_id=pk)
-    serializer = StudentSerializer(students, many=True)
-
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def listStudentsByClass(request, pk):
-    students = Student.objects.filter(classstudent__class_id=pk)
-    serializer = StudentSerializer(students, many=True)
-
-    return Response(serializer.data)
-
-# GET STUDENTS BY SCHOOL ID
-
-
-@api_view(['GET'])
-def getStudentsBySchoolId(request, pk):
-    students = Student.objects.filter(school_id=pk).order_by('last_name')
-
-    paginator = PageNumberPagination()
-    paginated_students = paginator.paginate_queryset(students, request)
-    serializer = StudentSerializer(paginated_students, many=True)
-
-    return paginator.get_paginated_response(serializer.data)
-
-# GET STUDENTS BY CLASS ID
-# @api_view(['GET'])
-# def getStudentsByClassId(request, pk):
-#     students = Student.objects.filter()
 
 # CREATE NEW STUDENT
 
@@ -74,8 +40,8 @@ def addStudent(request):
 
 
 @api_view(['PUT'])
-def updateStudent(request, pk):
-    student = Student.objects.get(id=pk)
+def updateStudent(request, student_pk):
+    student = Student.objects.get(id=student_pk)
     serializer = StudentSerializer(
         instance=student, data=request.data, partial=True)
     if serializer.is_valid():
@@ -87,8 +53,32 @@ def updateStudent(request, pk):
 
 
 @api_view(['DELETE'])
-def deleteStudent(request, pk):
-    student = Student.objects.get(id=pk)
+def deleteStudent(request, student_pk):
+    student = Student.objects.get(id=student_pk)
     student.delete()
 
     return Response({"message": "Student successfully deleted."})
+
+# GET STUDENTS BY SCHOOL ID
+
+
+@api_view(['GET'])
+def listSchoolStudents(request, school_pk):
+    students = Student.objects.filter(
+        school_id=school_pk).order_by('last_name')
+
+    paginator = PageNumberPagination()
+    paginated_students = paginator.paginate_queryset(students, request)
+    serializer = StudentSerializer(paginated_students, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
+
+# GET STUDENTS BY CLASS ID
+
+
+@api_view(['GET'])
+def listClassStudents(request, class_pk):
+    students = Student.objects.filter(classstudent__class_id=class_pk)
+    serializer = StudentSerializer(students, many=True)
+
+    return Response(serializer.data)

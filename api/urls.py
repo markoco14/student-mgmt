@@ -30,15 +30,18 @@ urlpatterns = [
     path('schools/<str:school_pk>/update/', school_views.updateSchool, name="update-school"),
     path('schools/<str:school_pk>/delete/', school_views.deleteSchool, name="delete-school"),
 
-    # SCHOOL USER ROUTES
+    # SCHOOL-USER ROUTES
     path('users/<str:user_pk>/schools/', school_views.listUserSchools, name='get-schools-by-user-access'),
     
-    # SCHOOL TEACHER ROUTES
+    # SCHOOL-TEACHER ROUTES
     path('schools/<str:school_pk>/teachers/', school_views.getSchoolTeachers, name="get-teachers-by-school"),
 
-    # SCHOOL CLASS ROUTES
+    # SCHOOL-CLASS ROUTES
     path('schools/<str:school_pk>/classes/', class_views.listSchoolClasses, name="list-school-classes"),
     path('schools/<str:school_pk>/classes/day/<str:day_pk>/', class_views.listSchoolTodayClasses, name='list-school-today-classes'),
+
+    # SCHOOL-STUDENT ROUTES
+    path('schools/<str:school_pk>/students/', student_views.listSchoolStudents, name="get-students-by-school"),
 
     # CLASS ROUTES
     path('classes/', class_views.listClasses, name="list-classes"),
@@ -46,20 +49,20 @@ urlpatterns = [
     path('classes/add/', class_views.addClass, name="add-class"),
     path('classes/<str:class_pk>/delete/', class_views.deleteClass, name="delete-class"),
 
-    # CLASS STUDENT REGISTRATION ROUTES
+    # CLASS-STUDENT ROUTES
+    path('classes/<str:class_pk>/students/', student_views.listClassStudents, name="list-students-by-class"),
+
+    # CLASS-STUDENT REGISTRATION ROUTES
     path('register-student-in-class/', class_views.registerStudentInClass, name='register-student'),
     path('remove-student-from-class/<str:class_pk>/<str:student_pk>/', class_views.removeStudentFromClassStudentById, name="remove-student"),
 
 
     # STUDENT ROUTES
-    path('get-students/', student_views.getStudents, name="get-students"),
-    path('get-student/<str:pk>/', student_views.getStudentById, name="get-student"),
-    path('get-students-by-school/<str:pk>/', student_views.getStudentsBySchoolId, name="get-students-by-school"),
-    path('get-students-by-owner/<str:pk>/', student_views.getStudentsByOwner, name="get-students-by-owner"),
-    path('get-students-by-class/<str:pk>/', student_views.listStudentsByClass, name="list-students-by-class"),
-    path('add-student/', student_views.addStudent, name="add-student"),
-    path('update-student/<str:pk>/', student_views.updateStudent, name="update-student"),
-    path('delete-student/<str:pk>/', student_views.deleteStudent, name="delete-student"),
+    path('students/', student_views.listStudents, name="get-students"),
+    path('students/<str:student_pk>/get/', student_views.getStudent, name="get-student"),
+    path('students/add/', student_views.addStudent, name="add-student"),
+    path('students/<str:student_pk>/update/', student_views.updateStudent, name="update-student"),
+    path('students/<str:student_pk>/delete/', student_views.deleteStudent, name="delete-student"),
 
 
     # REPORT ROUTES
