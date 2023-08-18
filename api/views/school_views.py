@@ -8,11 +8,23 @@ from ..serializers.serializers import SchoolTeacherSerializer, SchoolUserSeriali
 
 
 @api_view(['GET'])
-def getSchools(request, pk):
-    schools = School.objects.filter(owner_id=pk)
+def listSchools(request):
+    schools = School.objects.all()
     serializer = SchoolSerializer(schools, many=True)
 
     return Response(serializer.data)
+
+
+# GET SCHOOL BY SCHOOL ID
+
+
+@api_view(['GET'])
+def getSchoolById(request, school_pk):
+    schools = School.objects.get(id=school_pk)
+    serializer = SchoolSerializer(schools, many=False)
+
+    return Response(serializer.data)
+
 
 # ADD NEW SCHOOL
 
@@ -41,8 +53,8 @@ def addSchool(request):
 
 
 @api_view(['DELETE'])
-def deleteSchool(request, pk):
-    school = School.objects.get(id=pk)
+def deleteSchool(request, school_pk):
+    school = School.objects.get(id=school_pk)
     school.delete()
 
     return Response({"message": "School successfully deleted."})
@@ -51,8 +63,8 @@ def deleteSchool(request, pk):
 
 
 @api_view(['PUT'])
-def updateSchool(request, pk):
-    school = School.objects.get(id=pk)
+def updateSchool(request, school_pk):
+    school = School.objects.get(id=school_pk)
     serializer = SchoolSerializer(
         instance=school, data=request.data, partial=True)
     if serializer.is_valid():
@@ -71,8 +83,8 @@ def updateSchool(request, pk):
 #
 #
 @api_view(['GET'])
-def getSchoolsByUserAccess(request, pk):
-    schools = School.objects.filter(school_users__user=pk)
+def listUserSchools(request, user_pk):
+    schools = School.objects.filter(school_users__user=user_pk)
     serializer = SchoolSerializer(schools, many=True)
 
     return Response(serializer.data)

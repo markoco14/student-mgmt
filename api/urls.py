@@ -24,13 +24,14 @@ urlpatterns = [
     path('users/teachers/add/', user_views.addTeacher, name="add-teacher"),
 
     # SCHOOL ROUTES
-    path('get-schools/<str:pk>/', school_views.getSchools, name="get-schools-by-owner"),
-    path('add-school/', school_views.addSchool, name="add-school"),
-    path('delete-school/<str:pk>/', school_views.deleteSchool, name="delete-school"),
-    path('update-school/<str:pk>/', school_views.updateSchool, name="update-school"),
+    path('schools/', school_views.listSchools, name="list-schools"),
+    path('schools/<str:school_pk>/get/', school_views.getSchoolById, name="get-school-by-id"),
+    path('schools/add/', school_views.addSchool, name="add-school"),
+    path('schools/<str:school_pk>/update/', school_views.updateSchool, name="update-school"),
+    path('schools/<str:school_pk>/delete/', school_views.deleteSchool, name="delete-school"),
 
     # SCHOOL USER ROUTES
-    path('get-schools-by-user-access/<str:pk>/', school_views.getSchoolsByUserAccess, name='get-schools-by-user-access'),
+    path('users/<str:user_pk>/schools/', school_views.listUserSchools, name='get-schools-by-user-access'),
     
     # SCHOOL TEACHER ROUTES
     path('schools/<str:school_pk>/teachers/', school_views.getSchoolTeachers, name="get-teachers-by-school"),
