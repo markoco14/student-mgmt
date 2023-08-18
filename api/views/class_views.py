@@ -66,7 +66,7 @@ def listSchoolTodayClasses(request, school_pk, day_pk):
 
 
 @api_view(['POST'])
-def registerStudentInClass(request):
+def addClassStudent(request):
     serializer = ClassStudentSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -74,10 +74,10 @@ def registerStudentInClass(request):
     return Response(serializer.data)
 
 
+
 @api_view(['DELETE'])
-def removeStudentFromClassStudentById(request, class_pk, student_pk):
-    classStudent = ClassStudent.objects.filter(
-        class_id=class_pk).filter(student_id=student_pk)
+def deleteClassStudent(request, class_pk, student_pk):
+    classStudent = ClassStudent.objects.filter(class_id=class_pk).filter(student_id=student_pk)
     classStudent.delete()
 
     return Response({"message": "Student successfully removed from class."})

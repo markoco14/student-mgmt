@@ -50,11 +50,9 @@ urlpatterns = [
     path('classes/<str:class_pk>/delete/', class_views.deleteClass, name="delete-class"),
 
     # CLASS-STUDENT ROUTES
-    path('classes/<str:class_pk>/students/', student_views.listClassStudents, name="list-students-by-class"),
-
-    # CLASS-STUDENT REGISTRATION ROUTES
-    path('register-student-in-class/', class_views.registerStudentInClass, name='register-student'),
-    path('remove-student-from-class/<str:class_pk>/<str:student_pk>/', class_views.removeStudentFromClassStudentById, name="remove-student"),
+    path('classes/<str:class_pk>/students/', student_views.listClassStudents, name="list-class-students"),
+    path('classes/students/add/', class_views.addClassStudent, name='add-class-student'),
+    path('classes/<str:class_pk>/students/<str:student_pk>/delete/', class_views.deleteClassStudent, name="delete-class-student"),
 
 
     # STUDENT ROUTES
