@@ -14,13 +14,14 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # USER ROUTES
-    path('get-users/', user_views.getUsers, name="get-users"),
+    path('users/', user_views.getUsers, name="get-users"),
     path('users/<str:user_pk>/get/', user_views.getUserProfileById, name="get-user-profile"),
-    path('add-user/', user_views.addUser, name="add-user"),
+    path('users/add/', user_views.addUser, name="add-user"),
     path('users/<str:user_pk>/update/', user_views.updateUser, name="update-user"),
     path('users/<str:user_pk>/change-password/', user_views.changePassword, name="change-password"),
-    path('add-teacher/', user_views.addTeacher, name="add-teacher"),
-    path('get-teachers-by-school/<str:school_pk>/<str:owner_pk>/', user_views.getTeachersBySchool, name="get-teachers-by-school"),
+
+    # TEACHER-USER ROUTES
+    path('users/teachers/add/', user_views.addTeacher, name="add-teacher"),
 
     # SCHOOL ROUTES
     path('get-schools/<str:pk>/', school_views.getSchools, name="get-schools-by-owner"),
@@ -30,6 +31,10 @@ urlpatterns = [
 
     # SCHOOL USER ROUTES
     path('get-schools-by-user-access/<str:pk>/', school_views.getSchoolsByUserAccess, name='get-schools-by-user-access'),
+    
+    # SCHOOL TEACHER ROUTES
+    path('schools/<str:school_pk>/teachers/', school_views.getSchoolTeachers, name="get-teachers-by-school"),
+
 
     # CLASS ROUTES
     path('get-classes/', class_views.getClasses, name="get-classes"),
