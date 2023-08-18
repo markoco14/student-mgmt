@@ -79,9 +79,8 @@ urlpatterns = [
 
 
     # ADMIN ROUTES
-    path('get-levels/', admin_views.getAllLevels, name='get-levels'),
-    path('get-levels-by-school-id/<str:pk>/', admin_views.getLevelsBySchoolId, name='get-levels-by-school'),
-    path('add-level/', admin_views.addLevel, name='add-level'),
-    path('delete-level/<str:pk>/', admin_views.deleteLevel, name='delete-level'),
+    path('schools/<str:school_pk>/levels/', admin_views.listSchoolLevels, name='list-school-levels'),
+    path('levels/add', admin_views.addLevel, name='add-level'),
+    path('levels/<str:level_pk>/delete/', admin_views.deleteLevel, name='delete-level'),
 
 ]

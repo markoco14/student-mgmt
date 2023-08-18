@@ -14,16 +14,8 @@ from ..serializers.serializers import LevelSerializer
 
 
 @api_view(['GET'])
-def getAllLevels(request):
-    levels = Level.objects.all()
-    serializer = LevelSerializer(levels, many=True)
-
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-def getLevelsBySchoolId(request, pk):
-    levels = Level.objects.filter(school_id=pk)
+def listSchoolLevels(request, school_pk):
+    levels = Level.objects.filter(school_id=school_pk)
     serializer = LevelSerializer(levels, many=True)
 
     return Response(serializer.data)
@@ -38,8 +30,8 @@ def addLevel(request):
 
 
 @api_view(['DELETE'])
-def deleteLevel(request, pk):
-    level = Level.objects.get(id=pk)
+def deleteLevel(request, level_pk):
+    level = Level.objects.get(id=level_pk)
     level.delete()
 
     return Response({"message": "Level deleted."})
