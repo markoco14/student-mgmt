@@ -36,16 +36,15 @@ urlpatterns = [
     # SCHOOL TEACHER ROUTES
     path('schools/<str:school_pk>/teachers/', school_views.getSchoolTeachers, name="get-teachers-by-school"),
 
+    # SCHOOL CLASS ROUTES
+    path('schools/<str:school_pk>/classes/', class_views.listSchoolClasses, name="list-school-classes"),
+    path('schools/<str:school_pk>/classes/day/<str:day_pk>/', class_views.listSchoolTodayClasses, name='list-school-today-classes'),
 
     # CLASS ROUTES
-    path('get-classes/', class_views.getClasses, name="get-classes"),
-    path('get-classes-by-school-id/<str:pk>/', class_views.getClassesBySchoolId, name="get-classes-by-school-id"),
-    path('get-class-by-id/<str:pk>/', class_views.getClassById, name="get-class-by-id"),
-    path('get-classes-by-school-and-date/<str:school_pk>/<str:date_pk>/', class_views.getClassBySchoolAndDate, name='get-classes-by-school-and-date'),
-    path('get-classes-with-class-lists/', class_views.getClassesWithClassLists, name="classes-with-class-lists"),
-    path('add-class/', class_views.addClass, name="add-class"),
-    path('delete-class/<str:pk>/', class_views.deleteClass, name="delete-class"),
-
+    path('classes/', class_views.listClasses, name="list-classes"),
+    path('classes/<str:class_pk>/get/', class_views.getClassById, name="get-class"),
+    path('classes/add/', class_views.addClass, name="add-class"),
+    path('classes/<str:class_pk>/delete/', class_views.deleteClass, name="delete-class"),
 
     # CLASS STUDENT REGISTRATION ROUTES
     path('register-student-in-class/', class_views.registerStudentInClass, name='register-student'),
