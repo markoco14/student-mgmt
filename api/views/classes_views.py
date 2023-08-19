@@ -2,6 +2,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from classes.models import Class, ClassStudent
 from ..serializers.serializers import ClassSerializer, ClassStudentSerializer
+from rest_framework import status
+
 
 # CLASS MODEL CRUD VIEWS
 
@@ -54,6 +56,25 @@ def listSchoolTodayClasses(request, school_pk, day_pk):
     serializer = ClassSerializer(today_classes, many=True)
 
     return Response(serializer.data)
+
+# 
+# 
+# CLASS-TEACHER ROUTES
+# 
+# 
+
+@api_view(['PATCH'])
+def removeClassTeacher(request, class_pk):
+    try:
+        current_class = Class.objects.get(id=class_pk)
+    except Class.DoesNotExist:
+        return Response({"detail": "Class not found."}, status=status.HTTP_404_NOT_FOUND)
+    
+    current_class.teacher = None
+    current_class.save()
+
+    serializer = ClassSerializer(current_class)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 #
