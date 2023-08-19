@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import views, user_views, jwt_views, school_views, class_views, student_views, report_views, admin_views
+from .views import classes_views, views, user_views, jwt_views, school_views, student_views, report_views, admin_views
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
@@ -44,22 +44,22 @@ urlpatterns = [
 
 
     # SCHOOL-CLASS ROUTES
-    path('schools/<str:school_pk>/classes/', class_views.listSchoolClasses, name="list-school-classes"),
-    path('schools/<str:school_pk>/classes/day/<str:day_pk>/', class_views.listSchoolTodayClasses, name='list-school-today-classes'),
+    path('schools/<str:school_pk>/classes/', classes_views.listSchoolClasses, name="list-school-classes"),
+    path('schools/<str:school_pk>/classes/day/<str:day_pk>/', classes_views.listSchoolTodayClasses, name='list-school-today-classes'),
 
     # SCHOOL-STUDENT ROUTES
     path('schools/<str:school_pk>/students/', student_views.listSchoolStudents, name="get-students-by-school"),
 
     # CLASS ROUTES
-    path('classes/', class_views.listClasses, name="list-classes"),
-    path('classes/<str:class_pk>/get/', class_views.getClassById, name="get-class"),
-    path('classes/add/', class_views.addClass, name="add-class"),
-    path('classes/<str:class_pk>/delete/', class_views.deleteClass, name="delete-class"),
+    path('classes/', classes_views.listClasses, name="list-classes"),
+    path('classes/<str:class_pk>/get/', classes_views.getClassById, name="get-class"),
+    path('classes/add/', classes_views.addClass, name="add-class"),
+    path('classes/<str:class_pk>/delete/', classes_views.deleteClass, name="delete-class"),
 
     # CLASS-STUDENT ROUTES
     path('classes/<str:class_pk>/students/', student_views.listClassStudents, name="list-class-students"),
-    path('classes/students/add/', class_views.addClassStudent, name='add-class-student'),
-    path('classes/<str:class_pk>/students/<str:student_pk>/delete/', class_views.deleteClassStudent, name="delete-class-student"),
+    path('classes/students/add/', classes_views.addClassStudent, name='add-class-student'),
+    path('classes/<str:class_pk>/students/<str:student_pk>/delete/', classes_views.deleteClassStudent, name="delete-class-student"),
 
 
     # STUDENT ROUTES
