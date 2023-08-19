@@ -17,6 +17,9 @@ class Class(models.Model):
     teacher = models.ForeignKey(User, related_name="classes", on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.name} in {self.school.name} ({self.id})"
     
     class Meta:
         verbose_name_plural = 'Classes'
