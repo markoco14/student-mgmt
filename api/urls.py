@@ -41,7 +41,7 @@ urlpatterns = [
     
 
     # SCHOOL-TEACHER ROUTES
-    path('schools/<str:school_pk>/teachers/', school_views.getSchoolTeachers, name="get-teachers-by-school"),
+    path('schools/<str:school_pk>/teachers/', user_views.listSchoolTeachers, name="list-school-teachers"),
 
 
     # SCHOOL-CLASS ROUTES

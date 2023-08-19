@@ -80,6 +80,19 @@ def listTeachers(request):
 
     return Response(serializer.data)
 
+@api_view(['GET'])
+def listSchoolTeachers(request, school_pk):
+    school_users = SchoolUser.objects.filter(school=school_pk)
+
+    user_ids = []
+    for school_user in school_users:
+        user_ids.append(school_user.user.id)
+
+    teachers = User.objects.filter(role='TEACHER', id__in=user_ids)
+    serializer = UserSerializer(teachers, many=True)
+
+    return Response(serializer.data)
+
 # ADD NEW TEACHER
 
 @api_view(['POST'])
