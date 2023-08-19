@@ -70,6 +70,16 @@ def changePassword(request, user_pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# TEACHER VIEWS
+
+# GET ALL TEACHERS
+@api_view(['GET'])
+def listTeachers(request):
+    teachers = Teacher.objects.all()
+    serializer = TeacherSerializer(teachers, many=True)
+
+    return Response(serializer.data)
+
 # ADD NEW TEACHER
 
 @api_view(['POST'])
