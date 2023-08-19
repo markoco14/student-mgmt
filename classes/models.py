@@ -33,6 +33,9 @@ class ClassStudent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"{self.student_id.first_name} {self.student_id.last_name} in {self.class_id.name} in {self.class_id.school.name}: ({self.id})"
+
     class Meta:
         db_table = 'classes_class_students'
         unique_together = ['class_id', 'student_id']
