@@ -57,7 +57,8 @@ urlpatterns = [
     path('classes/<str:class_pk>/delete/', classes_views.deleteClass, name="delete-class"),
 
     # CLASS-TEACHER ROUTES
-    path('classes/<str:class_pk>/teachers/update/', classes_views.removeClassTeacher, name="delete-class-teacher"),
+    path('classes/<str:class_pk>/teachers/add/', classes_views.addClassTeacher, name="delete-class-teacher"),
+    path('classes/<str:class_pk>/teachers/remove/', classes_views.removeClassTeacher, name="delete-class-teacher"),
 
     # CLASS-STUDENT ROUTES
     path('classes/<str:class_pk>/students/', student_views.listClassStudents, name="list-class-students"),
