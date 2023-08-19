@@ -4,21 +4,22 @@ from levels.models import Level
 
 from schools.models import School
 from students.models import Student
+from users.models import User
 
 # Create your models here.
 
 
 class Class(models.Model):
     name = models.CharField(max_length=200)
-    school_id = models.ForeignKey(
-        School, db_column='school_id', on_delete=models.CASCADE)
-    level = models.ForeignKey(Level, db_column="level", related_name="classes", on_delete=models.SET_DEFAULT, default="", null=True)
+    school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True)
+    level = models.ForeignKey(Level, db_column="level_id", related_name="classes", on_delete=models.SET_NULL, null=True, blank=True)
     day = models.ManyToManyField(Weekday, related_name="classes")
+    teacher = models.ForeignKey(User, related_name="classes", on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        verbose_name_plural = 'Class'
+        verbose_name_plural = 'Classes'
 
 
 class ClassStudent(models.Model):
