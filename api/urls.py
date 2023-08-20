@@ -17,6 +17,8 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'', curriculum_views.SubjectViewSet)
+# router.register(r'schools/(?P<school_pk>\d+)/subjects', curriculum_views.SubjectViewSet, basename='subject')
+
 
 
 urlpatterns = [
@@ -116,4 +118,16 @@ urlpatterns = [
 
     # SUBJECT ROUTES
     path('subjects/', include(router.urls))
+
+
+    #  question for Kos
+
+    # is it better to have the hierarchy in the uri?
+    # like schools/5/subjects/
+    # but what about delete
+    # would I do
+    # schools/5/subjects/1/delete/
+    # schools/5/subjects/1/update/
+    # and what about filters
+    # would i do schools/5/subjects/?name=Grammar&teacher=Mark&time=night
 ]
