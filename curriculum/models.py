@@ -19,3 +19,7 @@ class SubjectLevel(models.Model):
 
     class Meta:
         db_table='curriculum_subject_level'
+
+class Unit(models.Model):
+    name = models.CharField(max_length=255)  # e.g., "Unit 1", "Basics", ...
+    subject_level = models.ForeignKey(SubjectLevel, related_name='units', on_delete=models.CASCADE)
