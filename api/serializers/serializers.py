@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from classes.models import Class, ClassStudent
-from levels.models import Level
+from curriculum.models import Level
 from students.models import Student
 from schools.models import School, SchoolUser
 from users.models import Teacher, User

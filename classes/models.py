@@ -1,6 +1,6 @@
 from django.db import models
 from core.models import Weekday
-from levels.models import Level
+from curriculum.models import Level
 
 from schools.models import School
 from students.models import Student
