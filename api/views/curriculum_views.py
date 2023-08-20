@@ -33,7 +33,7 @@ def deleteLevel(request, level_pk):
     level = Level.objects.get(id=level_pk)
     level.delete()
 
-    return Response({"message": "Level deleted."})
+    return Response({"detail": "Level deleted."})
 
 
 #
@@ -46,5 +46,29 @@ def deleteLevel(request, level_pk):
 def listSchoolSubjects(request, school_pk):
     subjects = Subject.objects.filter(school=school_pk)
     serializer = SubjectSerializer(subjects, many=True)
+
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def addSubject(request):
+    serializer = SubjectSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def deleteSubject(request, subject_pk):
+    subject = Subject.objects.get(id=subject_pk)
+    subject.delete()
+
+    return Response({"detail": "Subject deleted."})
+
+@api_view(['PATCH'])
+def updateSubject(request, subject_pk):
+    subject = Subject.objects.get(id=subject_pk)
+    serializer = SubjectSerializer(instance=subject, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
 
     return Response(serializer.data)
