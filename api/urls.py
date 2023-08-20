@@ -16,7 +16,8 @@ from rest_framework_simplejwt.views import (
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r'', curriculum_views.SubjectViewSet)
+router.register(r'subjects', curriculum_views.SubjectViewSet, basename='subject')
+router.register(r'levels', curriculum_views.LevelViewSet, basename='level')
 # router.register(r'schools/(?P<school_pk>\d+)/subjects', curriculum_views.SubjectViewSet, basename='subject')
 
 
@@ -109,15 +110,11 @@ urlpatterns = [
     # path('reports/details/<str:detail_pk>/delete/', report_views.deleteReportDetails, name="delete-report-details"),
 
 
-    # CURRICULUM ROUTES
 
-    # LEVEL ROUTES
-    path('schools/<str:school_pk>/levels/', curriculum_views.listSchoolLevels, name='list-school-levels'),
-    path('levels/add/', curriculum_views.addLevel, name='add-level'),
-    path('levels/<str:level_pk>/delete/', curriculum_views.deleteLevel, name='delete-level'),
+    # ViewSetRoutes
+    path('', include(router.urls)),
 
-    # SUBJECT ROUTES
-    path('subjects/', include(router.urls))
+    
 
 
     #  question for Kos

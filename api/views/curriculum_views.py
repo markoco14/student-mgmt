@@ -7,40 +7,24 @@ from api.serializers.curriculum_serializers import LevelSerializer
 from curriculum.models import Level, Subject
 
 #
-#
 # LEVELS ROUTES
 #
-#
 
+class LevelViewSet(viewsets.ModelViewSet):
+    queryset = Level.objects.all()
+    serializer_class = LevelSerializer
+    
+    def get_queryset(self):
+        school_pk = self.request.GET.get('school', None)
+        if school_pk:
+            return Level.objects.filter(school=school_pk)
+        
+        return super().get_queryset()
+    
+    # create, update, and destroy functions implied
 
-@api_view(['GET'])
-def listSchoolLevels(request, school_pk):
-    levels = Level.objects.filter(school_id=school_pk)
-    serializer = LevelSerializer(levels, many=True)
-
-    return Response(serializer.data)
-
-@api_view(['POST'])
-def addLevel(request):
-    serializer = LevelSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-
-    return Response(serializer.data)
-
-
-@api_view(['DELETE'])
-def deleteLevel(request, level_pk):
-    level = Level.objects.get(id=level_pk)
-    level.delete()
-
-    return Response({"detail": "Level deleted."})
-
-
-#
 #
 # SUBJECTS ROUTES
-#
 #
 
 class SubjectViewSet(viewsets.ModelViewSet):
