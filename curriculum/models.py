@@ -12,3 +12,10 @@ class Subject(models.Model):
     name = models.CharField(max_length=255)  # e.g., "Phonics", "Spelling", ...
     school = models.ForeignKey(School, related_name='subjects', on_delete=models.CASCADE)
 
+class SubjectLevel(models.Model):
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    level = models.ForeignKey(Level, on_delete=models.CASCADE)
+    curriculum_description = models.TextField(null=True, blank=True)
+
+    class Meta:
+        db_table='curriculum_subject_level'
