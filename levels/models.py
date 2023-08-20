@@ -6,4 +6,4 @@ from schools.models import School
 
 class Level(models.Model):
     name = models.CharField(max_length=200)
-    school = models.ForeignKey(School, related_name='levels', on_delete=models.CASCADE)
+    school = models.ForeignKey(School, related_name='school_levels', on_delete=models.CASCADE)
