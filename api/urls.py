@@ -1,6 +1,14 @@
 from django.urls import path
 
-from .views import classes_views, views, user_views, jwt_views, school_views, student_views, report_views, admin_views
+from .views import curriculum_views
+from .views import classes_views
+from .views import views
+from .views import user_views
+from .views import jwt_views
+from .views import school_views
+from .views import student_views
+from .views import report_views
+
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
@@ -93,9 +101,11 @@ urlpatterns = [
     # path('reports/details/<str:detail_pk>/delete/', report_views.deleteReportDetails, name="delete-report-details"),
 
 
-    # ADMIN ROUTES
-    path('schools/<str:school_pk>/levels/', admin_views.listSchoolLevels, name='list-school-levels'),
-    path('levels/add', admin_views.addLevel, name='add-level'),
-    path('levels/<str:level_pk>/delete/', admin_views.deleteLevel, name='delete-level'),
+    # CURRICULUM ROUTES
+
+    # LEVEL ROUTES
+    path('schools/<str:school_pk>/levels/', curriculum_views.listSchoolLevels, name='list-school-levels'),
+    path('levels/add/', curriculum_views.addLevel, name='add-level'),
+    path('levels/<str:level_pk>/delete/', curriculum_views.deleteLevel, name='delete-level'),
 
 ]
