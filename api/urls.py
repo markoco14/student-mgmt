@@ -1,9 +1,26 @@
-from django.urls import path
+from django.urls import include, path
 
-from .views import classes_views, views, user_views, jwt_views, school_views, student_views, report_views, admin_views
+from .views import curriculum_views
+from .views import classes_views
+from .views import views
+from .views import user_views
+from .views import jwt_views
+from .views import school_views
+from .views import student_views
+from .views import report_views
+
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
+
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'subjects', curriculum_views.SubjectViewSet, basename='subject')
+router.register(r'levels', curriculum_views.LevelViewSet, basename='level')
+# router.register(r'schools/(?P<school_pk>\d+)/subjects', curriculum_views.SubjectViewSet, basename='subject')
+
+
 
 urlpatterns = [
     # GREETING ROUTE
@@ -93,9 +110,21 @@ urlpatterns = [
     # path('reports/details/<str:detail_pk>/delete/', report_views.deleteReportDetails, name="delete-report-details"),
 
 
-    # ADMIN ROUTES
-    path('schools/<str:school_pk>/levels/', admin_views.listSchoolLevels, name='list-school-levels'),
-    path('levels/add', admin_views.addLevel, name='add-level'),
-    path('levels/<str:level_pk>/delete/', admin_views.deleteLevel, name='delete-level'),
 
+    # ViewSetRoutes
+    path('', include(router.urls)),
+
+    
+
+
+    #  question for Kos
+
+    # is it better to have the hierarchy in the uri?
+    # like schools/5/subjects/
+    # but what about delete
+    # would I do
+    # schools/5/subjects/1/delete/
+    # schools/5/subjects/1/update/
+    # and what about filters
+    # would i do schools/5/subjects/?name=Grammar&teacher=Mark&time=night
 ]

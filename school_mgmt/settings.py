@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'classes',
     'levels',
     'core',
+    'curriculum',
 ]
 
 REST_FRAMEWORK = {

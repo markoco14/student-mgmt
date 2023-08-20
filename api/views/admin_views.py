@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from levels.models import Level
+from curriculum.models import Level
 from ..serializers.serializers import LevelSerializer
 
 
