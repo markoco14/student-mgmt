@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from classes.models import Class, ClassStudent
-from curriculum.models import Level
 from students.models import Student
 from schools.models import School, SchoolUser
 from users.models import Teacher, User
@@ -103,8 +102,3 @@ class ReportDetailsSerializer(serializers.ModelSerializer):
         serializer = StudentSerializer(student, many=False)
         return serializer.data
 
-
-class LevelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Level
-        fields = '__all__'
