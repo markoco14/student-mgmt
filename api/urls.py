@@ -108,4 +108,7 @@ urlpatterns = [
     path('levels/add/', curriculum_views.addLevel, name='add-level'),
     path('levels/<str:level_pk>/delete/', curriculum_views.deleteLevel, name='delete-level'),
 
+    # SUBJECT ROUTES
+    path('schools/<str:school_pk>/subjects/', curriculum_views.listSchoolSubjects, name='list-school-subjects'),
+
 ]
