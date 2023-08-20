@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from .views import curriculum_views
 from .views import classes_views
@@ -12,6 +12,12 @@ from .views import report_views
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
+
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'', curriculum_views.SubjectViewSet)
+
 
 urlpatterns = [
     # GREETING ROUTE
@@ -109,9 +115,5 @@ urlpatterns = [
     path('levels/<str:level_pk>/delete/', curriculum_views.deleteLevel, name='delete-level'),
 
     # SUBJECT ROUTES
-    path('schools/<str:school_pk>/subjects/', curriculum_views.listSchoolSubjects, name='list-school-subjects'),
-    path('subjects/add/', curriculum_views.addSubject, name='add-subject'),
-    path('subjects/<str:subject_pk>/delete/', curriculum_views.deleteSubject, name='delete-school-subject'),
-    path('subjects/<str:subject_pk>/update/', curriculum_views.updateSubject, name='update-school-subject'),
-
+    path('subjects/', include(router.urls))
 ]

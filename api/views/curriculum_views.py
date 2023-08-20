@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import viewsets, status
 from api.serializers.curriculum_serializers import SubjectSerializer
 from api.serializers.curriculum_serializers import LevelSerializer
 
@@ -42,33 +43,15 @@ def deleteLevel(request, level_pk):
 #
 #
 
-@api_view(['GET'])
-def listSchoolSubjects(request, school_pk):
-    subjects = Subject.objects.filter(school=school_pk)
-    serializer = SubjectSerializer(subjects, many=True)
-
-    return Response(serializer.data)
-
-@api_view(['POST'])
-def addSubject(request):
-    serializer = SubjectSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-
-    return Response(serializer.data)
-
-@api_view(['DELETE'])
-def deleteSubject(request, subject_pk):
-    subject = Subject.objects.get(id=subject_pk)
-    subject.delete()
-
-    return Response({"detail": "Subject deleted."})
-
-@api_view(['PATCH'])
-def updateSubject(request, subject_pk):
-    subject = Subject.objects.get(id=subject_pk)
-    serializer = SubjectSerializer(instance=subject, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-
-    return Response(serializer.data)
+class SubjectViewSet(viewsets.ModelViewSet):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+    
+    def get_queryset(self):
+        school_pk = self.request.GET.get('school', None)
+        if school_pk:
+            return Subject.objects.filter(school=school_pk)
+        
+        return super().get_queryset()
+    
+    # create, update, and destroy functions implied
