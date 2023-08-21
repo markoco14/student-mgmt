@@ -1,5 +1,5 @@
 from django.db import models
-from core.models import Weekday
+from schedule.models import Weekday
 from curriculum.models import Level
 
 from schools.models import School

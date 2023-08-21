@@ -53,8 +53,7 @@ INSTALLED_APPS = [
     'schools',
     'reports',
     'classes',
-    'levels',
-    'core',
+    'schedule',
     'curriculum',
 ]
 

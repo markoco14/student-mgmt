@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.models import Weekday
+from schedule.models import Weekday
 
 # Register your models here.
 admin.site.register(Weekday)
