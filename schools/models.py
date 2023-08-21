@@ -34,7 +34,7 @@ class SchoolDay(models.Model):
     day = models.ForeignKey(Weekday, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.school.name} (id: {self.school.id}) open on {self.day.day}"
+        return f"School day (id: {self.id}) @ {self.school.name} (id: {self.school.id}) open on {self.day.day}"
     
     class Meta:
         db_table = 'schools_school_days'
