@@ -4,16 +4,16 @@ from django.db import models
 
 class Weekday(models.Model):
     DAYS_OF_WEEK = [
-        (1, 'Monday'),
-        (2, 'Tuesday'),
-        (3, 'Wednesday'),
-        (4, 'Thursday'),
-        (5, 'Friday'),
-        (6, 'Saturday'),
-        (7, 'Sunday'),
+        ('Monday', 'Monday'),
+        ('Tuesday', 'Tuesday'),
+        ('Wednesday', 'Wednesday'),
+        ('Thursday', 'Thursday'),
+        ('Friday', 'Friday'),
+        ('Saturday', 'Saturday'),
+        ('Sunday', 'Sunday'),
     ]
 
-    day = models.IntegerField(choices=DAYS_OF_WEEK)
+    day = models.CharField(max_length=10, choices=DAYS_OF_WEEK, unique=True)
 
     def __str__(self):
-        return self.get_day_display()
+        return self.day
