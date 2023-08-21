@@ -8,6 +8,7 @@ from .views import jwt_views
 from .views import school_views
 from .views import student_views
 from .views import report_views
+from .views import schedule_views
 
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -116,6 +117,9 @@ urlpatterns = [
 
     # ViewSetRoutes
     path('', include(router.urls)),
+
+    # SCHEDULE ROUTES
+    path('weekdays/', schedule_views.getWeekdays, name='weekday'),
 
     
 
