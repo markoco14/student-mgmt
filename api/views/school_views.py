@@ -179,20 +179,5 @@ class SchoolDayDetail(APIView):
 
 
 
-# @api_view(['GET'])
-# def getSchoolDays(request, school_pk=None):
-#     if school_pk:
-#         school_days = SchoolDay.objects.filter(school__id=school_pk)
-#         serializer = SchoolDaySerializer(school_days, many=True)
-
-#         return Response(serializer.data)
-    
-#     school_days = SchoolDay.objects.all()
-#     serializer = SchoolDaySerializer(school_days, many=True)
-
-#     return Response(serializer.data)
-
-
-
 
 
