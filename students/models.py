@@ -13,4 +13,4 @@ class Student(models.Model):
     school_id = models.ForeignKey(School, on_delete=models.CASCADE, db_column='school_id')
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} in {self.school_id.name}: ({self.id})"
+        return f"{self.first_name} {self.last_name} (id: {self.id}) in {self.school_id.name} (id: {self.school_id.id})"

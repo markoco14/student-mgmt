@@ -1,5 +1,5 @@
 from django.db import models
-from core.models import Weekday
+from schedule.models import Weekday
 from curriculum.models import Level
 
 from schools.models import School
@@ -19,7 +19,7 @@ class Class(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.name} in {self.school.name} ({self.id})"
+        return f"{self.name} (id: {self.id}) in {self.school.name} (id: {self.school.id})"
     
     class Meta:
         verbose_name_plural = 'Classes'
@@ -34,7 +34,7 @@ class ClassStudent(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.student_id.first_name} {self.student_id.last_name} in {self.class_id.name} in {self.class_id.school.name}: ({self.id})"
+        return f"{self.student_id.first_name} {self.student_id.last_name} (id: {self.student_id.id}) in {self.class_id.name} (id: {self.class_id.id}) in {self.class_id.school.name}: (id: {self.class_id.school.id})"
 
     class Meta:
         db_table = 'classes_class_students'
