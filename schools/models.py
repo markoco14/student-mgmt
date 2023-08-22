@@ -1,4 +1,5 @@
 from django.db import models
+from schedule.models import Weekday
 from users.models import Teacher, User
 
 # Create your models here.
@@ -27,3 +28,14 @@ class SchoolUser(models.Model):
     
     def __str__(self):
         return f"{self.user.first_name} (id: {self.user.id}) can access {self.school.name} (id: {self.school.id})"
+    
+class SchoolDay(models.Model):
+    school = models.ForeignKey(School, related_name='days', on_delete=models.CASCADE)
+    day = models.ForeignKey(Weekday, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"School day (id: {self.id}) @ {self.school.name} (id: {self.school.id}) open on {self.day.day}"
+    
+    class Meta:
+        db_table = 'schools_school_days'
+        unique_together = ['school', 'day']
