@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from api.serializers.school_serializers import SchoolDaySerializer
+from api.serializers.school_serializers import SchoolDayListSerializer, SchoolDaySerializer
 from schools.models import School, SchoolDay, SchoolUser
 from users.models import Teacher
 from ..serializers.serializers import SchoolTeacherSerializer, SchoolUserSerializer, SchoolSerializer
@@ -118,12 +118,12 @@ def getSchoolTeachers(request, school_pk):
 class SchoolDayList(APIView):
     def get(self, request, school_pk=None):
         if school_pk:
-            school_days = SchoolDay.objects.filter(school__id=school_pk)
-            serializer = SchoolDaySerializer(school_days, many=True)
+            school_days = SchoolDay.objects.filter(school__id=school_pk).order_by('day__id')
+            serializer = SchoolDayListSerializer(school_days, many=True)
             return Response(serializer.data)
 
         school_days = SchoolDay.objects.all()
-        serializer = SchoolDaySerializer(school_days, many=True)
+        serializer = SchoolDayListSerializer(school_days, many=True)
         return Response(serializer.data)
 
     # Create a new entry
