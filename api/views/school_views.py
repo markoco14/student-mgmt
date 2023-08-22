@@ -132,10 +132,14 @@ class SchoolDayList(APIView):
             'school': school_pk,
             'day': request.data['day']
         }
+        # SERIALIZER AND SAVE WITH DAY AS ID VALUE
         serializer = SchoolDaySerializer(data=school_day)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            saved_school_day = serializer.save()
+            # RETURN RESPONSE WITH DAY AS STRING VALUE
+            response_serializer = SchoolDayListSerializer(saved_school_day, many=False)
+
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class SchoolDayDetail(APIView):
