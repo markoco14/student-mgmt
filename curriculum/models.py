@@ -30,9 +30,3 @@ class SubjectLevel(models.Model):
 
     
 
-class Unit(models.Model):
-    name = models.CharField(max_length=255)  # e.g., "Unit 1", "Basics", ...
-    subject_level = models.ForeignKey(SubjectLevel, related_name='units', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"Unit {self.name} ({self.id}) in {self.subject_level.subject.name} Level {self. subject_level.level.name}"
