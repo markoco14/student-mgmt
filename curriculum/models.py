@@ -36,7 +36,7 @@ class Unit(models.Model):
     order = models.PositiveIntegerField() # 1, 2, 3.. used to keep the units in correct order
 
     def __str__(self):
-        return f"Unit {self.name} ({self.id}) in {self.subject_level.subject.name} Level {self.subject_level.level.name}"
+        return f"Unit {self.order}: {self.name} ({self.id}) in {self.subject_level.subject.name} Level {self.subject_level.level.name}"
     
     class Meta:
         db_table='curriculum_unit'
