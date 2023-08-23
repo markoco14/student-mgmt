@@ -127,6 +127,9 @@ urlpatterns = [
     path('schools/<int:school_pk>/subjects/<int:subject_pk>/levels/', curriculum_views.SubjectLevelList.as_view(), name='school-subject-specific-level-list'),
     path('subject-levels/<int:subject_level_pk>/', curriculum_views.SubjectLevelDetail.as_view(), name='subjectlevel-detail'),
 
+    # UNIT URI PATHS
+    path('units/', curriculum_views.UnitList.as_view(), name='unit-list'),
+    path('units/<int:unit_pk>/', curriculum_views.UnitDetail.as_view(), name='unit-detail'),
     
 
 
