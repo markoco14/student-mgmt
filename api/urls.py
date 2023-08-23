@@ -121,6 +121,12 @@ urlpatterns = [
     # SCHEDULE ROUTES
     path('weekdays/', schedule_views.getWeekdays, name='weekday'),
 
+    # SUBJECT-LEVEL URI PATHS
+    path('subject-levels/', curriculum_views.SubjectLevelList.as_view(), name='subjectlevel-list'),
+    path('schools/<int:school_pk>/subjects/levels/', curriculum_views.SubjectLevelList.as_view(), name='school-subjectlevel-list'),
+    path('schools/<int:school_pk>/subjects/<int:subject_pk>/levels/', curriculum_views.SubjectLevelList.as_view(), name='school-subject-specific-level-list'),
+    path('subject-levels/<int:subject_level_pk>/', curriculum_views.SubjectLevelDetail.as_view(), name='subjectlevel-detail'),
+
     
 
 
