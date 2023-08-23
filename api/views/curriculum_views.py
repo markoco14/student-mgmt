@@ -13,7 +13,7 @@ from curriculum.models import Level, Subject, SubjectLevel, Unit
 #
 
 class LevelViewSet(viewsets.ModelViewSet):
-    queryset = Level.objects.all()
+    queryset = Level.objects.all().order_by('order')
     serializer_class = LevelSerializer
     
     def get_queryset(self):
