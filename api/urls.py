@@ -1,6 +1,5 @@
 from django.urls import include, path
 
-from .views import curriculum_views
 from .views import classes_views
 from .views import views
 from .views import user_views
@@ -9,6 +8,7 @@ from .views import school_views
 from .views import student_views
 from .views import report_views
 from .views import schedule_views
+from curriculum import views as curriculum_views
 
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
