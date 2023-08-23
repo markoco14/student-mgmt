@@ -29,4 +29,14 @@ class SubjectLevel(models.Model):
         db_table='curriculum_subject_level'
 
     
+class Unit(models.Model):
+    subject_level = models.ForeignKey(SubjectLevel, related_name='units', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)  # e.g., "Unit 1", "Basics", ...
+    description = models.TextField(blank=True, null=True) # e.g., "Students will learn the basics of Past Simple Tense..."
+    order = models.PositiveIntegerField() # 1, 2, 3.. used to keep the units in correct order
 
+    def __str__(self):
+        return f"Unit {self.name} ({self.id}) in {self.subject_level.subject.name} Level {self.subject_level.level.name}"
+    
+    class Meta:
+        db_table='curriculum_unit'
