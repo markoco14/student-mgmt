@@ -19,7 +19,7 @@ class LevelViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         school_pk = self.request.GET.get('school', None)
         if school_pk:
-            return Level.objects.filter(school=school_pk)
+            return Level.objects.filter(school=school_pk).order_by('order')
         
         return super().get_queryset()
     
