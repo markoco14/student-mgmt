@@ -28,6 +28,7 @@ class SubjectLevel(models.Model):
         return f"{self.subject.name} Level {self.level.name} in {self.subject.school.name}"
     class Meta:
         db_table='curriculum_subject_level'
+        unique_together=['subject', 'level']
 
     
 class Unit(models.Model):
