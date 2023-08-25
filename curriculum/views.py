@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import viewsets, status
-from api.serializers.curriculum_serializers import SubjectLevelSerializer, SubjectSerializer, UnitSerializer
+from api.serializers.curriculum_serializers import SubjectLevelSerializer, SubjectLevelWriteSerializer, SubjectSerializer, UnitSerializer
 from api.serializers.curriculum_serializers import LevelSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
@@ -66,7 +66,7 @@ class SubjectLevelList(APIView):
         return Response(serializer.data)
     
     def post(self, request, format=None):
-        serializer = SubjectLevelSerializer(data=request.data)
+        serializer = SubjectLevelWriteSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -91,7 +91,7 @@ class SubjectLevelDetail(APIView):
 
     def put(self, request, subject_level_pk, format=None):
         subject_level = self.get_object(subject_level_pk)
-        serializer = SubjectLevelSerializer(subject_level, data=request.data)
+        serializer = SubjectLevelWriteSerializer(subject_level, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -100,7 +100,7 @@ class SubjectLevelDetail(APIView):
      # Partially update a specific entry by primary key
     def patch(self, request, subject_level_pk):
         subject_level = self.get_object(subject_level_pk)
-        serializer = SubjectLevelSerializer(subject_level, data=request.data, partial=True)
+        serializer = SubjectLevelWriteSerializer(subject_level, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
