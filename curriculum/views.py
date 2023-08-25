@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import viewsets, status
-from api.serializers.curriculum_serializers import SubjectLevelSerializer, SubjectLevelWriteSerializer, SubjectSerializer, UnitSerializer
+from api.serializers.curriculum_serializers import SubjectLevelListSerializer, SubjectLevelSerializer, SubjectLevelWriteSerializer, SubjectSerializer, UnitSerializer
 from api.serializers.curriculum_serializers import LevelSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
@@ -62,14 +62,14 @@ class SubjectLevelList(APIView):
         else:
             subject_levels = SubjectLevel.objects.all()
         
-        serializer = SubjectLevelSerializer(subject_levels, many=True)
+        serializer = SubjectLevelListSerializer(subject_levels, many=True)
         return Response(serializer.data)
     
     def post(self, request, format=None):
         serializer = SubjectLevelWriteSerializer(data=request.data)
         if serializer.is_valid():
             new_subject_level = serializer.save()
-            new_serializer = SubjectLevelSerializer(new_subject_level)
+            new_serializer = SubjectLevelListSerializer(new_subject_level)
             return Response(new_serializer.data, status=status.HTTP_201_CREATED)
         return Response(new_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -12,6 +12,12 @@ class SubjectSerializer(serializers.ModelSerializer):
 
 
 class SubjectLevelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SubjectLevel
+        fields = '__all__'
+
+class SubjectLevelListSerializer(serializers.ModelSerializer):
     subject = SubjectSerializer()
     level = LevelSerializer()
     class Meta:
