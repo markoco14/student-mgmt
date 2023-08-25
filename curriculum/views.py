@@ -68,9 +68,10 @@ class SubjectLevelList(APIView):
     def post(self, request, format=None):
         serializer = SubjectLevelWriteSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            new_subject_level = serializer.save()
+            new_serializer = SubjectLevelSerializer(new_subject_level)
+            return Response(new_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(new_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SubjectLevelDetail(APIView):
