@@ -2,43 +2,73 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from classes.models import Class, ClassStudent
 from users.models import User
-from .serializers import ClassSerializer, ClassStudentSerializer
+from .serializers import ClassSerializer, ClassStudentSerializer, ClassWriteSerializer
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound
 
 
-# CLASS MODEL CRUD VIEWS
+class ClassList(APIView):
+    """
+    List all Classes, or create a new one.
+    """
 
-@api_view(['GET'])
-def listClasses(request):
-    classes = Class.objects.all()
-    serializer = ClassSerializer(classes, many=True)
+    def get(self, request, school_pk=None, format=None):
+        if school_pk:
+            current_class = Class.objects.filter(school=school_pk)
 
-    return Response(serializer.data)
+        else:
+            current_class = Class.objects.all()
+        
+        serializer = ClassSerializer(current_class, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request, format=None):
+        serializer = ClassWriteSerializer(data=request.data)
+        if serializer.is_valid():
+            new_subject_level = serializer.save()
+            new_serializer = ClassWriteSerializer(new_subject_level)
+            return Response(new_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(new_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class ClassDetail(APIView):
+    """
+    Retrieve, update or delete a Class.
+    """
 
+    def get_object(self, class_pk):
+        try:
+            return Class.objects.get(id=class_pk)
+        except Class.DoesNotExist:
+            raise NotFound(detail="Object with this ID not found.")
 
-@api_view(['GET'])
-def getClassById(request, class_pk):
-    thisClass = Class.objects.get(id=class_pk)
-    serializer = ClassSerializer(thisClass, many=False)
+    def get(self, request, class_pk, format=None):
+        current_class = self.get_object(class_pk)
+        serializer = ClassSerializer(current_class)
+        return Response(serializer.data)
 
-    return Response(serializer.data)
+    def put(self, request, class_pk, format=None):
+        current_class = self.get_object(class_pk)
+        serializer = ClassWriteSerializer(current_class, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+     # Partially update a specific entry by primary key
+    def patch(self, request, class_pk):
+        current_class = self.get_object(class_pk)
+        serializer = ClassWriteSerializer(current_class, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-@api_view(['POST'])
-def addClass(request):
-    serializer = ClassSerializer(data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-
-    return Response(serializer.data)
-
-
-@api_view(['DELETE'])
-def deleteClass(request, class_pk):
-    this_class = Class.objects.get(id=class_pk)
-    this_class.delete()
-
-    return Response({"message": "School successfully deleted."})
+    def delete(self, request, class_pk, format=None):
+        current_class = self.get_object(class_pk)
+        current_class.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
 
 # OTHER CLASS VIEWS
 
