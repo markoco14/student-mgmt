@@ -1,6 +1,6 @@
 from django.urls import include, path
 
-from .views import classes_views
+from classes import views as classes_views
 from .views import views
 from .views import user_views
 from .views import jwt_views
@@ -73,10 +73,9 @@ urlpatterns = [
     path('schools/<str:school_pk>/students/', student_views.listSchoolStudents, name="get-students-by-school"),
 
     # CLASS ROUTES
-    path('classes/', classes_views.listClasses, name="list-classes"),
-    path('classes/<str:class_pk>/get/', classes_views.getClassById, name="get-class"),
-    path('classes/add/', classes_views.addClass, name="add-class"),
-    path('classes/<str:class_pk>/delete/', classes_views.deleteClass, name="delete-class"),
+    path('schools/<str:school_pk>/classes/', classes_views.ClassList.as_view(), name="class-list"),
+    path('classes/', classes_views.ClassList.as_view(), name="class-list"),
+    path('classes/<str:class_pk>/', classes_views.ClassDetail.as_view()),
 
     # CLASS-TEACHER ROUTES
     path('classes/<str:class_pk>/teachers/add/', classes_views.addClassTeacher, name="delete-class-teacher"),
@@ -123,7 +122,7 @@ urlpatterns = [
 
     # SUBJECT-LEVEL URI PATHS
     path('subject-levels/', curriculum_views.SubjectLevelList.as_view(), name='subjectlevel-list'),
-    path('schools/<int:school_pk>/subjects/levels/', curriculum_views.SubjectLevelList.as_view(), name='school-subjectlevel-list'),
+    path('schools/<int:school_pk>/subject-levels/', curriculum_views.SubjectLevelList.as_view(), name='school-subjectlevel-list'),
     path('schools/<int:school_pk>/subjects/<int:subject_pk>/levels/', curriculum_views.SubjectLevelList.as_view(), name='school-subject-specific-level-list'),
     path('subject-levels/<int:subject_level_pk>/', curriculum_views.SubjectLevelDetail.as_view(), name='subjectlevel-detail'),
 

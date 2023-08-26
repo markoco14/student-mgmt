@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from classes.models import Class, ClassStudent
 from students.models import Student
 from schools.models import School, SchoolUser
 from users.models import Teacher, User
@@ -52,29 +51,6 @@ class SchoolTeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
         fields = ['first_name', 'last_name']
-
-
-
-
-class ClassSerializer(serializers.ModelSerializer):
-    class_list = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Class
-        fields = '__all__'
-
-    def get_class_list(self, obj):
-        print(obj)
-        class_list = ClassStudent.objects.filter(class_id=obj.id)
-        serializer = ClassStudentSerializer(class_list, many=True)
-
-        return serializer.data
-
-
-class ClassStudentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ClassStudent
-        fields = '__all__'
 
 
 class StudentSerializer(serializers.ModelSerializer):
