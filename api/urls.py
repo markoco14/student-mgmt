@@ -1,6 +1,5 @@
 from django.urls import include, path
 
-from .views import curriculum_views
 from .views import classes_views
 from .views import views
 from .views import user_views
@@ -9,6 +8,7 @@ from .views import school_views
 from .views import student_views
 from .views import report_views
 from .views import schedule_views
+from curriculum import views as curriculum_views
 
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -121,6 +121,15 @@ urlpatterns = [
     # SCHEDULE ROUTES
     path('weekdays/', schedule_views.getWeekdays, name='weekday'),
 
+    # SUBJECT-LEVEL URI PATHS
+    path('subject-levels/', curriculum_views.SubjectLevelList.as_view(), name='subjectlevel-list'),
+    path('schools/<int:school_pk>/subjects/levels/', curriculum_views.SubjectLevelList.as_view(), name='school-subjectlevel-list'),
+    path('schools/<int:school_pk>/subjects/<int:subject_pk>/levels/', curriculum_views.SubjectLevelList.as_view(), name='school-subject-specific-level-list'),
+    path('subject-levels/<int:subject_level_pk>/', curriculum_views.SubjectLevelDetail.as_view(), name='subjectlevel-detail'),
+
+    # UNIT URI PATHS
+    # path('units/', curriculum_views.UnitList.as_view(), name='unit-list'),
+    # path('units/<int:unit_pk>/', curriculum_views.UnitDetail.as_view(), name='unit-detail'),
     
 
 
