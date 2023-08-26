@@ -1,11 +1,11 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import viewsets, status
-from curriculum.serializers import LevelSerializer, SubjectLevelListSerializer, SubjectLevelSerializer, SubjectLevelWriteSerializer, SubjectSerializer
+from curriculum.serializers import LevelSerializer, ModuleSerializer, SubjectLevelListSerializer, SubjectLevelSerializer, SubjectLevelWriteSerializer, SubjectSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 
-from curriculum.models import Level, Subject, SubjectLevel
+from curriculum.models import Level, Module, Subject, SubjectLevel
 
 #
 # LEVELS ROUTES
@@ -112,43 +112,43 @@ class SubjectLevelDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 # 
-# UNIT VIEWS
+# MODULE VIEWS
 # 
 
-# class UnitList(APIView):
-#     """
-#     List all Units, or create a new one.
-#     """ 
+class ModuleList(APIView):
+    """
+    List all Units, or create a new one.
+    """ 
 
-#     def get(self, request, format=None):
-#         units = Unit.objects.all().order_by('order')
+    def get(self, request, school_pk=None, format=None):
+        modules = Module.objects.all().order_by('order')
 
-#         # Fetch query parameters
-#         school = request.query_params.get('school', None)
-#         subject = request.query_params.get('subject', None)
-#         level = request.query_params.get('level', None)
+        # Fetch query parameters
+        # school = request.query_params.get('school', None)
+        subject = request.query_params.get('subject', None)
+        level = request.query_params.get('level', None)
 
-#         # Filter by school
-#         if school:
-#             units = units.filter(subject_level__subject__school__id=school)
+        # Filter by school
+        if school_pk:
+            modules = modules.filter(subject_level__subject__school__id=school_pk)
 
-#         # Further filter by subject if provided
-#         if subject:
-#             units = units.filter(subject_level__subject__id=subject)
+        # Further filter by subject if provided (use subject name)
+        if subject:
+            modules = modules.filter(subject_level__subject__name=subject)
 
-#         # Further filter by level if provided
-#         if level:
-#             units = units.filter(subject_level__level__id=level)
+        # Further filter by level if provided (use level order)
+        if level:
+            modules = modules.filter(subject_level__level__order=level)
 
-#         serializer = UnitSerializer(units, many=True)
-#         return Response(serializer.data)
+        serializer = ModuleSerializer(modules, many=True)
+        return Response(serializer.data)
     
-#     def post(self, request, format=None):
-#         serializer = UnitSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, format=None):
+        serializer = ModuleSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # class UnitDetail(APIView):

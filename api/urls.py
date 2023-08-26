@@ -17,10 +17,10 @@ from rest_framework_simplejwt.views import (
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r'subjects', curriculum_views.SubjectViewSet, basename='subject')
+router.register(r'subjects', curriculum_views.SubjectViewSet,
+                basename='subject')
 router.register(r'levels', curriculum_views.LevelViewSet, basename='level')
 # router.register(r'schools/(?P<school_pk>\d+)/subjects', curriculum_views.SubjectViewSet, basename='subject')
-
 
 
 urlpatterns = [
@@ -29,16 +29,20 @@ urlpatterns = [
 
 
     # AUTH ROUTES
-    path('token/', jwt_views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/', jwt_views.MyTokenObtainPairView.as_view(),
+         name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 
     # USER ROUTES
     path('users/', user_views.getUsers, name="get-users"),
-    path('users/<str:user_pk>/get/', user_views.getUserProfileById, name="get-user-profile"),
+    path('users/<str:user_pk>/get/',
+         user_views.getUserProfileById, name="get-user-profile"),
     path('users/add/', user_views.addUser, name="add-user"),
-    path('users/<str:user_pk>/update/', user_views.updateUser, name="update-user"),
-    path('users/<str:user_pk>/change-password/', user_views.changePassword, name="change-password"),
+    path('users/<str:user_pk>/update/',
+         user_views.updateUser, name="update-user"),
+    path('users/<str:user_pk>/change-password/',
+         user_views.changePassword, name="change-password"),
 
 
     # TEACHER-USER ROUTES
@@ -48,68 +52,92 @@ urlpatterns = [
 
     # SCHOOL ROUTES
     path('schools/', school_views.listSchools, name="list-schools"),
-    path('schools/<str:school_pk>/get/', school_views.getSchoolById, name="get-school-by-id"),
+    path('schools/<str:school_pk>/get/',
+         school_views.getSchoolById, name="get-school-by-id"),
     path('schools/add/', school_views.addSchool, name="add-school"),
-    path('schools/<str:school_pk>/update/', school_views.updateSchool, name="update-school"),
-    path('schools/<str:school_pk>/delete/', school_views.deleteSchool, name="delete-school"),
+    path('schools/<str:school_pk>/update/',
+         school_views.updateSchool, name="update-school"),
+    path('schools/<str:school_pk>/delete/',
+         school_views.deleteSchool, name="delete-school"),
 
     # SCHOOL DAY ROUTES
-    path('schools/<str:school_pk>/days/', school_views.SchoolDayList.as_view(), name='school-day-list'),
-    path('schools/days/<str:school_day_pk>/', school_views.SchoolDayDetail.as_view(), name='school-day-detail'),
+    path('schools/<str:school_pk>/days/',
+         school_views.SchoolDayList.as_view(), name='school-day-list'),
+    path('schools/days/<str:school_day_pk>/',
+         school_views.SchoolDayDetail.as_view(), name='school-day-detail'),
 
     # SCHOOL-USER ROUTES
-    path('users/<str:user_pk>/schools/', school_views.listUserSchools, name='get-schools-by-user-access'),
-    
+    path('users/<str:user_pk>/schools/', school_views.listUserSchools,
+         name='get-schools-by-user-access'),
+
 
     # SCHOOL-TEACHER ROUTES
-    path('schools/<str:school_pk>/teachers/', user_views.listSchoolTeachers, name="list-school-teachers"),
+    path('schools/<str:school_pk>/teachers/',
+         user_views.listSchoolTeachers, name="list-school-teachers"),
 
 
     # SCHOOL-CLASS ROUTES
-    path('schools/<str:school_pk>/classes/', classes_views.listSchoolClasses, name="list-school-classes"),
-    path('schools/<str:school_pk>/classes/day/<str:day_pk>/', classes_views.listSchoolTodayClasses, name='list-school-today-classes'),
+    path('schools/<str:school_pk>/classes/',
+         classes_views.listSchoolClasses, name="list-school-classes"),
+    path('schools/<str:school_pk>/classes/day/<str:day_pk>/',
+         classes_views.listSchoolTodayClasses, name='list-school-today-classes'),
 
     # SCHOOL-STUDENT ROUTES
-    path('schools/<str:school_pk>/students/', student_views.listSchoolStudents, name="get-students-by-school"),
+    path('schools/<str:school_pk>/students/',
+         student_views.listSchoolStudents, name="get-students-by-school"),
 
     # CLASS ROUTES
-    path('schools/<str:school_pk>/classes/', classes_views.ClassList.as_view(), name="class-list"),
+    path('schools/<str:school_pk>/classes/',
+         classes_views.ClassList.as_view(), name="class-list"),
     path('classes/', classes_views.ClassList.as_view(), name="class-list"),
     path('classes/<str:class_pk>/', classes_views.ClassDetail.as_view()),
 
     # CLASS-TEACHER ROUTES
-    path('classes/<str:class_pk>/teachers/add/', classes_views.addClassTeacher, name="delete-class-teacher"),
-    path('classes/<str:class_pk>/teachers/remove/', classes_views.removeClassTeacher, name="delete-class-teacher"),
+    path('classes/<str:class_pk>/teachers/add/',
+         classes_views.addClassTeacher, name="delete-class-teacher"),
+    path('classes/<str:class_pk>/teachers/remove/',
+         classes_views.removeClassTeacher, name="delete-class-teacher"),
 
     # CLASS-STUDENT ROUTES
-    path('classes/<str:class_pk>/students/', student_views.listClassStudents, name="list-class-students"),
-    path('classes/students/add/', classes_views.addClassStudent, name='add-class-student'),
-    path('classes/<str:class_pk>/students/<str:student_pk>/delete/', classes_views.deleteClassStudent, name="delete-class-student"),
+    path('classes/<str:class_pk>/students/',
+         student_views.listClassStudents, name="list-class-students"),
+    path('classes/students/add/', classes_views.addClassStudent,
+         name='add-class-student'),
+    path('classes/<str:class_pk>/students/<str:student_pk>/delete/',
+         classes_views.deleteClassStudent, name="delete-class-student"),
 
 
     # STUDENT ROUTES
     path('students/', student_views.listStudents, name="get-students"),
-    path('students/<str:student_pk>/get/', student_views.getStudent, name="get-student"),
+    path('students/<str:student_pk>/get/',
+         student_views.getStudent, name="get-student"),
     path('students/add/', student_views.addStudent, name="add-student"),
-    path('students/<str:student_pk>/update/', student_views.updateStudent, name="update-student"),
-    path('students/<str:student_pk>/delete/', student_views.deleteStudent, name="delete-student"),
+    path('students/<str:student_pk>/update/',
+         student_views.updateStudent, name="update-student"),
+    path('students/<str:student_pk>/delete/',
+         student_views.deleteStudent, name="delete-student"),
 
-    # 
+    #
     # REPORT ROUTES
-    # 
+    #
     path('reports/', report_views.listReports, name="list-reports"),
-    path('classes/<str:class_pk>/reports/date/<str:date_pk>/', report_views.getReportByClassAndDate, name="get-report-by-date"),
-    path('reports/create/', report_views.createReportAndReportDetails, name="create-report"),
-    path('reports/<str:pk>/delete/', report_views.deleteReport, name="delete-report"),
-    
-    # TODO: STUDENT-REPORT ROUTES FOR LATER 
+    path('classes/<str:class_pk>/reports/date/<str:date_pk>/',
+         report_views.getReportByClassAndDate, name="get-report-by-date"),
+    path('reports/create/', report_views.createReportAndReportDetails,
+         name="create-report"),
+    path('reports/<str:pk>/delete/',
+         report_views.deleteReport, name="delete-report"),
+
+    # TODO: STUDENT-REPORT ROUTES FOR LATER
     # path('students/<str:student_pk>/reports/', report_views.getTodayReportByStudentId, name="get-today-report-by-student-id"),
-    
+
 
     # REPORT DETAILS ROUTES
-    path('reports/<str:report_pk>/details/', report_views.listReportsDetailsByReportId, name="get-report-details"),
+    path('reports/<str:report_pk>/details/',
+         report_views.listReportsDetailsByReportId, name="get-report-details"),
     # path('reports/details/create/', report_views.createReportDetails, name="create-report-details"),
-    path('reports/details/<str:detail_pk>/', report_views.updateReportDetails, name="delete-report-details"),
+    path('reports/details/<str:detail_pk>/',
+         report_views.updateReportDetails, name="delete-report-details"),
     # path('reports/details/<str:detail_pk>/delete/', report_views.deleteReportDetails, name="delete-report-details"),
 
 
@@ -121,15 +149,20 @@ urlpatterns = [
     path('weekdays/', schedule_views.getWeekdays, name='weekday'),
 
     # SUBJECT-LEVEL URI PATHS
-    path('subject-levels/', curriculum_views.SubjectLevelList.as_view(), name='subjectlevel-list'),
-    path('schools/<int:school_pk>/subject-levels/', curriculum_views.SubjectLevelList.as_view(), name='school-subjectlevel-list'),
-    path('schools/<int:school_pk>/subjects/<int:subject_pk>/levels/', curriculum_views.SubjectLevelList.as_view(), name='school-subject-specific-level-list'),
-    path('subject-levels/<int:subject_level_pk>/', curriculum_views.SubjectLevelDetail.as_view(), name='subjectlevel-detail'),
+    path('subject-levels/', curriculum_views.SubjectLevelList.as_view(),
+         name='subjectlevel-list'),
+    path('schools/<int:school_pk>/subject-levels/',
+         curriculum_views.SubjectLevelList.as_view(), name='school-subjectlevel-list'),
+    path('schools/<int:school_pk>/subjects/<int:subject_pk>/levels/',
+         curriculum_views.SubjectLevelList.as_view(), name='school-subject-specific-level-list'),
+    path('subject-levels/<int:subject_level_pk>/',
+         curriculum_views.SubjectLevelDetail.as_view(), name='subjectlevel-detail'),
 
     # UNIT URI PATHS
-    # path('units/', curriculum_views.UnitList.as_view(), name='unit-list'),
-    # path('units/<int:unit_pk>/', curriculum_views.UnitDetail.as_view(), name='unit-detail'),
-    
+    path('modules/', curriculum_views.ModuleList.as_view(), name='list-modules'),
+    path('schools/<school_pk>/modules/', curriculum_views.ModuleList.as_view(), name='list-modules'),
+    # path('modules/<int:module_pk>/', curriculum_views.UnitDetail.as_view(), name='unit-detail'),
+
 
 
     #  question for Kos
