@@ -151,40 +151,40 @@ class ModuleList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class UnitDetail(APIView):
-#     """
-#     Retrieve, update or delete a Unit.
-#     """
+class ModuleDetail(APIView):
+    """
+    Retrieve, update or delete a Module.
+    """
 
-#     def get_object(self, unit_pk):
-#         try:
-#             return Unit.objects.get(id=unit_pk)
-#         except Unit.DoesNotExist:
-#             raise NotFound(detail="Object with this ID not found.")
+    def get_object(self, module_pk):
+        try:
+            return Module.objects.get(id=module_pk)
+        except Module.DoesNotExist:
+            raise NotFound(detail="Object with this ID not found.")
 
-#     def get(self, request, unit_pk, format=None):
-#         unit = self.get_object(unit_pk)
-#         serializer = UnitSerializer(unit)
-#         return Response(serializer.data)
+    def get(self, request, module_pk, format=None):
+        module = self.get_object(module_pk)
+        serializer = ModuleSerializer(module)
+        return Response(serializer.data)
 
-#     def put(self, request, unit_pk, format=None):
-#         unit = self.get_object(unit_pk)
-#         serializer = UnitSerializer(unit, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, module_pk, format=None):
+        module = self.get_object(module_pk)
+        serializer = ModuleSerializer(module, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     # Partially update a specific entry by primary key
-#     def patch(self, request, unit_pk):
-#         unit = self.get_object(unit_pk)
-#         serializer = UnitSerializer(unit, data=request.data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # Partially update a specific entry by primary key
+    def patch(self, request, module_pk):
+        module = self.get_object(module_pk)
+        serializer = ModuleSerializer(module, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     def delete(self, request, unit_pk, format=None):
-#         unit = self.get_object(unit_pk)
-#         unit.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, module_pk, format=None):
+        module = self.get_object(module_pk)
+        module.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
