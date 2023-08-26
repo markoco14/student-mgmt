@@ -1,6 +1,6 @@
 from django.urls import include, path
 
-from .views import classes_views
+from classes import views as classes_views
 from .views import views
 from .views import user_views
 from .views import jwt_views
