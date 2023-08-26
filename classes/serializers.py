@@ -15,6 +15,12 @@ class ClassSerializer(serializers.ModelSerializer):
         serializer = ClassStudentSerializer(class_list, many=True)
 
         return serializer.data
+    
+class ClassWriteSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Class
+        fields = '__all__'
 
 
 class ClassStudentSerializer(serializers.ModelSerializer):
