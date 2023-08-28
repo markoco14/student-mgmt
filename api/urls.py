@@ -158,10 +158,14 @@ urlpatterns = [
     path('subject-levels/<int:subject_level_pk>/',
          curriculum_views.SubjectLevelDetail.as_view(), name='subjectlevel-detail'),
 
-    # UNIT URI PATHS
+    # MODULE URI PATHS
     path('modules/', curriculum_views.ModuleList.as_view(), name='list-modules'),
     path('schools/<school_pk>/modules/', curriculum_views.ModuleList.as_view(), name='list-modules'),
     path('modules/<int:module_pk>/', curriculum_views.ModuleDetail.as_view(), name='unit-detail'),
+    
+    # MODULE-TYPE URI PATHS
+    path('module-types/', curriculum_views.ModuleTypeList.as_view(), name='list-module-types'),
+    path('schools/<str:school_pk>/module-types/', curriculum_views.ModuleTypeList.as_view(), name='list-module-types'),
 
 
 

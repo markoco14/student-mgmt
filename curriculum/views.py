@@ -1,11 +1,11 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import viewsets, status
-from curriculum.serializers import LevelSerializer, ModuleSerializer, SubjectLevelListSerializer, SubjectLevelSerializer, SubjectLevelWriteSerializer, SubjectSerializer
+from curriculum.serializers import LevelSerializer, ModuleSerializer, ModuleTypeSerializer, SubjectLevelListSerializer, SubjectLevelSerializer, SubjectLevelWriteSerializer, SubjectSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 
-from curriculum.models import Level, Module, Subject, SubjectLevel
+from curriculum.models import Level, Module, Subject, SubjectLevel, ModuleType
 
 #
 # LEVELS ROUTES
@@ -188,3 +188,39 @@ class ModuleDetail(APIView):
         module = self.get_object(module_pk)
         module.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+class ModuleTypeList(APIView):
+    """
+    List all Units, or create a new one.
+    """ 
+
+    def get(self, request, school_pk=None, format=None):
+        modules = ModuleType.objects.all()
+
+        # Fetch query parameters
+        # school = request.query_params.get('school', None)
+        # subject = request.query_params.get('subject', None)
+        # level = request.query_params.get('level', None)
+
+        # Filter by school
+        if school_pk:
+            modules = modules.filter(school=school_pk)
+
+        # # Further filter by subject if provided (use subject name)
+        # if subject:
+        #     modules = modules.filter(subject_level__subject__name=subject)
+
+        # # Further filter by level if provided (use level order)
+        # if level:
+        #     modules = modules.filter(subject_level__level__order=level)
+
+        serializer = ModuleTypeSerializer(modules, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request, format=None):
+        serializer = ModuleTypeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
