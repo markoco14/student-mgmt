@@ -27,6 +27,8 @@ urlpatterns = [
 
     # ASSESSMENT-TYPE URI PATHS
     path('assessment-types/', assessment_views.AssessmentTypeList.as_view(), name='assessment-types-list'),
+    path('schools/<str:school_pk>/assessment-types/', assessment_views.AssessmentTypeList.as_view(), name='assessment-types-list'),
+    path('assessment-types/<str:assessment_type_pk>/', assessment_views.AssessmentTypeDetail.as_view(), name='module-types-detail'),
 
     #  question for Kos
 

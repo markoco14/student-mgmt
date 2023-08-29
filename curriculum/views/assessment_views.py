@@ -17,22 +17,9 @@ class AssessmentTypeList(APIView):
     def get(self, request, school_pk=None, format=None):
         assessment_types = AssessmentType.objects.all()
 
-        # Fetch query parameters
-        # school = request.query_params.get('school', None)
-        # subject = request.query_params.get('subject', None)
-        # level = request.query_params.get('level', None)
-
         # Filter by school
         if school_pk:
             assessment_types = assessment_types.filter(school=school_pk)
-
-        # # Further filter by subject if provided (use subject name)
-        # if subject:
-        #     assessment_types = assessment_types.filter(subject_level__subject__name=subject)
-
-        # # Further filter by level if provided (use level order)
-        # if level:
-        #     assessment_types = assessment_types.filter(subject_level__level__order=level)
 
         serializer = AssessmentTypeSerializer(assessment_types, many=True)
         return Response(serializer.data)
