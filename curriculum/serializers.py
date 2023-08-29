@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from curriculum.models import Level, Subject, SubjectLevel
+from curriculum.models import Level, Subject, SubjectLevel, Module, ModuleType
 
 class LevelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,7 +31,12 @@ class SubjectLevelWriteSerializer(serializers.ModelSerializer):
         model = SubjectLevel
         fields = '__all__'
 
-# class UnitSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Unit
-#         fields = '__all__'
+class ModuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Module
+        fields = '__all__'
+
+class ModuleTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ModuleType
+        fields = '__all__'
