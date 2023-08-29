@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import viewsets, status
-from curriculum.serializers import LevelSerializer, ModuleSerializer, ModuleTypeSerializer, SubjectLevelListSerializer, SubjectLevelSerializer, SubjectLevelWriteSerializer, SubjectSerializer
+from curriculum.serializers.curriculum_serializers import LevelSerializer, ModuleSerializer, ModuleTypeSerializer, SubjectLevelListSerializer, SubjectLevelSerializer, SubjectLevelWriteSerializer, SubjectSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 

@@ -8,7 +8,7 @@ from .views import school_views
 from .views import student_views
 from .views import report_views
 from .views import schedule_views
-from curriculum import views as curriculum_views
+from curriculum.views import assessment_views, curriculum_views
 
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -168,7 +168,8 @@ urlpatterns = [
     path('schools/<str:school_pk>/module-types/', curriculum_views.ModuleTypeList.as_view(), name='list-module-types'),
     path('module-types/<str:module_type_pk>/', curriculum_views.ModuleTypeDetail.as_view(), name='module-types-detail'),
 
-
+    # ASSESSMENT-TYPE URI PATHS
+    path('assessment-types/', assessment_views.AssessmentTypeList.as_view(), name='assessment-types-list'),
 
     #  question for Kos
 
