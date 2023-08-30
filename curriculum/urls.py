@@ -26,10 +26,14 @@ urlpatterns = [
     path('module-types/<str:module_type_pk>/', curriculum_views.ModuleTypeDetail.as_view(), name='module-types-detail'),
 
     # ASSESSMENT-TYPE URI PATHS
-    path('assessment-types/', assessment_views.AssessmentTypeList.as_view(), name='assessment-types-list'),
-    path('schools/<str:school_pk>/assessment-types/', assessment_views.AssessmentTypeList.as_view(), name='assessment-types-list'),
-    path('assessment-types/<str:assessment_type_pk>/', assessment_views.AssessmentTypeDetail.as_view(), name='module-types-detail'),
+    path('assessment-types/', assessment_views.AssessmentTypeList.as_view(), name='assessment-type-list'),
+    path('schools/<str:school_pk>/assessment-types/', assessment_views.AssessmentTypeList.as_view(), name='assessment-type-list'),
+    path('assessment-types/<str:assessment_type_pk>/', assessment_views.AssessmentTypeDetail.as_view(), name='assessment-type-detail'),
 
+
+    # ASSESSMENT URI PATHS
+    path('assessments/', assessment_views.AssessmentList.as_view(), name='assessment-list'),
+    path('schools/<str:school_pk>/assessments/', assessment_views.AssessmentList.as_view(), name='assessment-list'),
     #  question for Kos
 
     # is it better to have the hierarchy in the uri?

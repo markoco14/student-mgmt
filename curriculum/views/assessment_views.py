@@ -1,17 +1,17 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import viewsets, status
-from curriculum.serializers.assessment_serializers import AssessmentTypeSerializer
+from curriculum.serializers.assessment_serializers import AssessmentSerializer, AssessmentTypeSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 
-from curriculum.models import AssessmentType
+from curriculum.models import Assessment, AssessmentType
 
 #
 
 class AssessmentTypeList(APIView):
     """
-    List all Units, or create a new one.
+    List all Assessment Types, or create a new one.
     """ 
 
     def get(self, request, school_pk=None, format=None):
@@ -69,3 +69,35 @@ class AssessmentTypeDetail(APIView):
         assessment_type = self.get_object(assessment_type_pk)
         assessment_type.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
+class AssessmentList(APIView):
+    """
+    List all Assessments, or create a new one.
+    """ 
+
+    def get(self, request, school_pk=None, format=None):
+        assessments = Assessment.objects.all()
+
+        module = request.query_params.get('module', None)
+        type = request.query_params.get('type', None)
+
+        if school_pk:
+            assessments = Assessment.objects.filter(module__subject_level__subject__school=school_pk)
+        
+        if module:
+             assessments = Assessment.objects.filter(module=module)
+
+        if type:
+             assessments = Assessment.objects.filter(type=type)
+
+        serializer = AssessmentSerializer(assessments, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request, format=None):
+        serializer = AssessmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
