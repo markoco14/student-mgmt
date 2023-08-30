@@ -46,7 +46,7 @@ class ModuleType(models.Model):
         unique_together = ['name', 'school']
 
 class Module(models.Model):
-    subject_level = models.ForeignKey(SubjectLevel, related_name='modules', on_delete=models.CASCADE)
+    subject_level = models.ForeignKey(SubjectLevel, related_name='modules', on_delete=models.PROTECT)
     name = models.CharField(max_length=255)  # e.g., "Past Simple", "History of Egypt", "Africa"
     type = models.ForeignKey(ModuleType, related_name="modules", on_delete=models.PROTECT)
     parent = models.ForeignKey('self', related_name='children', on_delete=models.SET_NULL, null=True, blank=True)
@@ -63,5 +63,50 @@ class Module(models.Model):
         db_table='curriculum_module'
         unique_together = ['name', 'order', 'type', 'subject_level']
         ordering = ['order']
+
+class AssessmentType(models.Model):
+    name = models.CharField(max_length=255) # Homework, In-class Practice, Test, Final Test
+    school = models.ForeignKey(School, related_name="assessment_types", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"({self.id}): {self.name} in {self.school.name}"
+    class Meta:
+        db_table = 'curriculum_assessment_type'
+        unique_together = ['name', 'school']
+
+class Assessment(models.Model):
+    # Status Choices
+    ACTIVE = 0
+    INACTIVE = 1
+    DRAFT = 2
+    ARCHIVED = 3  # Optionally, if you'd like a status between active and inactive
+
+    STATUS_CHOICES = [
+        (ACTIVE, 'Active'),
+        (INACTIVE, 'Inactive'),
+        (DRAFT, 'Draft'),
+        (ARCHIVED, 'Archived'),  # Optional
+    ]
+
+    name = models.CharField(max_length=255) # Homework 1, Test 2, Final Test, will be a combo of type and order
+    description = models.TextField(blank=True) # Students will be tested on....
+    module = models.ForeignKey(Module, related_name="assessments", on_delete=models.PROTECT) # Reading Level 5 Unit 4, Phonics Level 2 Unit 8 ...
+    type = models.ForeignKey(AssessmentType, related_name="assessments", on_delete=models.PROTECT) # Homework, In-class Practice, Test, Final Test
+    order = models.PositiveIntegerField() # 1, 2, 3.. used to keep the assessments in correct order
+    max_score = models.PositiveIntegerField() # Out of 8, 10, 12
+    status = models.IntegerField(choices=STATUS_CHOICES, default=DRAFT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"({self.id}): {self.name} in {self.module.name}"
+
+    class Meta:
+        db_table = 'curriculum_assessment'
+        unique_together = ['order', 'module', 'type']
+        ordering = ['order']
+
 
 
