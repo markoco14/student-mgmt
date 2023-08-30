@@ -34,14 +34,5 @@ urlpatterns = [
     # ASSESSMENT URI PATHS
     path('assessments/', assessment_views.AssessmentList.as_view(), name='assessment-list'),
     path('schools/<str:school_pk>/assessments/', assessment_views.AssessmentList.as_view(), name='assessment-list'),
-    #  question for Kos
-
-    # is it better to have the hierarchy in the uri?
-    # like schools/5/subjects/
-    # but what about delete
-    # would I do
-    # schools/5/subjects/1/delete/
-    # schools/5/subjects/1/update/
-    # and what about filters
-    # would i do schools/5/subjects/?name=Grammar&teacher=Mark&time=night
+    path('assessments/<str:assessment_pk>/', assessment_views.AssessmentDetail.as_view(), name='assessment-list'),
 ]

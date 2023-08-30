@@ -101,3 +101,42 @@ class AssessmentList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class AssessmentDetail(APIView):
+
+    # Utility method to get an object or return a 404 response
+    def get_object(self, assessment_pk):
+        try:
+            return Assessment.objects.get(id=assessment_pk)
+        except Assessment.DoesNotExist:
+            raise NotFound(detail="Object with this ID not found.")
+
+    # Retrieve a specific entry by primary key
+    def get(self, request, assessment_pk):
+        assessment = self.get_object(assessment_pk)
+        serializer = AssessmentSerializer(assessment)
+        return Response(serializer.data)
+
+    # Update a specific entry by primary key
+    def put(self, request, assessment_pk):
+        assessment = self.get_object(assessment_pk)
+        serializer = AssessmentSerializer(assessment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Partially update a specific entry by primary key
+    def patch(self, request, assessment_pk):
+        assessment = self.get_object(assessment_pk)
+        serializer = AssessmentSerializer(assessment, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Delete a specific entry by primary key
+    def delete(self, request, assessment_pk):
+        assessment = self.get_object(assessment_pk)
+        assessment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
