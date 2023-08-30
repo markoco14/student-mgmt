@@ -10,7 +10,7 @@ from curriculum.models import Assessment, AssessmentType, Module
 
 @api_view(['GET'])
 def module_assessment_page_list(request, school_pk):
-    modules = Module.objects.filter(subject_level__subject__school=school_pk).order_by('subject_level__subject__name', 'subject_level__level__order')
+    modules = Module.objects.filter(subject_level__subject__school=school_pk).order_by('subject_level__subject__name', 'subject_level__level__order', 'order')
     serializer = ModuleAssessmentPageSerializer(modules, many=True)
 
     return Response(serializer.data)
