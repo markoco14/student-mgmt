@@ -35,4 +35,7 @@ urlpatterns = [
     path('assessments/', assessment_views.AssessmentList.as_view(), name='assessment-list'),
     path('schools/<str:school_pk>/assessments/', assessment_views.AssessmentList.as_view(), name='assessment-list'),
     path('assessments/<str:assessment_pk>/', assessment_views.AssessmentDetail.as_view(), name='assessment-list'),
+
+    # MODULE-ASSESSMENT URI PATH
+    path('schools/<str:school_pk>/module-assessments/', assessment_views.module_assessment_page_list, name='assessment-list'),
 ]

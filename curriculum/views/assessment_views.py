@@ -1,13 +1,19 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import viewsets, status
-from curriculum.serializers.assessment_serializers import AssessmentSerializer, AssessmentTypeSerializer
+from curriculum.serializers.assessment_serializers import AssessmentSerializer, AssessmentTypeSerializer, ModuleAssessmentPageSerializer
+from django.core.exceptions import FieldError
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 
-from curriculum.models import Assessment, AssessmentType
+from curriculum.models import Assessment, AssessmentType, Module
 
-#
+@api_view(['GET'])
+def module_assessment_page_list(request, school_pk):
+    modules = Module.objects.filter(subject_level__subject__school=school_pk).order_by('subject_level__subject__name', 'subject_level__level__order')
+    serializer = ModuleAssessmentPageSerializer(modules, many=True)
+
+    return Response(serializer.data)
 
 class AssessmentTypeList(APIView):
     """
@@ -84,13 +90,13 @@ class AssessmentList(APIView):
         type = request.query_params.get('type', None)
 
         if school_pk:
-            assessments = Assessment.objects.filter(module__subject_level__subject__school=school_pk)
+            assessments = assessments.filter(module__subject_level__subject__school=school_pk)
         
         if module:
-             assessments = Assessment.objects.filter(module=module)
+             assessments = assessments.filter(module=module)
 
         if type:
-             assessments = Assessment.objects.filter(type=type)
+             assessments = assessments.filter(type=type)
 
         serializer = AssessmentSerializer(assessments, many=True)
         return Response(serializer.data)
