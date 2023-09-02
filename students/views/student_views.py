@@ -15,21 +15,26 @@ class StudentList(APIView):
         modules = Student.objects.all()
 
         # Fetch query parameters
-        # school = request.query_params.get('school', None)
-        # subject = request.query_params.get('subject', None)
-        # level = request.query_params.get('level', None)
+        first_name = request.query_params.get('first_name', None)
+        last_name = request.query_params.get('last_name', None)
+        age = request.query_params.get('age', None)
+        gender = request.query_params.get('gender', None)
 
-        # Filter by school
+        # Filter by school (hierachical url)
         if school_pk:
             modules = modules.filter(school=school_pk)
 
-        # # Further filter by subject if provided (use subject name)
-        # if subject:
-        #     modules = modules.filter(subject_level__subject__name=subject)
+        # Further filter by query params
+        if first_name:
+            modules = modules.filter(first_name=first_name)
+        if last_name:
+            modules = modules.filter(last_name=last_name)
+        if age:
+            modules = modules.filter(age=age)
+        if gender:
+            modules = modules.filter(gender=gender)
 
-        # # Further filter by level if provided (use level order)
-        # if level:
-        #     modules = modules.filter(subject_level__level__order=level)
+      
 
         serializer = StudentSerializer(modules, many=True)
         return Response(serializer.data)
