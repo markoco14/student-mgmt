@@ -9,9 +9,11 @@ class Student(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     age = models.SmallIntegerField()
+    gender = models.IntegerField(choices=[(0, 'Male'), (1, 'Female')])
+    photo_url = models.TextField(null=True) # https://storage.googleapis.com/twle-445f4.appspot.com/images/student_4.jpeg student_3 student_2 student_1
+    school_id = models.ForeignKey(School, on_delete=models.CASCADE, db_column='school_id')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    school_id = models.ForeignKey(School, on_delete=models.CASCADE, db_column='school_id')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} (id: {self.id}) in {self.school_id.name} (id: {self.school_id.id})"
