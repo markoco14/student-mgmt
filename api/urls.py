@@ -5,10 +5,9 @@ from .views import views
 from .views import user_views
 from .views import jwt_views
 from .views import school_views
-from .views import student_views
 from .views import report_views
 from .views import schedule_views
-from curriculum.views import assessment_views, curriculum_views
+from curriculum.views import curriculum_views
 
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -82,9 +81,6 @@ urlpatterns = [
     path('schools/<str:school_pk>/classes/day/<str:day_pk>/',
          classes_views.listSchoolTodayClasses, name='list-school-today-classes'),
 
-    # SCHOOL-STUDENT ROUTES
-    path('schools/<str:school_pk>/students/',
-         student_views.listSchoolStudents, name="get-students-by-school"),
 
     # CLASS ROUTES
     path('schools/<str:school_pk>/classes/',
@@ -98,24 +94,11 @@ urlpatterns = [
     path('classes/<str:class_pk>/teachers/remove/',
          classes_views.removeClassTeacher, name="delete-class-teacher"),
 
-    # CLASS-STUDENT ROUTES
-    path('classes/<str:class_pk>/students/',
-         student_views.listClassStudents, name="list-class-students"),
     path('classes/students/add/', classes_views.addClassStudent,
          name='add-class-student'),
     path('classes/<str:class_pk>/students/<str:student_pk>/delete/',
          classes_views.deleteClassStudent, name="delete-class-student"),
 
-
-    # STUDENT ROUTES
-#     path('students/', student_views.listStudents, name="get-students"),
-#     path('students/<str:student_pk>/get/',
-#          student_views.getStudent, name="get-student"),
-#     path('students/add/', student_views.addStudent, name="add-student"),
-#     path('students/<str:student_pk>/update/',
-#          student_views.updateStudent, name="update-student"),
-#     path('students/<str:student_pk>/delete/',
-#          student_views.deleteStudent, name="delete-student"),
 
     #
     # REPORT ROUTES
@@ -127,9 +110,6 @@ urlpatterns = [
          name="create-report"),
     path('reports/<str:pk>/delete/',
          report_views.deleteReport, name="delete-report"),
-
-    # TODO: STUDENT-REPORT ROUTES FOR LATER
-    # path('students/<str:student_pk>/reports/', report_views.getTodayReportByStudentId, name="get-today-report-by-student-id"),
 
 
     # REPORT DETAILS ROUTES
