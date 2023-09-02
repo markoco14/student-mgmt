@@ -23,11 +23,11 @@ class StudentList(APIView):
         age = request.query_params.get('age', None)
         gender = request.query_params.get('gender', None)
         page = request.query_params.get('page', None)
-        per_page = request.query_params.get('per_page', 20)
+        per_page = request.query_params.get('per_page', 15)
 
         # Filter by school (hierachical url)
         if school_pk:
-            students = students.filter(school=school_pk)
+            students = students.filter(school_id=school_pk)
 
         # Further filter by query params
         if first_name:
@@ -44,7 +44,7 @@ class StudentList(APIView):
         
 
         if page is not None:
-            
+
             try:
                 page = int(page)
             except ValueError:
@@ -67,6 +67,8 @@ class StudentList(APIView):
                 'total_pages': paginator.num_pages,
                 'current_page': int(page),
                 'per_page': int(per_page),
+                'next': students.next_page_number() if students.has_next() else None,
+                'previous': students.previous_page_number() if students.has_previous() else None,
                 'results': serializer.data
             })
 
