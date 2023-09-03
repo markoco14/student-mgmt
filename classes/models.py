@@ -32,6 +32,7 @@ class ClassDay(models.Model):
         return f"{self.class_id.name} on {self.school_day_id.day.day}"
     
     class Meta:
+        db_table = 'classes_class_days'
         verbose_name_plural = 'Class days'
 
 class ClassStudent(models.Model):
