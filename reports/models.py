@@ -1,13 +1,13 @@
 from django.db import models
 
-from classes.models import Class
+from classes.models import ClassEntity
 from students.models import Student
 
 # Create your models here.
 class Report(models.Model):
     date = models.DateField()
     is_complete = models.BooleanField(default=False)
-    class_id = models.ForeignKey(Class, on_delete=models.CASCADE, db_column='class_id', )
+    class_id = models.ForeignKey(ClassEntity, on_delete=models.CASCADE, db_column='class_id', )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

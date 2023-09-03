@@ -9,7 +9,7 @@ from users.models import User
 # Create your models here.
 
 
-class Class(models.Model):
+class ClassEntity(models.Model):
     name = models.CharField(max_length=200)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     level = models.ForeignKey(Level, related_name="classes", on_delete=models.PROTECT)
@@ -22,10 +22,11 @@ class Class(models.Model):
         return f"{self.name} (id: {self.id}) in {self.school.name} (id: {self.school.id})"
     
     class Meta:
-        verbose_name_plural = 'Classes'
+        db_table = 'classes_class_entities'
+        verbose_name_plural = 'Class entities'
 
 class ClassDay(models.Model):
-    class_id = models.ForeignKey(Class, db_column='class_id', on_delete=models.CASCADE)
+    class_id = models.ForeignKey(ClassEntity, db_column='class_id', on_delete=models.CASCADE)
     school_day_id = models.ForeignKey(SchoolDay, db_column='school_day_id', on_delete=models.CASCADE)
     
     def __str__(self):
@@ -37,7 +38,7 @@ class ClassDay(models.Model):
 
 class ClassStudent(models.Model):
     class_id = models.ForeignKey(
-        Class, db_column='class_id', on_delete=models.CASCADE)
+        ClassEntity, db_column='class_id', on_delete=models.CASCADE)
     student_id = models.ForeignKey(
         Student, db_column='student_id', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

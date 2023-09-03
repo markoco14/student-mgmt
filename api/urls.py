@@ -84,9 +84,9 @@ urlpatterns = [
 
     # CLASS ROUTES
     path('schools/<str:school_pk>/classes/',
-         classes_views.ClassList.as_view(), name="class-list"),
-    path('classes/', classes_views.ClassList.as_view(), name="class-list"),
-    path('classes/<str:class_pk>/', classes_views.ClassDetail.as_view()),
+         classes_views.ClassEntityList.as_view(), name="class-list"),
+    path('classes/', classes_views.ClassEntityList.as_view(), name="class-list"),
+    path('classes/<str:class_pk>/', classes_views.ClassEntityDetail.as_view()),
 
     # CLASS-TEACHER ROUTES
     path('classes/<str:class_pk>/teachers/add/',
