@@ -1,12 +1,13 @@
 from rest_framework import serializers
-from classes.models import Class, ClassStudent
+from api.serializers.serializers import StudentSerializer
+from classes.models import ClassEntity, ClassStudent
 
 
-class ClassSerializer(serializers.ModelSerializer):
+class ClassEntitySerializer(serializers.ModelSerializer):
     class_list = serializers.SerializerMethodField()
 
     class Meta:
-        model = Class
+        model = ClassEntity
         fields = '__all__'
 
     def get_class_list(self, obj):
@@ -16,14 +17,21 @@ class ClassSerializer(serializers.ModelSerializer):
 
         return serializer.data
     
-class ClassWriteSerializer(serializers.ModelSerializer):
+class ClassEntityWriteSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = Class
+        model = ClassEntity
         fields = '__all__'
 
 
 class ClassStudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassStudent
+        fields = '__all__'
+
+class ManageClass_ClassStudentListSerializer(serializers.ModelSerializer):
+    student = StudentSerializer(source='student_id')
+    
     class Meta:
         model = ClassStudent
         fields = '__all__'

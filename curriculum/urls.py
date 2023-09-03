@@ -4,8 +4,13 @@ from curriculum.views import assessment_views, curriculum_views
 
 
 urlpatterns = [
+	
+    # LEVEL URI PATHS
+    path('levels/', curriculum_views.LevelList.as_view(), name='level-list'),
+    path('schools/<str:school_pk>/levels/', curriculum_views.LevelList.as_view(), name='level-list'),
+	path('levels/<str:level_pk>/', curriculum_views.LevelDetail.as_view(), name='level-detail'),
     
-		# SUBJECT-LEVEL URI PATHS
+    # SUBJECT-LEVEL URI PATHS
     path('subject-levels/', curriculum_views.SubjectLevelList.as_view(),
          name='subjectlevel-list'),
     path('schools/<int:school_pk>/subject-levels/',

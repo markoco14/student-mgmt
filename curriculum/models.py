@@ -99,6 +99,8 @@ class Assessment(models.Model):
     status = models.IntegerField(choices=STATUS_CHOICES, default=DRAFT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    #is_level?
+    #level null if is_level false 
 
     def __str__(self):
         return f"({self.id}): {self.name} in {self.module.name}"
