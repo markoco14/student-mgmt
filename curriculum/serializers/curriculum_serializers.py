@@ -5,6 +5,7 @@ class LevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Level
         fields = '__all__'
+        
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject

@@ -17,9 +17,6 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register(r'subjects', curriculum_views.SubjectViewSet,
                 basename='subject')
-router.register(r'levels', curriculum_views.LevelViewSet, basename='level')
-# router.register(r'schools/(?P<school_pk>\d+)/subjects', curriculum_views.SubjectViewSet, basename='subject')
-
 
 urlpatterns = [
     # GREETING ROUTE
