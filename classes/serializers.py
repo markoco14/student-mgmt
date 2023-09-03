@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from api.serializers.serializers import StudentSerializer
 from classes.models import ClassEntity, ClassStudent
 
 
@@ -24,6 +25,13 @@ class ClassEntityWriteSerializer(serializers.ModelSerializer):
 
 
 class ClassStudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassStudent
+        fields = '__all__'
+
+class ManageClass_ClassStudentListSerializer(serializers.ModelSerializer):
+    student = StudentSerializer(source='student_id')
+    
     class Meta:
         model = ClassStudent
         fields = '__all__'

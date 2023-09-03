@@ -2,10 +2,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from classes.models import ClassStudent
 
-from classes.serializers import ClassStudentSerializer
+from classes.serializers import ClassStudentSerializer, ManageClass_ClassStudentListSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound
+
+
 
 class ClassStudentList(APIView):
     """
@@ -16,9 +18,18 @@ class ClassStudentList(APIView):
         class_students = ClassStudent.objects.all()
 
         school_class = request.query_params.get('school_class', None)
+        order = request.query_params.get('order', None)
+        details = request.query_params.get('details', None)
 
         if school_class:
             class_students = class_students.filter(class_id=school_class)
+
+        if order:
+            class_students = class_students.order_by('student_id__last_name')
+
+        if details:
+            serializer = ManageClass_ClassStudentListSerializer(class_students, many=True)
+            return Response(serializer.data)
         
         serializer = ClassStudentSerializer(class_students, many=True)
         return Response(serializer.data)
