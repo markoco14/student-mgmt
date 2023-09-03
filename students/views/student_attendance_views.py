@@ -24,12 +24,14 @@ class StudentAttendanceList(APIView):
         author = request.query_params.get('author', None)
         status = request.query_params.get('status', None)
         reason = request.query_params.get('reason', None)
+        school_class = request.query_params.get('school_class', None)
+        
         # # page = request.query_params.get('page', None)
         # per_page = request.query_params.get('per_page', 15)
 
         # Filter by school (hierachical url)
         if school_pk:
-            student_attendances = student_attendances.filter(school_id=school_pk)
+            student_attendances = student_attendances.filter(student_id__school_id=school_pk)
 
         # Further filter by query params
         if date:
@@ -40,6 +42,9 @@ class StudentAttendanceList(APIView):
             student_attendances = student_attendances.filter(status=status)
         if reason:
             student_attendances = student_attendances.filter(reason__contains=reason)
+
+        if school_class:
+            student_attendances = student_attendances.filter(student_id__class_students__class_id=school_class)
 
         # check if page number is letters and send response that can be alerted
         # even though the front end should control for this.
