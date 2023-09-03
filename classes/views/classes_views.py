@@ -14,11 +14,16 @@ class ClassEntityList(APIView):
     """
 
     def get(self, request, school_pk=None, format=None):
-        if school_pk:
-            class_entity = ClassEntity.objects.filter(school=school_pk)
+        class_entity = ClassEntity.objects.all()
 
-        else:
-            class_entity = ClassEntity.objects.all()
+        day = request.query_params.get('day', None)
+
+        if school_pk:
+            class_entity = class_entity.filter(school=school_pk)
+
+        if day:
+            class_entity = class_entity.filter(days__day__day=day)
+
         
         serializer = ClassEntitySerializer(class_entity, many=True)
         return Response(serializer.data)
