@@ -15,12 +15,12 @@ class ClassEntityList(APIView):
 
     def get(self, request, school_pk=None, format=None):
         if school_pk:
-            current_class = ClassEntity.objects.filter(school=school_pk)
+            class_entity = ClassEntity.objects.filter(school=school_pk)
 
         else:
-            current_class = ClassEntity.objects.all()
+            class_entity = ClassEntity.objects.all()
         
-        serializer = ClassEntitySerializer(current_class, many=True)
+        serializer = ClassEntitySerializer(class_entity, many=True)
         return Response(serializer.data)
     
     def post(self, request, format=None):
@@ -36,92 +36,35 @@ class ClassEntityDetail(APIView):
     Retrieve, update or delete a ClassEntity.
     """
 
-    def get_object(self, class_pk):
+    def get_object(self, class_entity_pk):
         try:
-            return ClassEntity.objects.get(id=class_pk)
+            return ClassEntity.objects.get(id=class_entity_pk)
         except ClassEntity.DoesNotExist:
             raise NotFound(detail="Object with this ID not found.")
 
-    def get(self, request, class_pk, format=None):
-        current_class = self.get_object(class_pk)
-        serializer = ClassEntitySerializer(current_class)
+    def get(self, request, class_entity_pk, format=None):
+        class_entity = self.get_object(class_entity_pk)
+        serializer = ClassEntitySerializer(class_entity)
         return Response(serializer.data)
 
-    def put(self, request, class_pk, format=None):
-        current_class = self.get_object(class_pk)
-        serializer = ClassEntityWriteSerializer(current_class, data=request.data)
+    def put(self, request, class_entity_pk, format=None):
+        class_entity = self.get_object(class_entity_pk)
+        serializer = ClassEntityWriteSerializer(class_entity, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
      # Partially update a specific entry by primary key
-    def patch(self, request, class_pk):
-        current_class = self.get_object(class_pk)
-        serializer = ClassEntityWriteSerializer(current_class, data=request.data, partial=True)
+    def patch(self, request, class_entity_pk):
+        class_entity = self.get_object(class_entity_pk)
+        serializer = ClassEntityWriteSerializer(class_entity, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, class_pk, format=None):
-        current_class = self.get_object(class_pk)
-        current_class.delete()
+    def delete(self, request, class_entity_pk, format=None):
+        class_entity = self.get_object(class_entity_pk)
+        class_entity.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
-
-# OTHER CLASS VIEWS
-
-
-@api_view(['GET'])
-def listSchoolClasses(request, school_pk):
-    classes = ClassEntity.objects.filter(school_id=school_pk)
-    serializer = ClassEntitySerializer(classes, many=True)
-
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-def listSchoolTodayClasses(request, school_pk, day_pk):
-    today_classes = ClassEntity.objects.filter(school_id=school_pk).filter(day=day_pk)
-    serializer = ClassEntitySerializer(today_classes, many=True)
-
-    return Response(serializer.data)
-
-# 
-# 
-# CLASS-TEACHER ROUTES
-# 
-# 
-
-@api_view(['PATCH'])
-def addClassTeacher(request, class_pk):
-    try:
-        current_class = ClassEntity.objects.get(id=class_pk)
-    except ClassEntity.DoesNotExist:
-        return Response({"detail": "ClassEntity not found."}, status=status.HTTP_404_NOT_FOUND)
-    
-    try:
-        teacher = User.objects.get(id=request.data['teacher'])
-    except User.DoesNotExist:
-        return Response({"detail": "Teacher not found."}, status=status.HTTP_404_NOT_FOUND)
-    
-    current_class.teacher = teacher
-    current_class.save()
-
-    serializer = ClassEntitySerializer(current_class)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-@api_view(['PATCH'])
-def removeClassTeacher(request, class_pk):
-    try:
-        current_class = ClassEntity.objects.get(id=class_pk)
-    except ClassEntity.DoesNotExist:
-        return Response({"detail": "ClassEntity not found."}, status=status.HTTP_404_NOT_FOUND)
-    
-    current_class.teacher = None
-    current_class.save()
-
-    serializer = ClassEntitySerializer(current_class)
-    return Response(serializer.data, status=status.HTTP_200_OK)
