@@ -1,6 +1,5 @@
 from django.urls import include, path
 
-from classes import views as classes_views
 from .views import views
 from .views import user_views
 from .views import jwt_views
@@ -75,30 +74,7 @@ urlpatterns = [
          user_views.listSchoolTeachers, name="list-school-teachers"),
 
 
-    # SCHOOL-CLASS ROUTES
-    path('schools/<str:school_pk>/classes/',
-         classes_views.listSchoolClasses, name="list-school-classes"),
-    path('schools/<str:school_pk>/classes/day/<str:day_pk>/',
-         classes_views.listSchoolTodayClasses, name='list-school-today-classes'),
-
-
-    # CLASS ROUTES
-    path('schools/<str:school_pk>/classes/',
-         classes_views.ClassEntityList.as_view(), name="class-list"),
-    path('classes/', classes_views.ClassEntityList.as_view(), name="class-list"),
-    path('classes/<str:class_pk>/', classes_views.ClassEntityDetail.as_view()),
-
-    # CLASS-TEACHER ROUTES
-    path('classes/<str:class_pk>/teachers/add/',
-         classes_views.addClassTeacher, name="delete-class-teacher"),
-    path('classes/<str:class_pk>/teachers/remove/',
-         classes_views.removeClassTeacher, name="delete-class-teacher"),
-
-    path('classes/students/add/', classes_views.addClassStudent,
-         name='add-class-student'),
-    path('classes/<str:class_pk>/students/<str:student_pk>/delete/',
-         classes_views.deleteClassStudent, name="delete-class-student"),
-
+   
 
     #
     # REPORT ROUTES
