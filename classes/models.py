@@ -40,7 +40,7 @@ class ClassStudent(models.Model):
     class_id = models.ForeignKey(
         ClassEntity, db_column='class_id', on_delete=models.CASCADE)
     student_id = models.ForeignKey(
-        Student, db_column='student_id', on_delete=models.CASCADE)
+        Student, db_column='student_id', related_name='class_students', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
