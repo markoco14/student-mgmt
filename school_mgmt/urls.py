@@ -23,4 +23,5 @@ urlpatterns = [
     path('', include('curriculum.urls')),
 	path('', include('students.urls')),
 	path('', include('classes.urls')),
+	path('', include('assessment.urls')),
 ]
