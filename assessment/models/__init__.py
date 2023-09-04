@@ -1,1 +1,1 @@
-
+from .assessment_model import Assessment
