@@ -1,15 +1,13 @@
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from rest_framework.exceptions import NotFound
-from students.models.student_attendence import StudentAttendance
+from students.models.student_attendence_model import StudentAttendance
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from students.serializers.student_attendance import StudentAttendanceSerializer
-
-# Create your views here.
-
+from students.serializers.student_attendance_serializers import StudentAttendanceDetailSerializer, StudentAttendanceSerializer
 
 class StudentAttendanceList(APIView):
     """
@@ -25,6 +23,7 @@ class StudentAttendanceList(APIView):
         status = request.query_params.get('status', None)
         reason = request.query_params.get('reason', None)
         school_class = request.query_params.get('school_class', None)
+        details = request.query_params.get('details', None)
         
         # # page = request.query_params.get('page', None)
         # per_page = request.query_params.get('per_page', 15)
@@ -42,42 +41,13 @@ class StudentAttendanceList(APIView):
             student_attendances = student_attendances.filter(status=status)
         if reason:
             student_attendances = student_attendances.filter(reason__contains=reason)
-
         if school_class:
             student_attendances = student_attendances.filter(student_id__class_students__class_id=school_class)
-
-        # check if page number is letters and send response that can be alerted
-        # even though the front end should control for this.
         
+        if details:
+            serializer = StudentAttendanceDetailSerializer(student_attendances, many=True)
+            return Response(serializer.data)
 
-        # if page is not None:
-
-        #     try:
-        #         page = int(page)
-        #     except ValueError:
-        #         return Response({"detail": "Page number needs to be an integer greater than 0"})
-            
-
-        #     paginator = Paginator(student_attendances, per_page)
-
-        #     try:
-        #         student_attendances = paginator.page(page)
-        #     except PageNotAnInteger:
-        #         student_attendances = paginator.page(1)
-        #     except EmptyPage:
-        #         student_attendances = paginator.page(paginator.num_pages)
-
-        #     serializer = StudentAttendanceSerializer(student_attendances, many=True)
-
-        #     return Response({
-        #         'count': paginator.count,
-        #         'total_pages': paginator.num_pages,
-        #         'current_page': int(page),
-        #         'per_page': int(per_page),
-        #         'next': student_attendances.next_page_number() if student_attendances.has_next() else None,
-        #         'previous': student_attendances.previous_page_number() if student_attendances.has_previous() else None,
-        #         'results': serializer.data
-        #     })
 
         serializer = StudentAttendanceSerializer(student_attendances, many=True)
         return Response(serializer.data)
@@ -120,8 +90,9 @@ class StudentAttendanceDetail(APIView):
         serializer = StudentAttendanceSerializer(
             student_attendance, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+            updated_attendance = serializer.save()
+            updated_serializer = StudentAttendanceDetailSerializer(updated_attendance, many=False)
+            return Response(updated_serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Delete a specific entry by primary key

@@ -3,7 +3,7 @@ from django.utils import timezone
 from classes.models import ClassEntity, ClassStudent
 
 from schools.models import SchoolDay
-from students.models.student_attendence import StudentAttendance
+from students.models.student_attendence_model import StudentAttendance
 import datetime
 import random
 import pytz  # Import the pytz library
