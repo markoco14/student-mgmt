@@ -61,14 +61,9 @@ class ClassAssessment(models.Model):
     Attributes:
         - class_id: A foreign key to the ClassEntity to which the assessment is assigned.
         - assessment_id: A foreign key to the Assessment that is being assigned.
-        - date_of_announcement: The date on which the assessment will be announced to the students. 
-                        Note that this doesn't indicate the creation date of this record.
+
         - created_at: A timestamp indicating when this record was created in the database.
         - updated_at: A timestamp indicating the last time this record was updated.
-
-    The 'date_of_announcement' field allows teachers to schedule assessments in advance. Teachers can create 
-    an assignment in the system ahead of time but set the 'date_of_announcement' to a future date, which is when 
-    the students will be notified of the assessment.
 
     The 'created_at' and 'updated_at' fields automatically track when the record is created and updated,
     respectively.
@@ -80,8 +75,6 @@ class ClassAssessment(models.Model):
 
     class_id = models.ForeignKey(ClassEntity, db_column='class_id', related_name='assessments', on_delete=models.PROTECT)
     assessment_id = models.ForeignKey(Assessment, db_column='assessment_id', related_name='classes', on_delete=models.PROTECT)
-    date_of_announcement = models.DateField()
-    date_due = models.DateField(null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
