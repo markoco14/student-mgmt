@@ -36,7 +36,7 @@ class StudentAttendance(models.Model):
     date = models.DateField() # To know what day it is
     status = models.IntegerField(choices=ATTENDANCE_CHOICES, default=0) # On Time, Late, Absent
     reason = models.TextField(null=True, blank=True) # A reason should be given if the student is late/absent
-    author_id = models.ForeignKey(User, db_column='author_id', on_delete=models.DO_NOTHING)
+    author_id = models.ForeignKey(User, db_column='author_id', on_delete=models.DO_NOTHING, null=True)
     
     class Meta:
         db_table='students_student_attendance'
