@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'schedule',
     'curriculum',
     'assessment',
+    'evaluation',
 ]
 
 REST_FRAMEWORK = {
