@@ -1,4 +1,5 @@
 from django.db import models
+from assessment.models.assessment_model import Assessment
 from schedule.models import Weekday
 from curriculum.models import Level
 
@@ -50,5 +51,38 @@ class ClassStudent(models.Model):
     class Meta:
         db_table = 'classes_class_students'
         unique_together = ['class_id', 'student_id']
+
+class ClassAssessment(models.Model):
+    """
+    The ClassAssessment model is designed to manage the association between an Assessment and a ClassEntity. 
+    This allows a teacher to assign a specific assessment to a specific class and set a date for when 
+    this assignment will be made known to students.
+
+    Attributes:
+        - class_id: A foreign key to the ClassEntity to which the assessment is assigned.
+        - assessment_id: A foreign key to the Assessment that is being assigned.
+
+        - created_at: A timestamp indicating when this record was created in the database.
+        - updated_at: A timestamp indicating the last time this record was updated.
+
+    The 'created_at' and 'updated_at' fields automatically track when the record is created and updated,
+    respectively.
+
+    The model employs Django's PROTECT option for both class_id and assessment_id foreign keys to ensure
+    that neither the ClassEntity nor the Assessment can be deleted while they have existing links in 
+    the ClassAssessment table.
+    """
+
+    class_id = models.ForeignKey(ClassEntity, db_column='class_id', related_name='assessments', on_delete=models.PROTECT)
+    assessment_id = models.ForeignKey(Assessment, db_column='assessment_id', related_name='classes', on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.class_id.name} (id:{self.class_id.id}) given Assessment {self.assessment_id.id}: {self.assessment_id.name}"
+
+    class Meta:
+        db_table = 'classes_class_assessments'
+
 
         
