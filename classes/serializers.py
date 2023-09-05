@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from api.serializers.serializers import StudentSerializer
-from classes.models import ClassEntity, ClassStudent
+from assessment.serializers.assessment_serializer import AssessmentSerializer
+from classes.models import ClassAssessment, ClassEntity, ClassStudent
 
 
 class ClassEntitySerializer(serializers.ModelSerializer):
@@ -34,4 +35,17 @@ class ManageClass_ClassStudentListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ClassStudent
+        fields = '__all__'
+
+class ClassAssessmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassAssessment
+        fields = '__all__'
+
+class ClassAssessmentDetailSerializer(serializers.ModelSerializer):
+    class_entity = ClassEntitySerializer(source='class_id')
+    assessment = AssessmentSerializer(source='assessment_id')
+
+    class Meta:
+        model = ClassAssessment
         fields = '__all__'
