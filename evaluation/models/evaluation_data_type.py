@@ -15,6 +15,7 @@ class EvaluationDataType(models.Model):
     ]
 
     data_type = models.IntegerField(choices=TYPE_CHOICES, unique=True)
+    description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
