@@ -9,9 +9,8 @@ class Command(BaseCommand):
         if EvaluationDataType.objects.count() == 0:
             # Create the default data types
             types = [
-                (0, 'String'),
-                (1, 'Boolean'),
-                (2, 'Number'),
+                (0, 'Text'),
+                (1, 'Range'),
             ]
             
             for type_id, type_name in types:
