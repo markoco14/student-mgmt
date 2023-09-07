@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from evaluation.models.evaluation_attributes import EvaluationAttribute, RangeEvaluationAttribute, TextEvaluationAttribute
-from evaluation.serializers import EvaluationAttributeSerializer, RangeEvaluationAttributeSerializer, TextEvaluationAttributeSerializer
+from evaluation.serializers.evaluation_attribute_serializers import EvaluationAttributeSerializer, RangeEvaluationAttributeSerializer, TextEvaluationAttributeSerializer
 
 # Create your views here.
 
