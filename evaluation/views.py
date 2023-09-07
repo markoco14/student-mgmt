@@ -2,22 +2,23 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from evaluation.models.evaluation_attributes import RangeEvaluationAttribute, TextEvaluationAttribute
-from evaluation.serializers import RangeEvaluationAttributeSerializer, TextEvaluationAttributeSerializerSerializer
+from evaluation.models.evaluation_attributes import EvaluationAttribute, RangeEvaluationAttribute, TextEvaluationAttribute
+from evaluation.serializers import EvaluationAttributeSerializer, RangeEvaluationAttributeSerializer, TextEvaluationAttributeSerializer
 
 # Create your views here.
+
 
 @api_view(['GET'])
 def get_daily_report_eval_attributes(request, school_pk=None):
     try:
-        range_attributes = RangeEvaluationAttribute.objects.filter(school_id=school_pk)
-        range_serializer = RangeEvaluationAttributeSerializer(range_attributes, many=True)
+        queryset = EvaluationAttribute.objects.select_related(
+            'rangeevaluationattribute', 'textevaluationattribute').all().order_by('-data_type_id')
 
-        text_attributes = TextEvaluationAttribute.objects.filter(school_id=school_pk)
-        text_serializer = TextEvaluationAttributeSerializerSerializer(text_attributes, many=True)
+        if school_pk:
+            queryset = queryset.filter(school_id=school_pk)
 
-        data = list(range_serializer.data) + list(text_serializer.data)
+        serializer = EvaluationAttributeSerializer(queryset, many=True)
 
-        return Response(data)
+        return Response(serializer.data)
     except RangeEvaluationAttribute.DoesNotExist:
         return Response({"details": "No objects with that School ID found."})
