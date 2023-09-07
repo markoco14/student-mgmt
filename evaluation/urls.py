@@ -1,6 +1,6 @@
 from django.urls import include, path
 
-from evaluation.views import get_daily_report_eval_attributes
+from evaluation.views.evaluation_attribute_views import get_daily_report_eval_attributes
 
 
 urlpatterns = [
