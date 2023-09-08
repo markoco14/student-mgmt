@@ -18,7 +18,7 @@ class StudentEvaluationList(APIView):
 
         # Fetch query parameters
         evaluation_attribute_id = request.query_params.get('evaluation_attribute_id', None)
-        # date = request.query_params.get('date', None)
+        date = request.query_params.get('date', None)
         # author = request.query_params.get('author', None)
         # status = request.query_params.get('status', None)
         # reason = request.query_params.get('reason', None)
@@ -36,8 +36,8 @@ class StudentEvaluationList(APIView):
         # Further filter by query params
         if evaluation_attribute_id:
             student_evaluations = student_evaluations.filter(evaluation_attribute_id=evaluation_attribute_id)
-        # if date:
-        #     student_evaluations = student_evaluations.filter(date=date)
+        if date:
+            student_evaluations = student_evaluations.filter(date=date)
         # if author:
         #     student_evaluations = student_evaluations.filter(author_id=author)
         # if status:
