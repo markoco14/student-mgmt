@@ -10,7 +10,8 @@ urlpatterns = [
 
     # STUDENT EVALUATION ROUTES
     path('daily-evaluations/', student_evaluation_views.StudentEvaluationList.as_view(), name='daily-evaluation-list'),
-    path('students/<str:student_pk>/daily-evaluations/', student_evaluation_views.StudentEvaluationList.as_view(), name='daily-evaluation-list')
+    path('students/<str:student_pk>/daily-evaluations/', student_evaluation_views.StudentEvaluationList.as_view(), name='daily-evaluation-list'),
+    path('schools/<str:school_pk>/daily-evaluations/', student_evaluation_views.StudentEvaluationList.as_view(), name='daily-evaluation-list'),
 ]
 
 

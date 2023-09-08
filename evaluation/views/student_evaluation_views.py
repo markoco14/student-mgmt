@@ -13,10 +13,11 @@ class StudentEvaluationList(APIView):
     List all Units, or create a new one.
     """
 
-    def get(self, request, student_pk=None, format=None):
-        student_evaluations = StudentEvaluation.objects.all()
+    def get(self, request, school_pk=None, student_pk=None, format=None):
+        student_evaluations = StudentEvaluation.objects.all().order_by('-date')
 
         # Fetch query parameters
+        evaluation_attribute_id = request.query_params.get('evaluation_attribute_id', None)
         # date = request.query_params.get('date', None)
         # author = request.query_params.get('author', None)
         # status = request.query_params.get('status', None)
@@ -26,12 +27,15 @@ class StudentEvaluationList(APIView):
         
         # # page = request.query_params.get('page', None)
         # per_page = request.query_params.get('per_page', 15)
-
+        if school_pk:
+            student_evaluations = student_evaluations.filter(student_id__school_id__id=school_pk)
         # Filter by school (hierachical url)
         if student_pk:
             student_evaluations = student_evaluations.filter(student_id=student_pk)
 
         # Further filter by query params
+        if evaluation_attribute_id:
+            student_evaluations = student_evaluations.filter(evaluation_attribute_id=evaluation_attribute_id)
         # if date:
         #     student_evaluations = student_evaluations.filter(date=date)
         # if author:
