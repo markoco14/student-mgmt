@@ -16,36 +16,39 @@ class StudentEvaluationList(APIView):
     def get(self, request, school_pk=None, student_pk=None, format=None):
         student_evaluations = StudentEvaluation.objects.all().order_by('-date')
 
-        # Fetch query parameters
-        evaluation_attribute_id = request.query_params.get('evaluation_attribute_id', None)
-        date = request.query_params.get('date', None)
-        # author = request.query_params.get('author', None)
-        # status = request.query_params.get('status', None)
-        # reason = request.query_params.get('reason', None)
-        # school_class = request.query_params.get('school_class', None)
-        # details = request.query_params.get('details', None)
-        
-        # # page = request.query_params.get('page', None)
-        # per_page = request.query_params.get('per_page', 15)
+        # hierarchal parameters
         if school_pk:
             student_evaluations = student_evaluations.filter(student_id__school_id__id=school_pk)
         # Filter by school (hierachical url)
         if student_pk:
             student_evaluations = student_evaluations.filter(student_id=student_pk)
+        
+        
+        # Fetch query parameters
+        evaluation_attribute_id = request.query_params.get('evaluation_attribute_id', None)
+        date = request.query_params.get('date', None)
+        class_id = request.query_params.get('class_id', None)
+        # author = request.query_params.get('author', None)
+        # status = request.query_params.get('status', None)
+        # reason = request.query_params.get('reason', None)
+        # details = request.query_params.get('details', None)
+        
+        # # page = request.query_params.get('page', None)
+        # per_page = request.query_params.get('per_page', 15)
 
         # Further filter by query params
         if evaluation_attribute_id:
             student_evaluations = student_evaluations.filter(evaluation_attribute_id=evaluation_attribute_id)
         if date:
             student_evaluations = student_evaluations.filter(date=date)
+        if class_id:
+            student_evaluations = student_evaluations.filter(student_id__class_students__class_id=class_id)
         # if author:
         #     student_evaluations = student_evaluations.filter(author_id=author)
         # if status:
         #     student_evaluations = student_evaluations.filter(status=status)
         # if reason:
         #     student_evaluations = student_evaluations.filter(reason__contains=reason)
-        # if school_class:
-        #     student_evaluations = student_evaluations.filter(student_id__class_students__class_id=school_class)
         
         # if details:
         #     serializer = StudentEvaluationDetailSerializer(student_evaluations, many=True)
