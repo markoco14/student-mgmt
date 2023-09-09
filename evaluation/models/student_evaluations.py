@@ -45,5 +45,5 @@ class StudentEvaluation(models.Model):
         return f"{self.get_evaluation_type_display()} Evaluation {self.student_id.first_name} {self.date}"
 
     class Meta:
-        unique_together = ['student_id', 'date', 'class_id']
+        unique_together = ['student_id', 'date', 'class_id', 'evaluation_attribute_id']
         db_table = 'evaluation_student_evaluations'
