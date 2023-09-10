@@ -32,7 +32,7 @@ class StudentAttendance(models.Model):
         (2, 'Absent')
     ]
 
-    student_id = models.ForeignKey(Student, db_column='student_id', on_delete=models.CASCADE)
+    student_id = models.ForeignKey(Student, db_column='student_id', related_name="attendance", on_delete=models.CASCADE)
     date = models.DateField() # To know what day it is
     status = models.IntegerField(choices=ATTENDANCE_CHOICES, default=0) # On Time, Late, Absent
     reason = models.TextField(null=True, blank=True) # A reason should be given if the student is late/absent

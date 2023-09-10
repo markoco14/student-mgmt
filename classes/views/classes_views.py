@@ -22,7 +22,7 @@ class ClassEntityList(APIView):
             class_entity = class_entity.filter(school=school_pk)
 
         if day:
-            class_entity = class_entity.filter(days__day__day=day)
+            class_entity = class_entity.filter(days__day__day__icontains=day)
 
         
         serializer = ClassEntitySerializer(class_entity, many=True)
