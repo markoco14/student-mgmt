@@ -12,9 +12,6 @@ from students.serializers.student_attendance_serializers import StudentAttendanc
 
 @api_view(['POST'])
 def create_records_for_class_list(request):
-    # print('class list',request.data['classList'])
-    print('date', request.data['date'])
-    print('user', request.data['user_id'])
 
     print('class list [0] class id', request.data['class_list'][0]['class_id'])
     class_id = request.data['class_list'][0]['class_id']
@@ -25,6 +22,7 @@ def create_records_for_class_list(request):
     for student in request.data['class_list']:
         attendance_record = {
             "student_id_id": student['student_id'],
+            "class_id_id": request.data['class_id'],
             "date": request.data['date'],
             "status": 0,
             "reason": None,
@@ -36,7 +34,7 @@ def create_records_for_class_list(request):
 
     if created_records:
         # BECAUSE BATCH CREATE RETURNING NULL IDS = FRONTEND RENDERING PROBLEM
-        fetched_records = StudentAttendance.objects.filter(date=request.data['date']).filter(student_id__class_students__class_id=class_id)
+        fetched_records = StudentAttendance.objects.filter(date=request.data['date']).filter(class_id=class_id)
 
         serializer = StudentAttendanceDetailSerializer(fetched_records, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -75,7 +73,7 @@ class StudentAttendanceList(APIView):
         if reason:
             student_attendances = student_attendances.filter(reason__contains=reason)
         if school_class:
-            student_attendances = student_attendances.filter(student_id__class_students__class_id=school_class)
+            student_attendances = student_attendances.filter(class_id=school_class)
         
         if details:
             serializer = StudentAttendanceDetailSerializer(student_attendances, many=True)

@@ -1,4 +1,5 @@
 from django.db import models
+from classes.models import ClassEntity
 
 from schools.models import School
 from students.models.student import Student
@@ -33,6 +34,7 @@ class StudentAttendance(models.Model):
     ]
 
     student_id = models.ForeignKey(Student, db_column='student_id', related_name="attendance", on_delete=models.CASCADE)
+    class_id = models.ForeignKey(ClassEntity, on_delete=models.PROTECT, db_column='class_id', related_name='student_attendance')
     date = models.DateField() # To know what day it is
     status = models.IntegerField(choices=ATTENDANCE_CHOICES, default=0) # On Time, Late, Absent
     reason = models.TextField(null=True, blank=True) # A reason should be given if the student is late/absent
@@ -40,4 +42,4 @@ class StudentAttendance(models.Model):
     
     class Meta:
         db_table='students_student_attendance'
-        unique_together=['student_id', 'date']
+        unique_together=['student_id', 'date', 'class_id']
