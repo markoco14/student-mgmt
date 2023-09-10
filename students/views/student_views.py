@@ -15,13 +15,20 @@ class StudentList(APIView):
     """
 
     def get(self, request, school_pk=None, format=None):
-        students = Student.objects.all()
+        students = Student.objects.all().order_by('last_name')
 
         # Fetch query parameters
         first_name = request.query_params.get('first_name', None)
         last_name = request.query_params.get('last_name', None)
         age = request.query_params.get('age', None)
         gender = request.query_params.get('gender', None)
+
+        class_entity = request.query_params.get('class_entity', None)
+
+        # FOR PAGES BASED ON ATTENDANCE
+        attendance = request.query_params.get('attendance', None)
+        date = request.query_params.get('date', None)
+
         page = request.query_params.get('page', None)
         per_page = request.query_params.get('per_page', 15)
 
@@ -38,6 +45,12 @@ class StudentList(APIView):
             students = students.filter(age=age)
         if gender:
             students = students.filter(gender=gender)
+
+        if class_entity:
+            students = students.filter(class_students__class_id=class_entity)
+        
+        if attendance and date:
+            students = students.filter(attendance__status__in=[0,1]).filter(attendance__date=date)
 
         # check if page number is letters and send response that can be alerted
         # even though the front end should control for this.
