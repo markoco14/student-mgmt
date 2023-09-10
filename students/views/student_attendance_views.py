@@ -9,6 +9,39 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from students.serializers.student_attendance_serializers import StudentAttendanceDetailSerializer, StudentAttendanceSerializer
 
+
+@api_view(['POST'])
+def create_records_for_class_list(request):
+    # print('class list',request.data['classList'])
+    print('date', request.data['date'])
+    print('user', request.data['user_id'])
+
+    print('class list [0] class id', request.data['class_list'][0]['class_id'])
+    class_id = request.data['class_list'][0]['class_id']
+
+    # CREATE HOLDER FOR ATTENDANCE RECORDS
+    attendance_records = []
+
+    for student in request.data['class_list']:
+        attendance_record = {
+            "student_id_id": student['student_id'],
+            "date": request.data['date'],
+            "status": 0,
+            "reason": None,
+            "author_id_id": request.data['user_id'],
+        }
+        attendance_records.append(attendance_record)
+
+    created_records = StudentAttendance.objects.bulk_create([StudentAttendance(**record) for record in attendance_records])
+
+    if created_records:
+        # BECAUSE BATCH CREATE RETURNING NULL IDS = FRONTEND RENDERING PROBLEM
+        fetched_records = StudentAttendance.objects.filter(date=request.data['date']).filter(student_id__class_students__class_id=class_id)
+
+        serializer = StudentAttendanceDetailSerializer(fetched_records, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response({'detail': 'Attendance records created'}, status=status.HTTP_201_CREATED)
+
 class StudentAttendanceList(APIView):
     """
     List all Units, or create a new one.

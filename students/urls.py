@@ -19,6 +19,9 @@ urlpatterns = [
          student_attendance_views.StudentAttendanceList.as_view(), name='school-student-attendance-list'),
     path('student-attendances/<str:student_attendance_pk>/',
          student_attendance_views.StudentAttendanceDetail.as_view(), name='student-attendance-list'),
+				 
+    # BATCH MAKE STUDENT ATTENDANCE
+    path('batch-student-attendances/', student_attendance_views.create_records_for_class_list, name='batch-student-attendance-list'),
 
 		# STUDENT ASSESSMENT ROUTES
     path('student-assessments/', student_assessment_views.StudentAssessmentList.as_view(),
