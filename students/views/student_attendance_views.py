@@ -9,7 +9,22 @@ from students.models.student import Student
 from students.models.student_attendence_model import StudentAttendance
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from students.serializers.student_attendance_serializers import StudentAttendanceDetailSerializer, StudentAttendanceSerializer
+from students.serializers.student_attendance_serializers import StudentAttendanceDetailSerializer, StudentAttendanceSerializer, StudentWithAttendanceSerializer
+
+
+@api_view(['GET'])
+def get_students_with_attendance(request, school_pk=None):
+    students = Student.objects.all()
+
+    class_entity = request.query_params.get('class_entity', None)
+    date = request.query_params.get('date', None)
+
+    if class_entity:
+        students = students.filter(class_students__class_id=class_entity)
+
+    serializer = StudentWithAttendanceSerializer(students, many=True, context={'class_entity': class_entity, 'date': date})
+
+    return Response(serializer.data)
 
 
 @api_view(['GET'])
@@ -23,10 +38,11 @@ def get_students_here_today(request, school_pk=None):
     date = request.query_params.get('date', None)
     if date:
         students = students.filter(attendance__date=date)
-    
+
     attendance = request.query_params.get('attendance', None)
     if attendance:
-        students = students.filter(attendance__class_id=class_entity, attendance__status__in=[0,1])
+        students = students.filter(
+            attendance__class_id=class_entity, attendance__status__in=[0, 1])
     # REMOVE DUPLICATES CAUSED BY ORM JOINS
     students = students.distinct()
 
