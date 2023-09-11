@@ -53,8 +53,9 @@ def get_students_here_today(request, school_pk=None):
 
 @api_view(['POST'])
 def create_attendance_records_for_class_list(request):
-
     class_id = request.data['class_id']
+    date = request.data['date']
+    author_id = request.data['user_id']
 
     # CREATE HOLDER FOR ATTENDANCE RECORDS
     attendance_records = []
@@ -63,10 +64,10 @@ def create_attendance_records_for_class_list(request):
         attendance_record = {
             "student_id_id": student['student_id'],
             "class_id_id": class_id,
-            "date": request.data['date'],
+            "date": date,
             "status": 0,
             "reason": None,
-            "author_id_id": request.data['user_id'],
+            "author_id_id": author_id,
         }
         attendance_records.append(attendance_record)
 
@@ -75,11 +76,10 @@ def create_attendance_records_for_class_list(request):
 
     if created_records:
         # BECAUSE BATCH CREATE RETURNING NULL IDS = FRONTEND RENDERING PROBLEM
-        fetched_records = StudentAttendance.objects.filter(
-            date=request.data['date']).filter(class_id=class_id)
-
-        serializer = StudentAttendanceDetailSerializer(
-            fetched_records, many=True)
+        # SO RE-FETCH STUDENTS WITH NEW ATTENDANCE RECORDS
+        fetched_records = Student.objects.filter(class_students__class_id=class_id)
+        serializer = StudentWithAttendanceSerializer(
+            fetched_records, many=True, context={'class_entity': class_id, 'date': date})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response({'detail': 'Attendance records created'}, status=status.HTTP_201_CREATED)
 
