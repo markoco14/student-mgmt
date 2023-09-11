@@ -14,7 +14,7 @@ from students.serializers.student_attendance_serializers import StudentAttendanc
 
 @api_view(['GET'])
 def get_students_with_attendance(request, school_pk=None):
-    students = Student.objects.all()
+    students = Student.objects.all().order_by('last_name')
 
     class_entity = request.query_params.get('class_entity', None)
     date = request.query_params.get('date', None)
@@ -29,7 +29,7 @@ def get_students_with_attendance(request, school_pk=None):
 
 @api_view(['GET'])
 def get_students_here_today(request, school_pk=None):
-    students = Student.objects.all()
+    students = Student.objects.all().order_by('last_name')
 
     class_entity = request.query_params.get('class_entity', None)
     if class_entity:
@@ -80,7 +80,7 @@ def create_attendance_records_for_class_list(request):
     if created_records:
         # BECAUSE BATCH CREATE RETURNING NULL IDS = FRONTEND RENDERING PROBLEM
         # SO RE-FETCH STUDENTS WITH NEW ATTENDANCE RECORDS
-        fetched_records = Student.objects.filter(class_students__class_id=class_id)
+        fetched_records = Student.objects.filter(class_students__class_id=class_id).order_by('last_name')
         serializer = StudentWithAttendanceSerializer(
             fetched_records, many=True, context={'class_entity': class_id, 'date': date})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
