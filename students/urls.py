@@ -19,11 +19,15 @@ urlpatterns = [
          student_attendance_views.StudentAttendanceList.as_view(), name='school-student-attendance-list'),
     path('student-attendances/<str:student_attendance_pk>/',
          student_attendance_views.StudentAttendanceDetail.as_view(), name='student-attendance-list'),
-				 
-    # BATCH MAKE STUDENT ATTENDANCE
-    path('batch-student-attendances/', student_attendance_views.create_records_for_class_list, name='batch-student-attendance-list'),
+		 
+    # ATTENDANCE FOR EVALUATIONS PAGE
+    path('students-here-today/', student_attendance_views.get_students_here_today, name='student-today-list'),
 
-		# STUDENT ASSESSMENT ROUTES
+    # BATCH MAKE STUDENT ATTENDANCE
+    path('batch-student-attendances/', student_attendance_views.create_attendance_records_for_class_list,
+         name='batch-student-attendance-list'),
+
+    # STUDENT ASSESSMENT ROUTES
     path('student-assessments/', student_assessment_views.StudentAssessmentList.as_view(),
          name='student-assessment-list'),
     path('students/<str:student_pk>/student-assessments/',
