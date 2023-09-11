@@ -38,8 +38,7 @@ def get_students_here_today(request, school_pk=None):
 @api_view(['POST'])
 def create_attendance_records_for_class_list(request):
 
-    print('class list [0] class id', request.data['class_list'][0]['class_id'])
-    class_id = request.data['class_list'][0]['class_id']
+    class_id = request.data['class_id']
 
     # CREATE HOLDER FOR ATTENDANCE RECORDS
     attendance_records = []
@@ -47,7 +46,7 @@ def create_attendance_records_for_class_list(request):
     for student in request.data['class_list']:
         attendance_record = {
             "student_id_id": student['student_id'],
-            "class_id_id": request.data['class_id'],
+            "class_id_id": class_id,
             "date": request.data['date'],
             "status": 0,
             "reason": None,
