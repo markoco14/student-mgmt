@@ -53,6 +53,7 @@ def get_students_here_today(request, school_pk=None):
 
 @api_view(['POST'])
 def create_attendance_records_for_class_list(request):
+    students = request.data['students']
     class_id = request.data['class_id']
     date = request.data['date']
     author_id = request.data['user_id']
@@ -60,16 +61,18 @@ def create_attendance_records_for_class_list(request):
     # CREATE HOLDER FOR ATTENDANCE RECORDS
     attendance_records = []
 
-    for student in request.data['class_list']:
-        attendance_record = {
-            "student_id_id": student['student_id'],
-            "class_id_id": class_id,
-            "date": date,
-            "status": 0,
-            "reason": None,
-            "author_id_id": author_id,
-        }
-        attendance_records.append(attendance_record)
+    # BECAUSE BULK_CREATE ERRORS EXCLUDE STUDENT IF ATTENDANCE RECORD EXISTS
+    for student in students:
+        if not student['attendance_for_day']:
+            attendance_record = {
+                "student_id_id": student['id'],
+                "class_id_id": class_id,
+                "date": date,
+                "status": 0,
+                "reason": None,
+                "author_id_id": author_id,
+            }
+            attendance_records.append(attendance_record)
 
     created_records = StudentAttendance.objects.bulk_create(
         [StudentAttendance(**record) for record in attendance_records])
