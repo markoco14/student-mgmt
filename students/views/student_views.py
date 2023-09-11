@@ -3,10 +3,28 @@ from rest_framework import status
 from rest_framework.views import APIView
 from api.serializers.serializers import StudentSerializer
 from rest_framework.exceptions import NotFound
+from rest_framework.decorators import api_view
 from students.models.student import Student
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from students.serializers.student_evaluation_serializers import StudentWithEvaluationSerializer
+
 # Create your views here.
+
+
+@api_view(['GET'])
+def get_students_with_evaluations(request, school_pk=None):
+    students = Student.objects.all().order_by('last_name')
+
+    class_entity = request.query_params.get('class_entity', None)
+    date = request.query_params.get('date', None)
+
+    if class_entity:
+        students = students.filter(class_students__class_id=class_entity)
+
+    serializer = StudentWithEvaluationSerializer(students, many=True, context={'class_entity': class_entity, 'date': date})
+
+    return Response(serializer.data)
 
 
 class StudentList(APIView):
