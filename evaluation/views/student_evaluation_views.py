@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 
 from rest_framework.exceptions import NotFound
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from evaluation.models.student_evaluations import StudentEvaluation
+from evaluation.models.student_evaluation_model import StudentEvaluation
 from evaluation.serializers.student_evaluation_serializers import StudentEvaluationSerializer, StudentEvaluationWriteSerializer
 
 class StudentEvaluationList(APIView):
