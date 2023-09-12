@@ -4,12 +4,102 @@ from rest_framework.views import APIView
 from api.serializers.serializers import StudentSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.decorators import api_view
+from classes.models import ClassEntity
+from evaluation.models.evaluation_attributes import EvaluationAttribute, RangeEvaluationAttribute
+from evaluation.models.student_evaluation_model import StudentEvaluation
 from students.models.student import Student
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from students.serializers.student_evaluation_serializers import StudentWithEvaluationSerializer
 
 # Create your views here.
+
+
+@api_view(['POST'])
+def create_evaluation_records_for_class_list(request):
+    students = request.data['students']
+    class_id = request.data['class_id']
+    author_id = request.data['user_id']
+    date = request.data['date']
+    school_id = request.data['school_id']
+
+    subject_id = request.data['subject_id']
+
+    level = ClassEntity.objects.get(id=class_id).level
+
+    evaluation_attributes = EvaluationAttribute.objects.filter(
+        school_id=school_id).prefetch_related('rangeevaluationattribute', 'textevaluationattribute')
+    for attribute in evaluation_attributes:
+        range_attr = getattr(attribute, 'rangeevaluationattribute', None)
+        text_attr = getattr(attribute, 'textevaluationattribute', None)
+        if range_attr:
+            # This attribute is a range type
+            max_value = range_attr.max_value
+            attribute.max_value = max_value
+            print(
+                f"printing attribute: {attribute.name} ({attribute.id}) with max value: {max_value}")
+        elif text_attr:
+            # This attribute is not a range type
+            print(
+                f"printing attribute: {attribute.name} ({attribute.id}) without max value ")
+        else:
+            print(
+                f"Unknown attribute type for: {attribute.name} ({attribute.id})")
+            # print(f"printing attribute: {attribute.name} ({attribute.id})")
+
+    # CREATE HOLDER FOR EVALUATION RECORDS
+    evaluation_records = []
+
+    # BECAUSE BULK_CREATE ERRORS EXCLUDE STUDENT IF EVALUATION RECORD EXISTS
+    # return Response([])
+    for student in students:
+        if not student['evaluations_for_day']:
+            for attribute in evaluation_attributes:
+                range_attr = getattr(
+                    attribute, 'rangeevaluationattribute', None)
+                text_attr = getattr(attribute, 'textevaluationattribute', None)
+                if range_attr:
+                    # if attribute.id in [1, 2]:
+                    print('string of max value', str(range_attr.max_value))
+                    # return Response([])
+                    evaluation_record = {
+                        "evaluation_type": 0,
+                        "student_id_id": student['id'],
+                        "author_id_id": author_id,
+                        "date": date,
+                        "evaluation_attribute_id_id": attribute.id,
+                        "evaluation_value": str(range_attr.max_value),
+                        "class_id_id": class_id,
+                        "subject_id_id": subject_id,
+                        "level_id_id": level.id,
+                    }
+                else:
+                    evaluation_record = {
+                        "evaluation_type": 0,
+                        "student_id_id": student['id'],
+                        "author_id_id": author_id,
+                        "date": date,
+                        "evaluation_attribute_id_id": attribute.id,
+                        "evaluation_value": "",
+                        "class_id_id": class_id,
+                        "subject_id_id": subject_id,
+                        "level_id_id": level.id,
+                    }
+
+                evaluation_records.append(evaluation_record)
+
+    created_records = StudentEvaluation.objects.bulk_create(
+        [StudentEvaluation(**record) for record in evaluation_records])
+
+    if created_records:
+        # BECAUSE BATCH CREATE RETURNING NULL IDS = FRONTEND RENDERING PROBLEM
+        # SO RE-FETCH STUDENTS WITH NEW EVALUATION RECORDS
+        fetched_records = Student.objects.filter(class_students__class_id=class_id,
+                                                 attendance__class_id=class_id, attendance__status__in=[0, 1]).order_by('last_name')
+        serializer = StudentWithEvaluationSerializer(
+            fetched_records, many=True, context={'class_entity': class_id, 'date': date})
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response({'detail': 'Attendance records created'}, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])
@@ -20,9 +110,11 @@ def get_students_with_evaluations(request, school_pk=None):
     date = request.query_params.get('date', None)
 
     if class_entity:
-        students = students.filter(class_students__class_id=class_entity, attendance__class_id=class_entity, attendance__status__in=[0,1])
+        students = students.filter(class_students__class_id=class_entity,
+                                   attendance__class_id=class_entity, attendance__status__in=[0, 1])
 
-    serializer = StudentWithEvaluationSerializer(students, many=True, context={'class_entity': class_entity, 'date': date})
+    serializer = StudentWithEvaluationSerializer(
+        students, many=True, context={'class_entity': class_entity, 'date': date})
 
     return Response(serializer.data)
 
@@ -66,13 +158,13 @@ class StudentList(APIView):
 
         if class_entity:
             students = students.filter(class_students__class_id=class_entity)
-        
+
         if attendance and date:
-            students = students.filter(attendance__status__in=[0,1]).filter(attendance__date=date)
+            students = students.filter(attendance__status__in=[
+                                       0, 1]).filter(attendance__date=date)
 
         # check if page number is letters and send response that can be alerted
         # even though the front end should control for this.
-        
 
         if page is not None:
 
@@ -80,7 +172,6 @@ class StudentList(APIView):
                 page = int(page)
             except ValueError:
                 return Response({"detail": "Page number needs to be an integer greater than 0"})
-            
 
             paginator = Paginator(students, per_page)
 
