@@ -14,6 +14,11 @@ urlpatterns = [
 
 	# STUDENTS WITH ATTENDANCE RECORDS
 	path('students-with-attendance/', student_attendance_views.get_students_with_attendance, name='student-with-attendance-list'),
+	
+	# STUDENTS WITH EVALUATION RECORDS
+	path('students-with-evaluations/', student_views.get_students_with_evaluations, name='student-with-evaluations-list'),
+
+	path('create-student-evaluations/', student_views.create_evaluation_records_for_class_list, name='batch-create-evaluations'),
 
     # STUDENT ATTENDANCE ROUTES
     path('student-attendances/', student_attendance_views.StudentAttendanceList.as_view(),

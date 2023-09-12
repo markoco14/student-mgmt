@@ -2,7 +2,7 @@ import datetime
 import random
 from django.core.management.base import BaseCommand
 from classes.models import ClassEntity, ClassStudent
-from evaluation.models.student_evaluations import StudentEvaluation
+from evaluation.models.student_evaluation_model import StudentEvaluation
 from curriculum.models import Level, Subject
 from students.models.student import Student
 from faker import Faker

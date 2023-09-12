@@ -1,7 +1,7 @@
 from django.contrib import admin
 from evaluation.models.evaluation_data_type import EvaluationDataType
 from evaluation.models.evaluation_attributes import TextEvaluationAttribute, RangeEvaluationAttribute, EvaluationAttribute
-from evaluation.models.student_evaluations import StudentEvaluation
+from evaluation.models.student_evaluation_model import StudentEvaluation
 
 # Register your models here.
 admin.site.register(EvaluationDataType)

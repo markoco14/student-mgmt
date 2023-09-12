@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 
 from rest_framework.exceptions import NotFound
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from evaluation.models.student_evaluations import StudentEvaluation
-from evaluation.serializers.student_evaluation_serializers import StudentEvaluationSerializer
+from evaluation.models.student_evaluation_model import StudentEvaluation
+from evaluation.serializers.student_evaluation_serializers import StudentEvaluationSerializer, StudentEvaluationWriteSerializer
 
 class StudentEvaluationList(APIView):
     """
@@ -93,7 +93,7 @@ class StudentEvaluationDetail(APIView):
     # Partially update a specific entry by primary key
     def patch(self, request, student_evaluation_pk):
         student_evaluation = self.get_object(student_evaluation_pk)
-        serializer = StudentEvaluationSerializer(
+        serializer = StudentEvaluationWriteSerializer(
             student_evaluation, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
