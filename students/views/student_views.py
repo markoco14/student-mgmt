@@ -20,7 +20,7 @@ def get_students_with_evaluations(request, school_pk=None):
     date = request.query_params.get('date', None)
 
     if class_entity:
-        students = students.filter(class_students__class_id=class_entity)
+        students = students.filter(class_students__class_id=class_entity, attendance__class_id=class_entity, attendance__status__in=[0,1])
 
     serializer = StudentWithEvaluationSerializer(students, many=True, context={'class_entity': class_entity, 'date': date})
 
