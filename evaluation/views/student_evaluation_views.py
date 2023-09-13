@@ -8,6 +8,14 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from evaluation.models.student_evaluation_model import StudentEvaluation
 from evaluation.serializers.student_evaluation_serializers import StudentEvaluationSerializer, StudentEvaluationWriteSerializer
 
+
+@api_view(['POST'])
+def batch_delete_evaluations_for_day(request, student_pk):
+    date = request.data['date']
+    print(date)
+    evaluations_for_day = StudentEvaluation.objects.filter(student_id=student_pk, date=date).delete()
+    
+    return Response(status=status.HTTP_204_NO_CONTENT)
 class StudentEvaluationList(APIView):
     """
     List all Units, or create a new one.

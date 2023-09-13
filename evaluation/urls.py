@@ -20,6 +20,8 @@ urlpatterns = [
     path('daily-evaluations/<str:student_evaluation_pk>/',
          student_evaluation_views.StudentEvaluationDetail.as_view(), name="daily-evaluation-detail"),
 
+	path('batch-delete-daily-evaluations/<str:student_pk>/', student_evaluation_views.batch_delete_evaluations_for_day, name="batch-delete-evaluations"),
+
 
 ]
 
