@@ -1,6 +1,6 @@
 from api.serializers.serializers import SchoolUserSerializer, TeacherSerializer, UserSerializer
 from api.serializers.user_serializers import ChangePasswordSerializer, UserProfileSerializer
-from schools.models import SchoolUser
+from schools.models import Role
 from users.models import Teacher, User
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -82,14 +82,9 @@ def listTeachers(request):
 
 @api_view(['GET'])
 def listSchoolTeachers(request, school_pk):
-    school_users = SchoolUser.objects.filter(school=school_pk)
-
-    user_ids = []
-    for school_user in school_users:
-        user_ids.append(school_user.user.id)
-
-    teachers = User.objects.filter(role='TEACHER', id__in=user_ids)
-    serializer = UserSerializer(teachers, many=True)
+    teacher_role = Role.objects.get(name='Teacher')
+    teacher_users = User.objects.filter(access_permissions__school_id=school_pk, access_permissions__role_id=teacher_role)
+    serializer = UserSerializer(teacher_users, many=True)
 
     return Response(serializer.data)
 
