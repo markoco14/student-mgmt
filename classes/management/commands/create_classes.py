@@ -21,25 +21,31 @@ class Command(BaseCommand):
         levels = Level.objects.filter(school=school)
         days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
         week_days = Weekday.objects.filter(day__in=days)  # Monday to Friday
-        print('available week days',week_days)
-        # return
+        available_days = SchoolDay.objects.filter(school=school)
+        print('available week days',available_days)
 
-        if not levels.exists() or not week_days.exists():
-            print("Not enough Levels or Weekdays to create classes.")
+        # return
+        if not levels.exists() or not available_days.exists():
+            print("Not enough Levels or Available to create classes.")
             return
-        
+        # return 
         # Create 10 ClassEntity instances
         for i in range(10):
             level = random.choice(levels)
-            week_day = random.choice(week_days)
+            # week_day = random.choice(week_days)
+            available_day = random.choice(available_days)
+            # print(week_day)
+            print('chosen day', available_day)
+            # return
             print('level', level.order)
-            print('weekday', week_day.day)
+            print('weekday', available_day.day)
             # continue
             
-            class_name = f"Level {level.order} {week_day.day}"
-            print ('class name', class_name)
             # continue
-            teacher = User.objects.filter(role='TEACHER').first()  # Assuming a User exists
+            teachers = User.objects.filter(role='TEACHER')
+            teacher = random.choice(teachers)  # Assuming a User exists
+            class_name = f"Level {level.order} - {available_day.day} - Teacher: {teacher.first_name} {teacher.last_name[0]}"
+            print ('class name', class_name)
 
             class_entity = ClassEntity.objects.create(
                 name=class_name,
@@ -49,12 +55,12 @@ class Command(BaseCommand):
             )
 
             # Now create associated ClassDay instances
-            school_day = SchoolDay.objects.filter(school=school, day=week_day).get()
+            # school_day = SchoolDay.objects.filter(school=school, day=week_day).get()
             
            
             ClassDay.objects.create(
                 class_id=class_entity,
-                school_day_id=school_day,
+                school_day_id=available_day,
             )
 
             print(f"Created class {class_name}")
