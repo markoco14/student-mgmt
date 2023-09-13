@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from schools.models import SchoolDay
+from schools.models import SchoolAccessPermission, SchoolDay
 
+
+class SchoolAccessPermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SchoolAccessPermission
+        fields = ['role_id', 'user_id', 'school_id']
 
 class SchoolDaySerializer(serializers.ModelSerializer):
     class Meta:

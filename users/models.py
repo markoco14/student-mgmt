@@ -57,4 +57,18 @@ class Teacher(User):
 
     class Meta:
         proxy = True
+        
+
+class AdminManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        return super().get_queryset(*args, **kwargs).filter(role=User.Roles.ADMIN)
+
+class Admin(User):
+    base_role = User.Roles.ADMIN
+    objects = AdminManager()
+
+    class Meta:
+        proxy = True
+
+
 

@@ -70,6 +70,10 @@ urlpatterns = [
     path('schools/<str:school_pk>/teachers/',
          user_views.listSchoolTeachers, name="list-school-teachers"),
 
+	# SCHOOL-ADMIN ROUTES
+	path('schools/<str:school_pk>/admins/', user_views.listSchoolAdmins, name='list-school-admins'),
+    path('users/admins/add/', user_views.addAdmin, name="add-admin"),
+
 
    
 
