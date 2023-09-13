@@ -89,7 +89,7 @@ def updateSchool(request, school_pk):
 #
 @api_view(['GET'])
 def listUserSchools(request, user_pk):
-    schools = School.objects.filter(school_users__user=user_pk)
+    schools = School.objects.filter(access_permissions__user_id=user_pk).distinct()
     serializer = SchoolSerializer(schools, many=True)
 
     return Response(serializer.data)
