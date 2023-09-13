@@ -1,3 +1,4 @@
+from api.serializers.school_serializers import SchoolAccessPermissionSerializer
 from api.serializers.serializers import SchoolUserSerializer, TeacherSerializer, UserSerializer
 from api.serializers.user_serializers import ChangePasswordSerializer, UserProfileSerializer
 from schools.models import Role
@@ -15,13 +16,15 @@ def getUsers(request):
     return Response(serializer.data)
 
 # GET USER PROFILE BY USER ID
+
+
 @api_view(['GET'])
 def getUserProfileById(request, user_pk):
     try:
         user = User.objects.get(id=user_pk)
     except User.DoesNotExist:
         return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
-    
+
     serializer = UserProfileSerializer(user, many=False)
 
     return Response(serializer.data)
@@ -39,6 +42,7 @@ def addUser(request):
 
 # PARTIAL UPDATE USER
 
+
 @api_view(['PATCH'])
 def updateUser(request, user_pk):
     try:
@@ -53,6 +57,8 @@ def updateUser(request, user_pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # UPDATE PASSWORD
+
+
 @api_view(['PATCH'])
 def changePassword(request, user_pk):
     try:
@@ -80,53 +86,60 @@ def listTeachers(request):
 
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def listSchoolTeachers(request, school_pk):
     teacher_role = Role.objects.get(name='Teacher')
-    teacher_users = User.objects.filter(access_permissions__school_id=school_pk, access_permissions__role_id=teacher_role)
+    teacher_users = User.objects.filter(
+        access_permissions__school_id=school_pk, access_permissions__role_id=teacher_role)
     serializer = UserSerializer(teacher_users, many=True)
 
     return Response(serializer.data)
 
 # ADD NEW TEACHER
-
 @api_view(['POST'])
 def addTeacher(request):
+    teacher_role = Role.objects.get(name="Teacher")
+    school_id = request.data['school']
     try:
         # check if the user exists at all
         user = User.objects.get(email=request.data['email'])
-        school_user = {
-            "school": request.data['school'],
-            "user": user.id
-        }
-        serializer = SchoolUserSerializer(data=school_user)
-        if serializer.is_valid():
-            serializer.save()
-        
-        user_data = {
-            "id": user.id,
-            "email": user.email,
-            "first_name": user.first_name,
-            "last_name": user.last_name
-        }
 
-        teacher_serializer = TeacherSerializer(data=user_data, many=False)
-        
-        if teacher_serializer.is_valid():
-            print('ok')
+        access_permission = {
+            "school_id": school_id,
+            "user_id": user.id,
+            "role_id": teacher_role.id,
+        }
+        # print(access_permission)
 
-        return Response(teacher_serializer.data)
+        permission_serializer = SchoolAccessPermissionSerializer(
+            data=access_permission)
+        if permission_serializer.is_valid():
+            new_permission = permission_serializer.save()
+
+        # return this user
+        if new_permission:
+            user_serializer = UserSerializer(user, many=False)
+
+            return Response(user_serializer.data)
+
+        return Response({"details": "Unable to save user access permissions"})
 
     except User.DoesNotExist:
-        serializer = TeacherSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            school_user = {
-                "school": request.data['school'],
-                "user": serializer.data['id']
-            }
-            school_user_serializer = SchoolUserSerializer(data=school_user)
-            if school_user_serializer.is_valid():
-                school_user_serializer.save()
+        new_teacher_serializer = TeacherSerializer(data=request.data)
+        if new_teacher_serializer.is_valid():
+            new_teacher_serializer.save()
 
-            return Response(serializer.data)
+            access_permission = {
+                "school_id": school_id,
+                "user_id": new_teacher_serializer.data['id'],
+                "role_id": teacher_role.id,
+            }
+
+            permission_serializer = SchoolAccessPermissionSerializer(
+                data=access_permission)
+
+            if permission_serializer.is_valid():
+                permission_serializer.save()
+
+            return Response(new_teacher_serializer.data)
