@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from api.serializers.serializers import StudentSerializer
 from assessment.serializers.assessment_serializer import AssessmentSerializer
-from classes.models import ClassAssessment, ClassEntity, ClassStudent
+from classes.models import ClassAssessment, ClassDay, ClassEntity, ClassStudent
 
 
 class ClassEntitySerializer(serializers.ModelSerializer):
@@ -23,6 +23,11 @@ class ClassEntityWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassEntity
         fields = '__all__'
+        
+class ClassDaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassDay
+        fields= '__all__'
 
 
 class ClassStudentSerializer(serializers.ModelSerializer):
