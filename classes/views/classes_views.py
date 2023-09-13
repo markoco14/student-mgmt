@@ -1,8 +1,9 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from classes.models import ClassEntity
+from classes.models import ClassDay, ClassEntity
+from schools.models import SchoolDay
 from users.models import User
-from classes.serializers import ClassEntitySerializer, ClassEntityWriteSerializer
+from classes.serializers import ClassDaySerializer, ClassEntitySerializer, ClassEntityWriteSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound
@@ -29,12 +30,25 @@ class ClassEntityList(APIView):
         return Response(serializer.data)
     
     def post(self, request, format=None):
-        serializer = ClassEntityWriteSerializer(data=request.data)
-        if serializer.is_valid():
-            new_subject_level = serializer.save()
-            new_serializer = ClassEntityWriteSerializer(new_subject_level)
-            return Response(new_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(new_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        days = request.data['days']
+        class_entity_serializer = ClassEntityWriteSerializer(data=request.data)
+        if class_entity_serializer.is_valid():
+            class_entity = class_entity_serializer.save()
+            class_days_to_create = []
+            for day in days:
+                new_class_day = {
+                    "class_id": class_entity.id,
+                    "school_day_id": day
+                }
+                new_class_serializer = ClassDaySerializer(data=new_class_day)
+                if not new_class_serializer.is_valid():
+                    return Response(new_class_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                class_days_to_create.append(ClassDay(**new_class_serializer.validated_data))
+                
+            ClassDay.objects.bulk_create(class_days_to_create)
+            
+            return Response(class_entity_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(class_entity_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class ClassEntityDetail(APIView):
     """
