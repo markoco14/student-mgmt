@@ -8,6 +8,7 @@ class Command(BaseCommand):
     help = 'Create random students'
 
     def handle(self, *args, **options):
+        school_id = input("What is the school id?")
         fake = Faker()
         
         girl_urls = [
@@ -37,9 +38,9 @@ class Command(BaseCommand):
                 boy_counter += 1
 
             # Assuming you have a school object to associate the student with
-            school = School.objects.first()  # Or any other logic to get a school object
+            school = School.objects.get(id=school_id)  # Or any other logic to get a school object
 
-            Student.objects.create(
+            student = Student.objects.create(
                 first_name=first_name,
                 last_name=last_name,
                 age=age,
@@ -47,5 +48,7 @@ class Command(BaseCommand):
                 photo_url=photo_url,
                 school_id=school,
             )
+            
+            print(self.stdout.write(f"created student {student.first_name} in school {school.name}"))
 
         self.stdout.write(self.style.SUCCESS('Successfully created 100 students'))
