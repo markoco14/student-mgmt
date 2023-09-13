@@ -1,5 +1,5 @@
 from api.serializers.school_serializers import SchoolAccessPermissionSerializer
-from api.serializers.serializers import SchoolUserSerializer, TeacherSerializer, UserSerializer
+from api.serializers.serializers import AdminSerializer, SchoolUserSerializer, TeacherSerializer, UserSerializer
 from api.serializers.user_serializers import ChangePasswordSerializer, UserProfileSerializer
 from schools.models import Role
 from users.models import Teacher, User
@@ -129,7 +129,7 @@ def addTeacher(request):
 
         # return this user
         if new_permission:
-            user_serializer = UserSerializer(user, many=False)
+            user_serializer = TeacherSerializer(user, many=False)
 
             return Response(user_serializer.data)
 
@@ -158,7 +158,7 @@ def addTeacher(request):
 # ADD NEW Admin
 @api_view(['POST'])
 def addAdmin(request):
-    teacher_role = Role.objects.get(name="Teacher")
+    admin_role = Role.objects.get(name="Admin")
     school_id = request.data['school']
     try:
         # check if the user exists at all
@@ -167,7 +167,7 @@ def addAdmin(request):
         access_permission = {
             "school_id": school_id,
             "user_id": user.id,
-            "role_id": teacher_role.id,
+            "role_id": admin_role.id,
         }
         # print(access_permission)
 
@@ -178,21 +178,21 @@ def addAdmin(request):
 
         # return this user
         if new_permission:
-            user_serializer = UserSerializer(user, many=False)
+            user_serializer = AdminSerializer(user, many=False)
 
             return Response(user_serializer.data)
 
         return Response({"details": "Unable to save user access permissions"})
 
     except User.DoesNotExist:
-        new_teacher_serializer = TeacherSerializer(data=request.data)
-        if new_teacher_serializer.is_valid():
-            new_teacher_serializer.save()
+        new_admin_serializer = AdminSerializer(data=request.data)
+        if new_admin_serializer.is_valid():
+            new_admin_serializer.save()
 
             access_permission = {
                 "school_id": school_id,
-                "user_id": new_teacher_serializer.data['id'],
-                "role_id": teacher_role.id,
+                "user_id": new_admin_serializer.data['id'],
+                "role_id": admin_role.id,
             }
 
             permission_serializer = SchoolAccessPermissionSerializer(
@@ -201,4 +201,4 @@ def addAdmin(request):
             if permission_serializer.is_valid():
                 permission_serializer.save()
 
-            return Response(new_teacher_serializer.data)
+            return Response(new_admin_serializer.data)
