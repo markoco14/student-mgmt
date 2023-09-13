@@ -153,3 +153,52 @@ def addTeacher(request):
                 permission_serializer.save()
 
             return Response(new_teacher_serializer.data)
+        
+
+# ADD NEW Admin
+@api_view(['POST'])
+def addAdmin(request):
+    teacher_role = Role.objects.get(name="Teacher")
+    school_id = request.data['school']
+    try:
+        # check if the user exists at all
+        user = User.objects.get(email=request.data['email'])
+
+        access_permission = {
+            "school_id": school_id,
+            "user_id": user.id,
+            "role_id": teacher_role.id,
+        }
+        # print(access_permission)
+
+        permission_serializer = SchoolAccessPermissionSerializer(
+            data=access_permission)
+        if permission_serializer.is_valid():
+            new_permission = permission_serializer.save()
+
+        # return this user
+        if new_permission:
+            user_serializer = UserSerializer(user, many=False)
+
+            return Response(user_serializer.data)
+
+        return Response({"details": "Unable to save user access permissions"})
+
+    except User.DoesNotExist:
+        new_teacher_serializer = TeacherSerializer(data=request.data)
+        if new_teacher_serializer.is_valid():
+            new_teacher_serializer.save()
+
+            access_permission = {
+                "school_id": school_id,
+                "user_id": new_teacher_serializer.data['id'],
+                "role_id": teacher_role.id,
+            }
+
+            permission_serializer = SchoolAccessPermissionSerializer(
+                data=access_permission)
+
+            if permission_serializer.is_valid():
+                permission_serializer.save()
+
+            return Response(new_teacher_serializer.data)
