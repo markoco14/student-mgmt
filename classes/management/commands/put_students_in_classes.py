@@ -8,10 +8,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # Get all available classes
-        class_entities = ClassEntity.objects.all()
+        school_id = input('what is the school id?')
+        class_entities = ClassEntity.objects.filter(school=school_id)
 
         # Get all available students
-        students = list(Student.objects.all())  # Convert queryset to list for easier manipulation
+        students = list(Student.objects.filter(school_id=school_id))  # Convert queryset to list for easier manipulation
 
         if not class_entities.exists() or not students:
             self.stdout.write(self.style.ERROR("Not enough ClassEntities or Students to perform the operation."))
