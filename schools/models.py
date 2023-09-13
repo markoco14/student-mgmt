@@ -29,6 +29,25 @@ class SchoolUser(models.Model):
     def __str__(self):
         return f"{self.user.first_name} (id: {self.user.id}) can access {self.school.name} (id: {self.school.id})"
     
+
+class Role(models.Model):
+    name = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.name
+    
+class SchoolAccessPermission(models.Model):
+    school_id = models.ForeignKey(School, db_column='school_id', related_name="access_permissions", on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, db_column="user_id", related_name="access_permissions", on_delete=models.CASCADE)
+    role_id = models.ForeignKey(Role, db_column="role_id", related_name="access_permissions", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user_id.first_name} {self.user_id.last_name} ({self.user_id.id}) can access {self.school_id.name} as {self.role_id.name}"
+    
 class SchoolDay(models.Model):
     school = models.ForeignKey(School, related_name='days', on_delete=models.CASCADE)
     day = models.ForeignKey(Weekday, on_delete=models.CASCADE)
