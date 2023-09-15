@@ -7,7 +7,7 @@ from curriculum.models.subject_model import Subject
 
 class SubjectLevel(models.Model):
     subject = models.ForeignKey(Subject, related_name="levels", on_delete=models.CASCADE)
-    level = models.ForeignKey(Level, on_delete=models.CASCADE)
+    level = models.ForeignKey(Level, related_name="subjects", on_delete=models.CASCADE)
     curriculum_description = models.TextField(null=True, blank=True)
 
     def __str__(self):
