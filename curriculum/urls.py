@@ -1,5 +1,5 @@
 from django.urls import path
-from curriculum.views import assessment_views, curriculum_views, level_views, subject_views
+from curriculum.views import assessment_views, curriculum_views, level_views, subject_views, subject_level_views
 
 
 
@@ -16,14 +16,14 @@ urlpatterns = [
 	path('levels/<str:level_pk>/', level_views.LevelDetail.as_view(), name='level-detail'),
     
     # SUBJECT-LEVEL URI PATHS
-    path('subject-levels/', curriculum_views.SubjectLevelList.as_view(),
-         name='subjectlevel-list'),
+    path('subject-levels/', subject_level_views.SubjectLevelList.as_view(),
+         name='subject-level-list'),
     path('schools/<int:school_pk>/subject-levels/',
-         curriculum_views.SubjectLevelList.as_view(), name='school-subjectlevel-list'),
+         subject_level_views.SubjectLevelList.as_view(), name='school-subject-level-list'),
     path('schools/<int:school_pk>/subjects/<int:subject_pk>/levels/',
-         curriculum_views.SubjectLevelList.as_view(), name='school-subject-specific-level-list'),
+         subject_level_views.SubjectLevelList.as_view(), name='school-subject-specific-level-list'),
     path('subject-levels/<int:subject_level_pk>/',
-         curriculum_views.SubjectLevelDetail.as_view(), name='subjectlevel-detail'),
+         subject_level_views.SubjectLevelDetail.as_view(), name='subject-level-detail'),
     
 		 # MODULE URI PATHS
     path('modules/', curriculum_views.ModuleList.as_view(), name='list-modules'),
