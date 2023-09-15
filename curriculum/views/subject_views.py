@@ -24,6 +24,14 @@ class SubjectList(APIView):
         # Filter by school
         if school_pk:
             subjects = subjects.filter(school__id=school_pk)
+        
+        level = request.query_params.get('level', None)
+        if level:
+            subjects = subjects.filter(levels__level_id=level)
+            
+        class_id = request.query_params.get('class_id', None)
+        if class_id:
+            subjects = subjects.filter(levels__level_id__classes__id=class_id)
 
         if page is not None:
 
