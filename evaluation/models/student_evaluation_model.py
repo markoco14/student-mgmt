@@ -1,7 +1,7 @@
 from django.db import models
 from classes.models import ClassEntity
 from curriculum.models import Level, Subject
-from evaluation.models.evaluation_attributes import EvaluationAttribute, RangeEvaluationAttribute, TextEvaluationAttribute
+from evaluation.models.evaluation_attribute_model import EvaluationAttribute, RangeEvaluationAttribute, TextEvaluationAttribute
 
 from students.models.student import Student
 from users.models import User

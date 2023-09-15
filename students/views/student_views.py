@@ -5,7 +5,7 @@ from api.serializers.serializers import StudentSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.decorators import api_view
 from classes.models import ClassEntity
-from evaluation.models.evaluation_attributes import EvaluationAttribute, RangeEvaluationAttribute
+from evaluation.models.evaluation_attribute_model import EvaluationAttribute, RangeEvaluationAttribute
 from evaluation.models.student_evaluation_model import StudentEvaluation
 from students.models.student import Student
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
