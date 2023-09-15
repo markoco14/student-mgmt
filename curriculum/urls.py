@@ -1,24 +1,29 @@
 from django.urls import path
-from curriculum.views import assessment_views, curriculum_views
+from curriculum.views import assessment_views, curriculum_views, level_views, subject_views, subject_level_views
 
 
 
 urlpatterns = [
+
+	# SUBJECT URI PATHS
+	path('subjects/', subject_views.SubjectList.as_view(), name="subject-list"),
+	path('schools/<str:school_pk>/subjects/', subject_views.SubjectList.as_view(), name="subject-list"),
+	path('subjects/<str:subject_pk>/', subject_views.SubjectDetail.as_view(), name="subject-detail"),
 	
     # LEVEL URI PATHS
-    path('levels/', curriculum_views.LevelList.as_view(), name='level-list'),
-    path('schools/<str:school_pk>/levels/', curriculum_views.LevelList.as_view(), name='level-list'),
-	path('levels/<str:level_pk>/', curriculum_views.LevelDetail.as_view(), name='level-detail'),
+    path('levels/', level_views.LevelList.as_view(), name='level-list'),
+    path('schools/<str:school_pk>/levels/', level_views.LevelList.as_view(), name='level-list'),
+	path('levels/<str:level_pk>/', level_views.LevelDetail.as_view(), name='level-detail'),
     
     # SUBJECT-LEVEL URI PATHS
-    path('subject-levels/', curriculum_views.SubjectLevelList.as_view(),
-         name='subjectlevel-list'),
+    path('subject-levels/', subject_level_views.SubjectLevelList.as_view(),
+         name='subject-level-list'),
     path('schools/<int:school_pk>/subject-levels/',
-         curriculum_views.SubjectLevelList.as_view(), name='school-subjectlevel-list'),
+         subject_level_views.SubjectLevelList.as_view(), name='school-subject-level-list'),
     path('schools/<int:school_pk>/subjects/<int:subject_pk>/levels/',
-         curriculum_views.SubjectLevelList.as_view(), name='school-subject-specific-level-list'),
+         subject_level_views.SubjectLevelList.as_view(), name='school-subject-specific-level-list'),
     path('subject-levels/<int:subject_level_pk>/',
-         curriculum_views.SubjectLevelDetail.as_view(), name='subjectlevel-detail'),
+         subject_level_views.SubjectLevelDetail.as_view(), name='subject-level-detail'),
     
 		 # MODULE URI PATHS
     path('modules/', curriculum_views.ModuleList.as_view(), name='list-modules'),
