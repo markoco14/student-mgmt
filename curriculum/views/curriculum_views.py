@@ -11,41 +11,6 @@ from curriculum.models import Level, Module, Subject, SubjectLevel, ModuleType
 
 
 
-#
-# LEVELS ROUTES
-#
-
-class LevelViewSet(viewsets.ModelViewSet):
-    queryset = Level.objects.all().order_by('order')
-    serializer_class = LevelSerializer
-    
-    def get_queryset(self):
-        school_pk = self.request.GET.get('school', None)
-        if school_pk:
-            return Level.objects.filter(school=school_pk).order_by('order')
-        
-        return super().get_queryset()
-    
-    # create, update, and destroy functions implied
-
-#
-# SUBJECTS ROUTES
-#
-
-class SubjectViewSet(viewsets.ModelViewSet):
-    queryset = Subject.objects.all()
-    serializer_class = SubjectSerializer
-    
-    def get_queryset(self):
-        school_pk = self.request.GET.get('school', None)
-        if school_pk:
-            return Subject.objects.filter(school=school_pk)
-        
-        return super().get_queryset()
-    
-    # create, update, and destroy functions implied
-
-
 # 
 # SUBJECT LEVEL VIEWS
 # 

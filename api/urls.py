@@ -14,9 +14,6 @@ from rest_framework_simplejwt.views import (
 
 from rest_framework.routers import DefaultRouter
 
-router = DefaultRouter()
-router.register(r'subjects', curriculum_views.SubjectViewSet,
-                basename='subject')
 
 urlpatterns = [
     # GREETING ROUTE
@@ -96,11 +93,6 @@ urlpatterns = [
     path('reports/details/<str:detail_pk>/',
          report_views.updateReportDetails, name="delete-report-details"),
     # path('reports/details/<str:detail_pk>/delete/', report_views.deleteReportDetails, name="delete-report-details"),
-
-
-
-    # ViewSetRoutes
-    path('', include(router.urls)),
 
     # SCHEDULE ROUTES
     path('weekdays/', schedule_views.getWeekdays, name='weekday'),

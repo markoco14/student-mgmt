@@ -1,9 +1,14 @@
 from django.urls import path
-from curriculum.views import assessment_views, curriculum_views, level_views
+from curriculum.views import assessment_views, curriculum_views, level_views, subject_views
 
 
 
 urlpatterns = [
+
+	# SUBJECT URI PATHS
+	path('subjects/', subject_views.SubjectList.as_view(), name="subject-list"),
+	path('schools/<str:school_pk>/subjects/', subject_views.SubjectList.as_view(), name="subject-list"),
+	path('subjects/<str:subject_pk>/', subject_views.SubjectDetail.as_view(), name="subject-detail"),
 	
     # LEVEL URI PATHS
     path('levels/', level_views.LevelList.as_view(), name='level-list'),
