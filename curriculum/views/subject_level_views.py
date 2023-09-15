@@ -17,16 +17,21 @@ class SubjectLevelList(APIView):
     List all SubjectLevels, or create a new one.
     """
 
-    def get(self, request, school_pk=None, subject_pk=None, format=None):
+    def get(self, request, school_pk=None, format=None):
+        subject_levels = SubjectLevel.objects.all()
+
         if school_pk:
-            subject_levels = SubjectLevel.objects.filter(
+            subject_levels = subject_levels.filter(
                 subject__school__id=school_pk)
 
-            if subject_pk:
-                subject_levels = subject_levels.filter(subject__id=subject_pk)
+        subject = request.query_params.get('subject', None)
+        level = request.query_params.get('level', None)
 
-        else:
-            subject_levels = SubjectLevel.objects.all()
+        if subject:
+            subject_levels = subject_levels.filter(subject_id=subject)
+            
+        if level:
+            subject_levels = subject_levels.filter(level_id=level)
 
         serializer = SubjectLevelListSerializer(subject_levels, many=True)
         return Response(serializer.data)
