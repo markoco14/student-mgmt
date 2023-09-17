@@ -1,22 +1,23 @@
 from rest_framework import serializers
 
-from evaluation.models.evaluation_attributes import EvaluationAttribute, RangeEvaluationAttribute, TextEvaluationAttribute
+from evaluation.models.evaluation_attribute_model import EvaluationAttribute, TextEvaluationAttribute
+from evaluation.serializers.range_attribute_serializers import RangeEvaluationAttributeSerializer
+from evaluation.serializers.text_attribute_serializers import TextEvaluationAttributeSerializer
 
 
-class RangeEvaluationAttributeSerializer(serializers.ModelSerializer):
+
+
+
+
+class EvaluationAttributeListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = RangeEvaluationAttribute
-        fields = '__all__'
-        
-				
-class TextEvaluationAttributeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TextEvaluationAttribute
+        model = EvaluationAttribute
         fields = '__all__'
 
 
 class EvaluationAttributeSerializer(serializers.Serializer):
-    rangeevaluationattribute = RangeEvaluationAttributeSerializer(required=False) # Notice the nested serializers
+    rangeevaluationattribute = RangeEvaluationAttributeSerializer(
+        required=False)  # Notice the nested serializers
     textevaluationattribute = TextEvaluationAttributeSerializer(required=False)
 
     def to_representation(self, instance):
