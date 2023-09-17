@@ -48,14 +48,18 @@ class EvaluationAttributeList(APIView):
         # Filter by school
         if school_pk:
             attributes = attributes.filter(school_id=school_pk)
-          
+        
+        details = request.query_params.get('details', None)
+        if details:
+            serializer = EvaluationAttributeSerializer(attributes, many=True)
+            return Response(serializer.data)
 
         serializer = EvaluationAttributeListSerializer(attributes, many=True)
         return Response(serializer.data)
 
-	# THIS ROUTE DOESN'T NEED A POST. 
-	# BECAUSE WE WON'T SPECIFICALLY CREATE AN EVALUATION ATTRIBUTE
-	# ALWAYS RANGE OR TEXT
+    # THIS ROUTE DOESN'T NEED A POST. 
+    # BECAUSE WE WON'T SPECIFICALLY CREATE AN EVALUATION ATTRIBUTE
+    # ALWAYS RANGE OR TEXT
     # def post(self, request, format=None):
     #     serializer = EvaluationAttributeListSerializer(data=request.data)
     #     if serializer.is_valid():
