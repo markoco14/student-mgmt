@@ -1,12 +1,10 @@
 from rest_framework import serializers
 
-from evaluation.models.evaluation_attribute_model import EvaluationAttribute, RangeEvaluationAttribute, TextEvaluationAttribute
+from evaluation.models.evaluation_attribute_model import EvaluationAttribute, TextEvaluationAttribute
+from evaluation.serializers.range_attribute_serializers import RangeEvaluationAttributeSerializer
 
 
-class RangeEvaluationAttributeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RangeEvaluationAttribute
-        fields = '__all__'
+
 
 
 class TextEvaluationAttributeSerializer(serializers.ModelSerializer):
