@@ -57,15 +57,27 @@ class EvaluationAttributeList(APIView):
         serializer = EvaluationAttributeListSerializer(attributes, many=True)
         return Response(serializer.data)
 
-    # THIS ROUTE DOESN'T NEED A POST. 
-    # BECAUSE WE WON'T SPECIFICALLY CREATE AN EVALUATION ATTRIBUTE
-    # ALWAYS RANGE OR TEXT
-    # def post(self, request, format=None):
-    #     serializer = EvaluationAttributeListSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # CHECKS FOR CONDITIONAL RANGE OR TEXT
+    # AND USES RANGE OR TEXT SERIALIZER
+    # BECAUSE WE NEED TO CHOOSE TYPE
+    def post(self, request, format=None):
+        # CREATES RANGE TYPE
+        if request.data['data_type_id'] == 9:
+            serializer = RangeEvaluationAttributeSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+        # CREATES TEXT TYPE
+        if request.data['data_type_id'] == 8:
+            serializer = TextEvaluationAttributeSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class EvaluationAttributeDetail(APIView):
     """
