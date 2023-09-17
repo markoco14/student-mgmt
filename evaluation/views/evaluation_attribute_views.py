@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.db.models import ProtectedError
 
 from evaluation.models.evaluation_attribute_model import EvaluationAttribute, RangeEvaluationAttribute, TextEvaluationAttribute
 from evaluation.serializers.evaluation_attribute_serializers import EvaluationAttributeListSerializer, EvaluationAttributeSerializer, RangeEvaluationAttributeSerializer, TextEvaluationAttributeSerializer
@@ -32,15 +33,12 @@ def get_daily_report_eval_attributes(request, school_pk=None):
         return Response({"details": "No objects with that School ID found."})
 
 
-
-
-
 # EVALUATION ATTRIBUTE VIEWS
 
 class EvaluationAttributeList(APIView):
     """
     List all EvaluationAttributes, or create a new one.
-    """ 
+    """
 
     def get(self, request, school_pk=None, format=None):
         attributes = EvaluationAttribute.objects.all().order_by('-data_type_id')
@@ -48,7 +46,7 @@ class EvaluationAttributeList(APIView):
         # Filter by school
         if school_pk:
             attributes = attributes.filter(school_id=school_pk)
-        
+
         details = request.query_params.get('details', None)
         if details:
             serializer = EvaluationAttributeSerializer(attributes, many=True)
@@ -69,7 +67,7 @@ class EvaluationAttributeList(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
+
         # CREATES TEXT TYPE
         if request.data['data_type_id'] == 8:
             serializer = TextEvaluationAttributeSerializer(data=request.data)
@@ -78,7 +76,8 @@ class EvaluationAttributeList(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class EvaluationAttributeDetail(APIView):
     """
     Retrieve, update or delete a EvaluationAttribute.
@@ -88,7 +87,7 @@ class EvaluationAttributeDetail(APIView):
         try:
             return EvaluationAttribute.objects.get(id=evaluation_attribute_pk)
         except EvaluationAttribute.DoesNotExist:
-            raise NotFound(detail="Object with this ID not found.")
+            raise NotFound({"error": "We couldn't find this metric. Please try refreshing the page."})
 
     def get(self, request, evaluation_attribute_pk, format=None):
         evaluation_attribute = self.get_object(evaluation_attribute_pk)
@@ -97,22 +96,30 @@ class EvaluationAttributeDetail(APIView):
 
     def put(self, request, evaluation_attribute_pk, format=None):
         evaluation_attribute = self.get_object(evaluation_attribute_pk)
-        serializer = EvaluationAttributeSerializer(evaluation_attribute, data=request.data)
+        serializer = EvaluationAttributeSerializer(
+            evaluation_attribute, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
      # Partially update a specific entry by primary key
     def patch(self, request, evaluation_attribute_pk):
         evaluation_attribute = self.get_object(evaluation_attribute_pk)
-        serializer = EvaluationAttributeSerializer(evaluation_attribute, data=request.data, partial=True)
+        serializer = EvaluationAttributeSerializer(
+            evaluation_attribute, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, evaluation_attribute_pk, format=None):
-        evaluation_attribute = self.get_object(evaluation_attribute_pk)
-        evaluation_attribute.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+            evaluation_attribute = self.get_object(evaluation_attribute_pk)
+            evaluation_attribute.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ProtectedError:
+            # Handle the error and send a response to the frontend.
+            return Response({
+                "error": "Cannot delete because Student Reports exist with this attribute. Please contact support for help."
+            }, status=400)  # Or appropriate error code, 400 is for Bad Request.
