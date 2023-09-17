@@ -32,42 +32,42 @@ class RangeEvaluationAttributeList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class EvaluationAttributeDetail(APIView):
-#     """
-#     Retrieve, update or delete a EvaluationAttribute.
-#     """
+class RangeEvaluationAttributeDetail(APIView):
+    """
+    Retrieve, update or delete a RangeEvaluationAttribute.
+    """
 
-#     def get_object(self, evaluation_attribute_pk):
-#         try:
-#             return EvaluationAttribute.objects.get(id=evaluation_attribute_pk)
-#         except EvaluationAttribute.DoesNotExist:
-#             raise NotFound(detail="Object with this ID not found.")
+    def get_object(self, range_attribute_pk):
+        try:
+            return RangeEvaluationAttribute.objects.get(id=range_attribute_pk)
+        except RangeEvaluationAttribute.DoesNotExist:
+            raise NotFound(detail="Object with this ID not found.")
 
-#     def get(self, request, evaluation_attribute_pk, format=None):
-#         evaluation_attribute = self.get_object(evaluation_attribute_pk)
-#         serializer = EvaluationAttributeSerializer(evaluation_attribute)
-#         return Response(serializer.data)
+    def get(self, request, range_attribute_pk, format=None):
+        evaluation_attribute = self.get_object(range_attribute_pk)
+        serializer = RangeEvaluationAttributeSerializer(evaluation_attribute)
+        return Response(serializer.data)
 
-#     def put(self, request, evaluation_attribute_pk, format=None):
-#         evaluation_attribute = self.get_object(evaluation_attribute_pk)
-#         serializer = EvaluationAttributeSerializer(
-#             evaluation_attribute, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, range_attribute_pk, format=None):
+        evaluation_attribute = self.get_object(range_attribute_pk)
+        serializer = RangeEvaluationAttributeSerializer(
+            evaluation_attribute, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#      # Partially update a specific entry by primary key
-#     def patch(self, request, evaluation_attribute_pk):
-#         evaluation_attribute = self.get_object(evaluation_attribute_pk)
-#         serializer = EvaluationAttributeSerializer(
-#             evaluation_attribute, data=request.data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+     # Partially update a specific entry by primary key
+    def patch(self, request, range_attribute_pk):
+        evaluation_attribute = self.get_object(range_attribute_pk)
+        serializer = RangeEvaluationAttributeSerializer(
+            evaluation_attribute, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     def delete(self, request, evaluation_attribute_pk, format=None):
-#         evaluation_attribute = self.get_object(evaluation_attribute_pk)
-#         evaluation_attribute.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, range_attribute_pk, format=None):
+        evaluation_attribute = self.get_object(range_attribute_pk)
+        evaluation_attribute.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
