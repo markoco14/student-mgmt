@@ -5,17 +5,23 @@ from evaluation.views import student_evaluation_views
 
 
 urlpatterns = [
-	# EVALUATION ATTRIBUTE ROUTES
+    # EVALUATION ATTRIBUTE ROUTES
     path('schools/<str:school_pk>/evaluation-attributes/',
          evaluation_attribute_views.EvaluationAttributeList.as_view(), name="evaluation-attribute-list"),
-	
-	# RANGE ATTRIBUTE
-	path('range-attributes/', range_attribute_views.RangeEvaluationAttributeList.as_view(), name="range-attribute-list"),
-	path('range-attributes/<str:range_attribute_pk>/', range_attribute_views.RangeEvaluationAttributeDetail.as_view(), name="range-attribute-detail"),
 
-	# TEXT ATTRIBUTE
-	path('text-attributes/', text_attribute_views.TextEvaluationAttributeList.as_view(), name="text-attribute-list"),
-	path('schools/<str:school_pk>/text-attributes/', text_attribute_views.TextEvaluationAttributeList.as_view(), name="text-attribute-list"),
+    # RANGE ATTRIBUTE
+    path('range-attributes/', range_attribute_views.RangeEvaluationAttributeList.as_view(),
+         name="range-attribute-list"),
+    path('range-attributes/<str:range_attribute_pk>/',
+         range_attribute_views.RangeEvaluationAttributeDetail.as_view(), name="range-attribute-detail"),
+
+    # TEXT ATTRIBUTE
+    path('text-attributes/', text_attribute_views.TextEvaluationAttributeList.as_view(),
+         name="text-attribute-list"),
+    path('schools/<str:school_pk>/text-attributes/',
+         text_attribute_views.TextEvaluationAttributeList.as_view(), name="text-attribute-list"),
+    path('text-attributes/<str:text_attribute_pk>/',
+         text_attribute_views.TextEvaluationAttributeDetail.as_view(), name="text-attribute-detail"),
 
     # DAILY REPORT PAGE ROUTES ROUTES
     path('schools/<str:school_pk>/daily-report-attributes/',
@@ -37,9 +43,4 @@ urlpatterns = [
 
 
 
-    
 ]
-
-
-#  path('users/<str:user_pk>/get/',
-#          user_views.getUserProfileById, name="get-user-profile"),

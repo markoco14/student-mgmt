@@ -32,42 +32,42 @@ class TextEvaluationAttributeList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class TextEvaluationAttributeDetail(APIView):
-#     """
-#     Retrieve, update or delete a TextEvaluationAttribute.
-#     """
+class TextEvaluationAttributeDetail(APIView):
+    """
+    Retrieve, update or delete a TextEvaluationAttribute.
+    """
 
-#     def get_object(self, range_attribute_pk):
-#         try:
-#             return TextEvaluationAttribute.objects.get(id=range_attribute_pk)
-#         except TextEvaluationAttribute.DoesNotExist:
-#             raise NotFound(detail="Object with this ID not found.")
+    def get_object(self, text_attribute_pk):
+        try:
+            return TextEvaluationAttribute.objects.get(id=text_attribute_pk)
+        except TextEvaluationAttribute.DoesNotExist:
+            raise NotFound(detail="Object with this ID not found.")
 
-#     def get(self, request, range_attribute_pk, format=None):
-#         evaluation_attribute = self.get_object(range_attribute_pk)
-#         serializer = TextEvaluationAttributeSerializer(evaluation_attribute)
-#         return Response(serializer.data)
+    def get(self, request, text_attribute_pk, format=None):
+        text_attribute = self.get_object(text_attribute_pk)
+        serializer = TextEvaluationAttributeSerializer(text_attribute)
+        return Response(serializer.data)
 
-#     def put(self, request, range_attribute_pk, format=None):
-#         evaluation_attribute = self.get_object(range_attribute_pk)
-#         serializer = TextEvaluationAttributeSerializer(
-#             evaluation_attribute, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, text_attribute_pk, format=None):
+        text_attribute = self.get_object(text_attribute_pk)
+        serializer = TextEvaluationAttributeSerializer(
+            text_attribute, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#      # Partially update a specific entry by primary key
-#     def patch(self, request, range_attribute_pk):
-#         evaluation_attribute = self.get_object(range_attribute_pk)
-#         serializer = TextEvaluationAttributeSerializer(
-#             evaluation_attribute, data=request.data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+     # Partially update a specific entry by primary key
+    def patch(self, request, text_attribute_pk):
+        text_attribute = self.get_object(text_attribute_pk)
+        serializer = TextEvaluationAttributeSerializer(
+            text_attribute, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     def delete(self, request, range_attribute_pk, format=None):
-#         evaluation_attribute = self.get_object(range_attribute_pk)
-#         evaluation_attribute.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, text_attribute_pk, format=None):
+        text_attribute = self.get_object(text_attribute_pk)
+        text_attribute.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
