@@ -1,3 +1,3 @@
-from .evaluation_data_type import EvaluationDataType
+from .evaluation_data_type_model import EvaluationDataType
 from .evaluation_attribute_model import EvaluationAttribute
 from .student_evaluation_model import StudentEvaluation
