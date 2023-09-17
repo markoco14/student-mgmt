@@ -1,11 +1,16 @@
 from django.urls import include, path
 
-from evaluation.views import evaluation_attribute_views
-# from evaluation.views.evaluation_attribute_views import get_daily_report_eval_attributes, EvaluationAttributeList
+from evaluation.views import evaluation_attribute_views, range_attribute_views
 from evaluation.views import student_evaluation_views
 
 
 urlpatterns = [
+	# EVALUATION ATTRIBUTE ROUTES
+    path('schools/<str:school_pk>/evaluation-attributes/',
+         evaluation_attribute_views.EvaluationAttributeList.as_view(), name="evaluation-attribute-list"),
+	path('range-attributes/', range_attribute_views.RangeEvaluationAttributeList.as_view(), name="range-attribute-list"),
+
+
     # DAILY REPORT PAGE ROUTES ROUTES
     path('schools/<str:school_pk>/daily-report-attributes/',
          evaluation_attribute_views.get_daily_report_eval_attributes, name='daily-report-attribute-list'),
@@ -26,9 +31,7 @@ urlpatterns = [
 
 
 
-    # EVALUATION ATTRIBUTE ROUTES
-    path('schools/<str:school_pk>/evaluation-attributes/',
-         evaluation_attribute_views.EvaluationAttributeList.as_view(), name="evaluation-attribute-list"),
+    
 ]
 
 
