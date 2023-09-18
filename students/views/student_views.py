@@ -1,3 +1,4 @@
+from typing import List
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -15,53 +16,28 @@ from students.serializers.student_evaluation_serializers import StudentWithEvalu
 # Create your views here.
 
 
-@api_view(['POST'])
-def create_evaluation_records_for_class_list(request):
-    students = request.data['students']
-    class_id = request.data['class_id']
-    author_id = request.data['user_id']
-    date = request.data['date']
-    school_id = request.data['school_id']
-
-    subject_id = request.data['subject_id']
-
-    level = ClassEntity.objects.get(id=class_id).level
-
+def get_augmented_evaluation_attributes(school_id: int):
     evaluation_attributes = EvaluationAttribute.objects.filter(
         school_id=school_id).prefetch_related('rangeevaluationattribute', 'textevaluationattribute')
+
     for attribute in evaluation_attributes:
         range_attr = getattr(attribute, 'rangeevaluationattribute', None)
-        text_attr = getattr(attribute, 'textevaluationattribute', None)
         if range_attr:
-            # This attribute is a range type
-            max_value = range_attr.max_value
-            attribute.max_value = max_value
-            print(
-                f"printing attribute: {attribute.name} ({attribute.id}) with max value: {max_value}")
-        elif text_attr:
-            # This attribute is not a range type
-            print(
-                f"printing attribute: {attribute.name} ({attribute.id}) without max value ")
-        else:
-            print(
-                f"Unknown attribute type for: {attribute.name} ({attribute.id})")
-            # print(f"printing attribute: {attribute.name} ({attribute.id})")
+            attribute.max_value = range_attr.max_value
+        # If additional processing for text_attr or other types is needed, add here.
+    return evaluation_attributes
 
+
+def prepare_evaluation_records_for_students(students, evaluation_attributes, author_id, date, class_id, subject_id, level_id):
     # CREATE HOLDER FOR EVALUATION RECORDS
     evaluation_records = []
 
-    # BECAUSE BULK_CREATE ERRORS EXCLUDE STUDENT IF EVALUATION RECORD EXISTS
-    # return Response([])
     for student in students:
         if not student['evaluations_for_day']:
             for attribute in evaluation_attributes:
                 range_attr = getattr(
                     attribute, 'rangeevaluationattribute', None)
-                text_attr = getattr(attribute, 'textevaluationattribute', None)
                 if range_attr:
-                    # if attribute.id in [1, 2]:
-                    print('string of max value', str(range_attr.max_value))
-                    # return Response([])
                     evaluation_record = {
                         "evaluation_type": 0,
                         "student_id_id": student['id'],
@@ -71,7 +47,7 @@ def create_evaluation_records_for_class_list(request):
                         "evaluation_value": str(range_attr.max_value),
                         "class_id_id": class_id,
                         "subject_id_id": subject_id,
-                        "level_id_id": level.id,
+                        "level_id_id": level_id,
                     }
                 else:
                     evaluation_record = {
@@ -83,10 +59,37 @@ def create_evaluation_records_for_class_list(request):
                         "evaluation_value": "",
                         "class_id_id": class_id,
                         "subject_id_id": subject_id,
-                        "level_id_id": level.id,
+                        "level_id_id": level_id,
                     }
 
                 evaluation_records.append(evaluation_record)
+
+    return evaluation_records
+
+
+@api_view(['POST'])
+def create_evaluation_records_for_class_list(request):
+    students: List[Student] = request.data['students']
+    class_id: int = request.data['class_id']
+    author_id: int = request.data['user_id']
+    date: str = request.data['date']
+    school_id: int = request.data['school_id']
+
+    subject_id = request.data['subject_id']
+
+    level = ClassEntity.objects.get(id=class_id).level
+
+    evaluation_attributes = get_augmented_evaluation_attributes(
+        school_id=school_id)
+
+    evaluation_records = prepare_evaluation_records_for_students(
+        students=students,
+        evaluation_attributes=evaluation_attributes,
+        author_id=author_id,
+        date=date,
+        class_id=class_id,
+        subject_id=subject_id,
+        level_id=level.id)
 
     created_records = StudentEvaluation.objects.bulk_create(
         [StudentEvaluation(**record) for record in evaluation_records])
@@ -112,9 +115,10 @@ def get_students_with_evaluations(request, school_pk=None):
 
     if class_entity:
         students = students.filter(class_students__class_id=class_entity)
-        
+
     if present:
-        students = students.filter(class_students__student_id__attendance__date=date, class_students__student_id__attendance__status__in=[0,1])
+        students = students.filter(class_students__student_id__attendance__date=date,
+                                   class_students__student_id__attendance__status__in=[0, 1])
 
     serializer = StudentWithEvaluationSerializer(
         students, many=True, context={'class_entity': class_entity, 'date': date})
