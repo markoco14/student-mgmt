@@ -1,5 +1,5 @@
 from django.db import models
-from evaluation.models.evaluation_data_type import EvaluationDataType
+from evaluation.models.evaluation_data_type_model import EvaluationDataType
 
 from schools.models import School
 
