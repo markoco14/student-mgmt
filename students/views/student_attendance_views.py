@@ -1,3 +1,4 @@
+from typing import List
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -22,7 +23,8 @@ def get_students_with_attendance(request, school_pk=None):
     if class_entity:
         students = students.filter(class_students__class_id=class_entity)
 
-    serializer = StudentWithAttendanceSerializer(students, many=True, context={'class_entity': class_entity, 'date': date})
+    serializer = StudentWithAttendanceSerializer(
+        students, many=True, context={'class_entity': class_entity, 'date': date})
 
     return Response(serializer.data)
 
@@ -51,17 +53,17 @@ def get_students_here_today(request, school_pk=None):
     return Response(serializer.data)
 
 
-@api_view(['POST'])
-def create_attendance_records_for_class_list(request):
-    students = request.data['students']
-    class_id = request.data['class_id']
-    date = request.data['date']
-    author_id = request.data['user_id']
-
+# EXTRACT CREATE ATTENDANCE RECORDS LOGIC TO FUNCTION
+def create_attendance_records(
+        students: List[Student], 
+        class_id: int, 
+        date: str, 
+        author_id: int
+        ) -> List[StudentAttendance]:
     # CREATE HOLDER FOR ATTENDANCE RECORDS
     attendance_records = []
 
-    # BECAUSE BULK_CREATE ERRORS EXCLUDE STUDENT IF ATTENDANCE RECORD EXISTS
+    # TO PREVENT BULK_CREATE ERRORS, EXCLUDE STUDENT IF ATTENDANCE RECORD EXISTS
     for student in students:
         if not student['attendance_for_day']:
             attendance_record = {
@@ -73,14 +75,25 @@ def create_attendance_records_for_class_list(request):
                 "author_id_id": author_id,
             }
             attendance_records.append(attendance_record)
-
-    created_records = StudentAttendance.objects.bulk_create(
+            
+    return StudentAttendance.objects.bulk_create(
         [StudentAttendance(**record) for record in attendance_records])
+
+
+@api_view(['POST'])
+def create_attendance_records_for_class_list(request):
+    students: List[Student] = request.data['students']
+    class_id: int = request.data['class_id']
+    date: str = request.data['date']
+    author_id: int = request.data['user_id']
+
+    created_records = create_attendance_records(students, class_id, date, author_id)
 
     if created_records:
         # BECAUSE BATCH CREATE RETURNING NULL IDS = FRONTEND RENDERING PROBLEM
         # SO RE-FETCH STUDENTS WITH NEW ATTENDANCE RECORDS
-        fetched_records = Student.objects.filter(class_students__class_id=class_id).order_by('last_name')
+        fetched_records = Student.objects.filter(
+            class_students__class_id=class_id).order_by('last_name')
         serializer = StudentWithAttendanceSerializer(
             fetched_records, many=True, context={'class_entity': class_id, 'date': date})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
