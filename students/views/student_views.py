@@ -108,9 +108,13 @@ def get_students_with_evaluations(request, school_pk=None):
 
     class_entity = request.query_params.get('class_entity', None)
     date = request.query_params.get('date', None)
+    present = request.query_params.get('present', None)
 
     if class_entity:
         students = students.filter(class_students__class_id=class_entity)
+        
+    if present:
+        students = students.filter(class_students__student_id__attendance__date=date, class_students__student_id__attendance__status__in=[0,1])
 
     serializer = StudentWithEvaluationSerializer(
         students, many=True, context={'class_entity': class_entity, 'date': date})
