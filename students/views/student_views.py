@@ -117,8 +117,10 @@ def get_students_with_evaluations(request, school_pk=None):
         students = students.filter(class_students__class_id=class_entity)
 
     if present:
-        students = students.filter(attendance__date=date,
-                                   attendance__status__in=[0, 1],)
+        students = students.filter(
+            attendance__class_id=class_entity,
+            attendance__date=date,
+            attendance__status__in=[0, 1],)
 
     # DUPLICATES DUE TO QUERY
     students = students.distinct()
