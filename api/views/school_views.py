@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from api.serializers.school_serializers import SchoolDayListSerializer, SchoolDaySerializer
+from api.serializers.school_serializers import SchoolAccessPermissionSerializer, SchoolDayListSerializer, SchoolDaySerializer
 from schools.models import School, SchoolDay, SchoolUser
 from users.models import Teacher
 from ..serializers.serializers import SchoolTeacherSerializer, SchoolUserSerializer, SchoolSerializer
@@ -42,15 +42,18 @@ def addSchool(request):
         serializer.save()
         school = serializer.data['id']
         school_user = {
-            "school": school,
-            "user": owner
+            "school_id": school,
+            "user_id": owner,
+            "role_id": 1,
         }
-        school_user_serializer = SchoolUserSerializer(data=school_user)
-        if school_user_serializer.is_valid():
-            school_user_serializer.save()
-            return Response('school user serializer valid')
+        
+        school_owner_access_serializer = SchoolAccessPermissionSerializer(data=school_user)
+        if school_owner_access_serializer.is_valid():
+            school_owner_access_serializer.save()
         else:
             return Response('school user serializer not valid')
+    
+    return Response(serializer.data)
 
     # return Response(serializer.data)
 
