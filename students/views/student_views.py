@@ -117,12 +117,12 @@ def get_students_with_evaluations(request, school_pk=None):
         students = students.filter(class_students__class_id=class_entity)
 
     if present:
-        students = students.filter(class_students__student_id__attendance__date=date,
-                                   class_students__student_id__attendance__status__in=[0, 1])
+        students = students.filter(attendance__date=date,
+                                   attendance__status__in=[0, 1],)
 
     # DUPLICATES DUE TO QUERY
     students = students.distinct()
-    
+
     serializer = StudentWithEvaluationSerializer(
         students, many=True, context={'class_entity': class_entity, 'date': date})
 
