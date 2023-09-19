@@ -10,8 +10,8 @@ class EvaluationDataType(models.Model):
 
 
     TYPE_CHOICES = [
-		(0, 'Text'),
-		(1, 'Range'),
+		(0, 'Text'), # ID 1
+		(1, 'Range'), # ID 2
     ]
 
     data_type = models.IntegerField(choices=TYPE_CHOICES, unique=True)

@@ -60,7 +60,7 @@ class EvaluationAttributeList(APIView):
     # BECAUSE WE NEED TO CHOOSE TYPE
     def post(self, request, format=None):
         # CREATES RANGE TYPE
-        if request.data['data_type_id'] == 9:
+        if request.data['data_type_id'] == 2:
             serializer = RangeEvaluationAttributeSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
@@ -69,7 +69,7 @@ class EvaluationAttributeList(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # CREATES TEXT TYPE
-        if request.data['data_type_id'] == 8:
+        if request.data['data_type_id'] == 1:
             serializer = TextEvaluationAttributeSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
