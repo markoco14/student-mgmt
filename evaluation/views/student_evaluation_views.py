@@ -10,10 +10,15 @@ from evaluation.serializers.student_evaluation_serializers import StudentEvaluat
 
 
 @api_view(['POST'])
-def batch_delete_evaluations_for_day(request, student_pk):
-    date = request.data['date']
-    print(date)
-    evaluations_for_day = StudentEvaluation.objects.filter(student_id=student_pk, date=date).delete()
+def batch_delete_evaluations_for_day(request):
+    evaluations_for_day = request.data['evaluations_for_day']
+    evaluation_ids = []
+    for evaluation in  evaluations_for_day:
+        evaluation_ids.append(evaluation['id'])
+
+    evaluations_to_delete = StudentEvaluation.objects.filter(id__in=evaluation_ids)
+    evaluations_to_delete.delete()
+    
     
     return Response(status=status.HTTP_204_NO_CONTENT)
 class StudentEvaluationList(APIView):
