@@ -8,7 +8,6 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound
 
-
 class ClassEntityList(APIView):
     """
     List all Classes, or create a new one.
