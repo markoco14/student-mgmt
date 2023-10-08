@@ -5,7 +5,7 @@ holds all school related api views
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from schools.school_serializers import SchoolAccessPermissionSerializer, SchoolDayListSerializer, SchoolDaySerializer, SchoolSerializer
+from schools.school_serializers import SchoolAccessPermissionSerializer, SchoolDayListSerializer, SchoolDaySerializer, SchoolSerializer, SchoolTeacherSerializer
 from schools.models import School, SchoolDay, SchoolUser
 from users.models import Teacher
 from rest_framework import status
@@ -16,7 +16,10 @@ from rest_framework.exceptions import NotFound
 
 
 @api_view(['GET'])
-def listSchools(request):
+def list_schools(request):
+    """
+    list all schools
+    """
     schools = School.objects.all()
     serializer = SchoolSerializer(schools, many=True)
 
@@ -27,7 +30,10 @@ def listSchools(request):
 
 
 @api_view(['GET'])
-def getSchoolById(request, school_pk):
+def get_school_by_id(request, school_pk):
+    """
+    get a single school by id
+    """
     schools = School.objects.get(id=school_pk)
     serializer = SchoolSerializer(schools, many=False)
 
@@ -38,7 +44,10 @@ def getSchoolById(request, school_pk):
 
 
 @api_view(['POST'])
-def addSchool(request):
+def add_school(request):
+    """
+    create a new school
+    """
     owner = request.data['owner_id']
     serializer = SchoolSerializer(data=request.data)
     if serializer.is_valid():
@@ -64,7 +73,10 @@ def addSchool(request):
 
 
 @api_view(['DELETE'])
-def deleteSchool(request, school_pk):
+def delete_school(request, school_pk):
+    """
+    delete a school
+    """
     school = School.objects.get(id=school_pk)
     school.delete()
 
@@ -74,7 +86,10 @@ def deleteSchool(request, school_pk):
 
 
 @api_view(['PUT'])
-def updateSchool(request, school_pk):
+def update_school(request, school_pk):
+    """
+    update school requiring all data
+    """
     school = School.objects.get(id=school_pk)
     serializer = SchoolSerializer(
         instance=school, data=request.data, partial=True)
@@ -94,7 +109,10 @@ def updateSchool(request, school_pk):
 #
 #
 @api_view(['GET'])
-def listUserSchools(request, user_pk):
+def list_user_schools(request, user_pk):
+    """
+    list schools users can access
+    """
     schools = School.objects.filter(access_permissions__user_id=user_pk).distinct()
     serializer = SchoolSerializer(schools, many=True)
 
@@ -103,7 +121,10 @@ def listUserSchools(request, user_pk):
 
 # SCHOOL-TEACHER ROUTES
 @api_view(['GET'])
-def getSchoolTeachers(request, school_pk):
+def get_school_teachers(request, school_pk):
+    """
+    get users with 'teacher' role at current school
+    """
     school_users = SchoolUser.objects.filter(school=school_pk)
 
     user_ids = []
