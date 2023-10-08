@@ -1,10 +1,13 @@
+"""
+holds all school related api views
+"""
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from schools.school_serializers import SchoolAccessPermissionSerializer, SchoolDayListSerializer, SchoolDaySerializer
+from schools.school_serializers import SchoolAccessPermissionSerializer, SchoolDayListSerializer, SchoolDaySerializer, SchoolSerializer
 from schools.models import School, SchoolDay, SchoolUser
 from users.models import Teacher
-from ..api.serializers.serializers import SchoolTeacherSerializer, SchoolUserSerializer, SchoolSerializer
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 

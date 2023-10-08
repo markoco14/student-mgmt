@@ -1,11 +1,15 @@
-from schools.school_serializers import SchoolAccessPermissionSerializer
-from api.serializers.serializers import AdminSerializer, SchoolUserSerializer, TeacherSerializer, UserSerializer
+"""
+holds all user related views
+"""
+
+from api.serializers.serializers import AdminSerializer, TeacherSerializer, UserSerializer
 from api.serializers.user_serializers import ChangePasswordSerializer, UserProfileSerializer
-from schools.models import Role
-from users.models import Teacher, User
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from schools.models import Role
+from schools.school_serializers import SchoolAccessPermissionSerializer
+from users.models import Teacher, User
 
 
 @api_view(['GET'])
