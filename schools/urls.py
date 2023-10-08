@@ -1,3 +1,7 @@
+"""
+holds all school related url paths
+"""
+
 from django.urls import path
 from api.views import user_views
 

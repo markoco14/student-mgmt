@@ -1,6 +1,10 @@
+"""
+all school related models
+"""
+
 from django.db import models
 from schedule.models import Weekday
-from users.models import Teacher, User
+from users.models import User
 
 # Create your models here.
 

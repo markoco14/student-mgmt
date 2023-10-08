@@ -1,3 +1,7 @@
+"""
+all school related admin
+"""
+
 from django.contrib import admin
 from .models import School, SchoolUser, SchoolDay, Role, SchoolAccessPermission
 
