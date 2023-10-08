@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from schools.school_serializers import SchoolAccessPermissionSerializer, SchoolDayListSerializer, SchoolDaySerializer, SchoolSerializer, SchoolTeacherSerializer
 from schools.models import School, SchoolDay, SchoolUser
-from users.models import Teacher
+from users.models import Teacher, User
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 
@@ -109,11 +109,12 @@ def update_school(request, school_pk):
 #
 #
 @api_view(['GET'])
-def list_user_schools(request, user_pk):
+def list_user_schools(request):
     """
     list schools users can access
     """
-    schools = School.objects.filter(access_permissions__user_id=user_pk).distinct()
+    user = User.objects.filter(email=request.user).first()
+    schools = School.objects.filter(access_permissions__user_id=user.id).distinct()
     serializer = SchoolSerializer(schools, many=True)
 
     return Response(serializer.data)
