@@ -1,10 +1,10 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from api.serializers.school_serializers import SchoolAccessPermissionSerializer, SchoolDayListSerializer, SchoolDaySerializer
+from schools.school_serializers import SchoolAccessPermissionSerializer, SchoolDayListSerializer, SchoolDaySerializer
 from schools.models import School, SchoolDay, SchoolUser
 from users.models import Teacher
-from ..serializers.serializers import SchoolTeacherSerializer, SchoolUserSerializer, SchoolSerializer
+from ..api.serializers.serializers import SchoolTeacherSerializer, SchoolUserSerializer, SchoolSerializer
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 
