@@ -12,7 +12,6 @@ urlpatterns = [
 	
     # LEVEL URI PATHS
     path('levels/', level_views.LevelList.as_view(), name='level-list'),
-    path('schools/<str:school_pk>/levels/', level_views.LevelList.as_view(), name='level-list'),
 	path('levels/<str:level_pk>/', level_views.LevelDetail.as_view(), name='level-detail'),
     
     # SUBJECT-LEVEL URI PATHS
