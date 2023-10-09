@@ -92,10 +92,13 @@ def listTeachers(request):
 
 
 @api_view(['GET'])
-def listSchoolTeachers(request, school_pk):
+def listSchoolTeachers(request):
     teacher_role = Role.objects.get(name='Teacher')
-    teacher_users = User.objects.filter(
-        access_permissions__school_id=school_pk, access_permissions__role_id=teacher_role)
+    school = request.query_params.get('school')
+    if school:
+        teacher_users = User.objects.filter(access_permissions__role_id=teacher_role, access_permissions__school_id=school)
+    else:
+        teacher_users = User.objects.filter(access_permissions__role_id=teacher_role)
     serializer = UserSerializer(teacher_users, many=True)
 
     return Response(serializer.data)

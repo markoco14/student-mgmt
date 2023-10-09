@@ -32,7 +32,7 @@ urlpatterns = [
 
 
     # SCHOOL-TEACHER ROUTES
-    path('schools/<str:school_pk>/teachers/',
+    path('school-teachers/',
          user_views.listSchoolTeachers, name="list-school-teachers"),
 
 	# SCHOOL-ADMIN ROUTES
