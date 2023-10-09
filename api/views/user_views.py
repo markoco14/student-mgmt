@@ -82,17 +82,8 @@ def changePassword(request, user_pk):
 
 # TEACHER VIEWS
 
-# GET ALL TEACHERS
 @api_view(['GET'])
 def listTeachers(request):
-    teachers = Teacher.objects.all()
-    serializer = TeacherSerializer(teachers, many=True)
-
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-def listSchoolTeachers(request):
     teacher_role = Role.objects.get(name='Teacher')
     school = request.query_params.get('school')
     if school:
@@ -105,7 +96,7 @@ def listSchoolTeachers(request):
 
 
 @api_view(['GET'])
-def listSchoolAdmins(request):
+def listAdmins(request):
     admin_role = Role.objects.get(name='Admin')
     school = request.query_params.get('school')
     if school:

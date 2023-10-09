@@ -33,9 +33,10 @@ urlpatterns = [
 
     # SCHOOL-TEACHER ROUTES
     path('school-teachers/',
-         user_views.listSchoolTeachers, name="list-school-teachers"),
+         user_views.listTeachers, name="list-school-teachers"),
+	path('users/teachers/add/', user_views.addTeacher, name="add-teacher"),
 
 	# SCHOOL-ADMIN ROUTES
-	path('school-admins/', user_views.listSchoolAdmins, name='list-school-admins'),
+	path('school-admins/', user_views.listAdmins, name='list-school-admins'),
     path('users/admins/add/', user_views.addAdmin, name="add-admin"),
 ]

@@ -37,11 +37,6 @@ urlpatterns = [
          user_views.changePassword, name="change-password"),
 
 
-    # TEACHER-USER ROUTES
-    path('teachers/', user_views.listTeachers, name="get-users"),
-    path('users/teachers/add/', user_views.addTeacher, name="add-teacher"),
-
-
 
 
     #
