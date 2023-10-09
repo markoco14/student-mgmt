@@ -16,10 +16,6 @@ urlpatterns = [
     # SUBJECT-LEVEL URI PATHS
     path('subject-levels/', subject_level_views.SubjectLevelList.as_view(),
          name='subject-level-list'),
-    path('schools/<int:school_pk>/subject-levels/',
-         subject_level_views.SubjectLevelList.as_view(), name='school-subject-level-list'),
-    path('schools/<int:school_pk>/subjects/<int:subject_pk>/levels/',
-         subject_level_views.SubjectLevelList.as_view(), name='school-subject-specific-level-list'),
     path('subject-levels/<int:subject_level_pk>/',
          subject_level_views.SubjectLevelDetail.as_view(), name='subject-level-detail'),
     
