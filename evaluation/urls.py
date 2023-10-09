@@ -30,16 +30,12 @@ urlpatterns = [
 		 name="text-attribute-detail"),
 
     # DAILY REPORT PAGE ROUTES ROUTES
-    path('schools/<str:school_pk>/daily-report-attributes/',
+    path('daily-report-attributes/',
          evaluation_attribute_views.get_daily_report_eval_attributes, name='daily-report-attribute-list'),
 
     # STUDENT EVALUATION ROUTES
     path('daily-evaluations/', student_evaluation_views.StudentEvaluationList.as_view(),
          name='daily-evaluation-list'),
-    path('students/<str:student_pk>/daily-evaluations/',
-         student_evaluation_views.StudentEvaluationList.as_view(), name='daily-evaluation-list'),
-    path('schools/<str:school_pk>/daily-evaluations/',
-         student_evaluation_views.StudentEvaluationList.as_view(), name='daily-evaluation-list'),
 
     path('daily-evaluations/<str:student_evaluation_pk>/',
          student_evaluation_views.StudentEvaluationDetail.as_view(), name="daily-evaluation-detail"),

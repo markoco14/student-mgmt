@@ -15,15 +15,15 @@ from rest_framework.views import APIView
 
 
 @api_view(['GET'])
-def get_daily_report_eval_attributes(request, school_pk=None):
+def get_daily_report_eval_attributes(request):
     try:
         queryset = EvaluationAttribute.objects.select_related(
             'rangeevaluationattribute', 'textevaluationattribute').all().order_by('-data_type_id')
 
         # queryset = RangeEvaluationAttribute.objects.all()
-
-        if school_pk:
-            queryset = queryset.filter(school_id=school_pk)
+        school = request.query_params.get('school')
+        if school:
+            queryset = queryset.filter(school_id=school)
 
         serializer = EvaluationAttributeSerializer(queryset, many=True)
         # serializer = RangeEvaluationAttributeSerializer(queryset, many=True)

@@ -26,15 +26,16 @@ class StudentEvaluationList(APIView):
     List all Units, or create a new one.
     """
 
-    def get(self, request, school_pk=None, student_pk=None, format=None):
+    def get(self, request, format=None):
         student_evaluations = StudentEvaluation.objects.all().order_by('-date')
-
+        school = request.query_params.get('school')
+        student = request.query_params.get('student')
         # hierarchal parameters
-        if school_pk:
-            student_evaluations = student_evaluations.filter(student_id__school_id__id=school_pk)
+        if school:
+            student_evaluations = student_evaluations.filter(student_id__school_id__id=school)
         # Filter by school (hierachical url)
-        if student_pk:
-            student_evaluations = student_evaluations.filter(student_id=student_pk)
+        if student:
+            student_evaluations = student_evaluations.filter(student_id=student)
         
         
         # Fetch query parameters
