@@ -82,10 +82,11 @@ class StudentAttendanceList(APIView):
     List all Units, or create a new one.
     """
 
-    def get(self, request, school_pk=None, format=None):
+    def get(self, request, format=None):
         student_attendances = StudentAttendance.objects.all()
 
         # Fetch query parameters
+        school = request.query_params.get('school', None)
         date = request.query_params.get('date', None)
         author = request.query_params.get('author', None)
         status = request.query_params.get('status', None)
@@ -96,10 +97,9 @@ class StudentAttendanceList(APIView):
         # # page = request.query_params.get('page', None)
         # per_page = request.query_params.get('per_page', 15)
 
-        # Filter by school (hierachical url)
-        if school_pk:
+        if school:
             student_attendances = student_attendances.filter(
-                student_id__school_id=school_pk)
+                student_id__school_id=school)
 
         # Further filter by query params
         if date:

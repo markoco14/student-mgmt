@@ -23,8 +23,6 @@ urlpatterns = [
     # STUDENT ATTENDANCE ROUTES
     path('student-attendances/', student_attendance_views.StudentAttendanceList.as_view(),
          name='student-attendance-list'),
-    path('schools/<str:school_pk>/student-attendances/',
-         student_attendance_views.StudentAttendanceList.as_view(), name='school-student-attendance-list'),
     path('student-attendances/<str:student_attendance_pk>/',
          student_attendance_views.StudentAttendanceDetail.as_view(), name='student-attendance-list'),
 
