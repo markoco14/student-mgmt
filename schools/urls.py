@@ -27,7 +27,7 @@ urlpatterns = [
          school_views.SchoolDayDetail.as_view(), name='school-day-detail'),
 
     # SCHOOL-USER ROUTES
-    path('user/schools/', school_views.list_user_schools,
+    path('user-schools/', school_views.list_user_schools,
          name='get-schools-by-user-access'),
 
 
