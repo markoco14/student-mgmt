@@ -12,12 +12,12 @@ class TextEvaluationAttributeList(APIView):
     List all TextEvaluationAttributes, or create a new one.
     """
 
-    def get(self, request, school_pk=None, format=None):
+    def get(self, request, format=None):
         attributes = TextEvaluationAttribute.objects.all()
-
+        school = request.query_params.get('school')
         # Filter by school
-        if school_pk:
-            attributes = attributes.filter(school_id=school_pk)
+        if school:
+            attributes = attributes.filter(school_id=school)
 
         serializer = TextEvaluationAttributeSerializer(attributes, many=True)
 

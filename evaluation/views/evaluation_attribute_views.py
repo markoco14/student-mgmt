@@ -40,12 +40,13 @@ class EvaluationAttributeList(APIView):
     List all EvaluationAttributes, or create a new one.
     """
 
-    def get(self, request, school_pk=None, format=None):
+    def get(self, request, format=None):
         attributes = EvaluationAttribute.objects.all().order_by('-data_type_id')
 
         # Filter by school
-        if school_pk:
-            attributes = attributes.filter(school_id=school_pk)
+        school = request.query_params.get('school')
+        if school:
+            attributes = attributes.filter(school_id=school)
 
         details = request.query_params.get('details', None)
         if details:
@@ -60,13 +61,13 @@ class EvaluationAttributeList(APIView):
     # BECAUSE WE NEED TO CHOOSE TYPE
     def post(self, request, format=None):
         # CREATES RANGE TYPE
-        if request.data['data_type_id'] == 2:
+        if request.data['data_type_id'] == 0:
             serializer = RangeEvaluationAttributeSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # CREATES TEXT TYPE
         if request.data['data_type_id'] == 1:
@@ -74,8 +75,8 @@ class EvaluationAttributeList(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EvaluationAttributeDetail(APIView):
