@@ -19,25 +19,11 @@ urlpatterns = [
     path('subject-levels/<int:subject_level_pk>/',
          subject_level_views.SubjectLevelDetail.as_view(), name='subject-level-detail'),
     
-		 # MODULE URI PATHS
+	# MODULE URI PATHS
     path('modules/', curriculum_views.ModuleList.as_view(), name='list-modules'),
     path('modules/<int:module_pk>/', curriculum_views.ModuleDetail.as_view(), name='unit-detail'),
     
     # MODULE-TYPE URI PATHS
     path('module-types/', curriculum_views.ModuleTypeList.as_view(), name='list-module-types'),
     path('module-types/<str:module_type_pk>/', curriculum_views.ModuleTypeDetail.as_view(), name='module-types-detail'),
-
-    # ASSESSMENT-TYPE URI PATHS
-#     path('assessment-types/', assessment_views.AssessmentTypeList.as_view(), name='assessment-type-list'),
-#     path('schools/<str:school_pk>/assessment-types/', assessment_views.AssessmentTypeList.as_view(), name='assessment-type-list'),
-#     path('assessment-types/<str:assessment_type_pk>/', assessment_views.AssessmentTypeDetail.as_view(), name='assessment-type-detail'),
-
-
-    # ASSESSMENT URI PATHS
-#     path('assessments/', assessment_views.AssessmentList.as_view(), name='assessment-list'),
-#     path('schools/<str:school_pk>/assessments/', assessment_views.AssessmentList.as_view(), name='assessment-list'),
-#     path('assessments/<str:assessment_pk>/', assessment_views.AssessmentDetail.as_view(), name='assessment-list'),
-
-    # MODULE-ASSESSMENT URI PATH
-#     path('schools/<str:school_pk>/module-assessments/', assessment_views.module_assessment_page_list, name='assessment-list'),
 ]
