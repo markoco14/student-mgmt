@@ -68,6 +68,19 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10  # This sets the default page size.
 }
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+      'Basic': {
+            'type': 'basic'
+      },
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
+}
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=3),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=5),

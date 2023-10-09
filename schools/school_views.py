@@ -5,8 +5,14 @@ holds all school related api views
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from schools.school_serializers import SchoolAccessPermissionSerializer, SchoolDayListSerializer, SchoolDaySerializer, SchoolSerializer, SchoolTeacherSerializer
+from schools.school_serializers import *
+# SchoolAccessPermissionSerializer,
+# SchoolDayListSerializer,
+# SchoolDaySerializer,
+# SchoolSerializer,
+# SchoolTeacherSerializer
 from schools.models import School, SchoolDay, SchoolUser
+from users import utils as user_utils
 from users.models import Teacher, User
 from rest_framework import status
 from rest_framework.exceptions import NotFound
@@ -113,7 +119,11 @@ def list_user_schools(request):
     """
     list schools users can access
     """
-    user = User.objects.filter(email=request.user).first()
+    user = user_utils.get_current_user(email=request.user)
+    # user = User.objects.filter(email=request.user).first()
+    # if not user:
+    #     raise Exception({"detail": "User not found"})
+    # print(user)
     schools = School.objects.filter(access_permissions__user_id=user.id).distinct()
     serializer = SchoolSerializer(schools, many=True)
 
