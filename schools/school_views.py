@@ -154,9 +154,10 @@ def get_school_teachers(request, school_pk):
 # 
 
 class SchoolDayList(APIView):
-    def get(self, request, school_pk=None):
-        if school_pk:
-            school_days = SchoolDay.objects.filter(school__id=school_pk).order_by('day__id')
+    def get(self, request):
+        school = request.query_params.get('school', None)
+        if school:
+            school_days = SchoolDay.objects.filter(school__id=school).order_by('day__id')
             serializer = SchoolDayListSerializer(school_days, many=True)
             return Response(serializer.data)
 
@@ -165,9 +166,9 @@ class SchoolDayList(APIView):
         return Response(serializer.data)
 
     # Create a new entry
-    def post(self, request, school_pk):
+    def post(self, request):
         school_day = {
-            'school': school_pk,
+            'school': request.data['school'],
             'day': request.data['day']
         }
         # SERIALIZER AND SAVE WITH DAY AS ID VALUE

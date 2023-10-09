@@ -21,9 +21,9 @@ urlpatterns = [
          school_views.delete_school, name="delete-school"),
 
     # SCHOOL DAY ROUTES
-    path('schools/<str:school_pk>/days/',
+    path('school-days/',
          school_views.SchoolDayList.as_view(), name='school-day-list'),
-    path('schools/days/<str:school_day_pk>/',
+    path('school-days/<str:school_day_pk>/',
          school_views.SchoolDayDetail.as_view(), name='school-day-detail'),
 
     # SCHOOL-USER ROUTES
