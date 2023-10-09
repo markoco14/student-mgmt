@@ -21,7 +21,6 @@ urlpatterns = [
     
 		 # MODULE URI PATHS
     path('modules/', curriculum_views.ModuleList.as_view(), name='list-modules'),
-    path('schools/<school_pk>/modules/', curriculum_views.ModuleList.as_view(), name='list-modules'),
     path('modules/<int:module_pk>/', curriculum_views.ModuleDetail.as_view(), name='unit-detail'),
     
     # MODULE-TYPE URI PATHS
