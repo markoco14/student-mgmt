@@ -14,16 +14,16 @@ class SubjectList(APIView):
     List all Subjects, or create a new one.
     """ 
 
-    def get(self, request, school_pk=None, format=None):
+    def get(self, request, format=None):
         subjects = Subject.objects.all()
 
         # Fetch query parameters
         per_page = request.query_params.get('per_page', 15)
         page = request.query_params.get('page', None)
-
-        # Filter by school
-        if school_pk:
-            subjects = subjects.filter(school__id=school_pk)
+        
+        school = request.query_params.get('school')
+        if school:
+            subjects = subjects.filter(school__id=school)
         
         level = request.query_params.get('level', None)
         if level:

@@ -7,7 +7,6 @@ urlpatterns = [
 
 	# SUBJECT URI PATHS
 	path('subjects/', subject_views.SubjectList.as_view(), name="subject-list"),
-	path('schools/<str:school_pk>/subjects/', subject_views.SubjectList.as_view(), name="subject-list"),
 	path('subjects/<str:subject_pk>/', subject_views.SubjectDetail.as_view(), name="subject-detail"),
 	
     # LEVEL URI PATHS
