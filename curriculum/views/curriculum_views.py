@@ -94,17 +94,17 @@ class ModuleTypeList(APIView):
     List all Units, or create a new one.
     """ 
 
-    def get(self, request, school_pk=None, format=None):
+    def get(self, request, format=None):
         modules = ModuleType.objects.all()
 
         # Fetch query parameters
-        # school = request.query_params.get('school', None)
+        school = request.query_params.get('school', None)
         # subject = request.query_params.get('subject', None)
         # level = request.query_params.get('level', None)
 
         # Filter by school
-        if school_pk:
-            modules = modules.filter(school=school_pk)
+        if school:
+            modules = modules.filter(school=school)
 
         # # Further filter by subject if provided (use subject name)
         # if subject:
