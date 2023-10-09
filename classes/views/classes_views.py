@@ -1,12 +1,10 @@
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from classes.models import ClassDay, ClassEntity
-from schools.models import SchoolDay
-from users.models import User
-from classes.serializers import ClassDaySerializer, ClassEntitySerializer, ClassEntityWriteSerializer
 from rest_framework import status
-from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from classes.serializers import ClassDaySerializer, ClassEntitySerializer, ClassEntityWriteSerializer
+from classes.models import ClassDay, ClassEntity
+
 
 
 class ClassEntityList(APIView):
@@ -14,13 +12,19 @@ class ClassEntityList(APIView):
     List all Classes, or create a new one.
     """
 
-    def get(self, request, school_pk=None, format=None):
+    def get(self, request, format=None):
+        """
+        day -- Get classes for specific day
+        school -- Get classes belonging to school
+        """
+        
         class_entity = ClassEntity.objects.all()
 
         day = request.query_params.get('day', None)
+        school = request.query_params.get('school', None)
 
-        if school_pk:
-            class_entity = class_entity.filter(school=school_pk)
+        if school:
+            class_entity = class_entity.filter(school=school)
 
         if day:
             class_entity = class_entity.filter(days__day__day__icontains=day)

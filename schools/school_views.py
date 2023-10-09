@@ -1,10 +1,19 @@
+"""
+holds all school related api views
+"""
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from api.serializers.school_serializers import SchoolAccessPermissionSerializer, SchoolDayListSerializer, SchoolDaySerializer
+from schools.school_serializers import *
+# SchoolAccessPermissionSerializer,
+# SchoolDayListSerializer,
+# SchoolDaySerializer,
+# SchoolSerializer,
+# SchoolTeacherSerializer
 from schools.models import School, SchoolDay, SchoolUser
-from users.models import Teacher
-from ..serializers.serializers import SchoolTeacherSerializer, SchoolUserSerializer, SchoolSerializer
+from users import utils as user_utils
+from users.models import Teacher, User
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 
@@ -13,7 +22,10 @@ from rest_framework.exceptions import NotFound
 
 
 @api_view(['GET'])
-def listSchools(request):
+def list_schools(request):
+    """
+    list all schools
+    """
     schools = School.objects.all()
     serializer = SchoolSerializer(schools, many=True)
 
@@ -24,7 +36,10 @@ def listSchools(request):
 
 
 @api_view(['GET'])
-def getSchoolById(request, school_pk):
+def get_school_by_id(request, school_pk):
+    """
+    get a single school by id
+    """
     schools = School.objects.get(id=school_pk)
     serializer = SchoolSerializer(schools, many=False)
 
@@ -35,7 +50,10 @@ def getSchoolById(request, school_pk):
 
 
 @api_view(['POST'])
-def addSchool(request):
+def add_school(request):
+    """
+    create a new school
+    """
     owner = request.data['owner_id']
     serializer = SchoolSerializer(data=request.data)
     if serializer.is_valid():
@@ -61,7 +79,10 @@ def addSchool(request):
 
 
 @api_view(['DELETE'])
-def deleteSchool(request, school_pk):
+def delete_school(request, school_pk):
+    """
+    delete a school
+    """
     school = School.objects.get(id=school_pk)
     school.delete()
 
@@ -71,7 +92,10 @@ def deleteSchool(request, school_pk):
 
 
 @api_view(['PUT'])
-def updateSchool(request, school_pk):
+def update_school(request, school_pk):
+    """
+    update school requiring all data
+    """
     school = School.objects.get(id=school_pk)
     serializer = SchoolSerializer(
         instance=school, data=request.data, partial=True)
@@ -91,8 +115,16 @@ def updateSchool(request, school_pk):
 #
 #
 @api_view(['GET'])
-def listUserSchools(request, user_pk):
-    schools = School.objects.filter(access_permissions__user_id=user_pk).distinct()
+def list_user_schools(request):
+    """
+    list schools users can access
+    """
+    user = user_utils.get_current_user(email=request.user)
+    # user = User.objects.filter(email=request.user).first()
+    # if not user:
+    #     raise Exception({"detail": "User not found"})
+    # print(user)
+    schools = School.objects.filter(access_permissions__user_id=user.id).distinct()
     serializer = SchoolSerializer(schools, many=True)
 
     return Response(serializer.data)
@@ -100,7 +132,10 @@ def listUserSchools(request, user_pk):
 
 # SCHOOL-TEACHER ROUTES
 @api_view(['GET'])
-def getSchoolTeachers(request, school_pk):
+def get_school_teachers(request, school_pk):
+    """
+    get users with 'teacher' role at current school
+    """
     school_users = SchoolUser.objects.filter(school=school_pk)
 
     user_ids = []
@@ -119,9 +154,10 @@ def getSchoolTeachers(request, school_pk):
 # 
 
 class SchoolDayList(APIView):
-    def get(self, request, school_pk=None):
-        if school_pk:
-            school_days = SchoolDay.objects.filter(school__id=school_pk).order_by('day__id')
+    def get(self, request):
+        school = request.query_params.get('school', None)
+        if school:
+            school_days = SchoolDay.objects.filter(school__id=school).order_by('day__id')
             serializer = SchoolDayListSerializer(school_days, many=True)
             return Response(serializer.data)
 
@@ -130,9 +166,9 @@ class SchoolDayList(APIView):
         return Response(serializer.data)
 
     # Create a new entry
-    def post(self, request, school_pk):
+    def post(self, request):
         school_day = {
-            'school': school_pk,
+            'school': request.data['school'],
             'day': request.data['day']
         }
         # SERIALIZER AND SAVE WITH DAY AS ID VALUE

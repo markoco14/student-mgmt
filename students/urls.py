@@ -7,8 +7,6 @@ urlpatterns = [
 
     # STUDENT ROUTES
     path('students/', student_views.StudentList.as_view(), name='student-list'),
-    path('schools/<str:school_pk>/students/',
-         student_views.StudentList.as_view(), name='student-list'),
     path('students/<str:student_pk>/',
          student_views.StudentDetail.as_view(), name='student-detail'),
 
@@ -23,8 +21,6 @@ urlpatterns = [
     # STUDENT ATTENDANCE ROUTES
     path('student-attendances/', student_attendance_views.StudentAttendanceList.as_view(),
          name='student-attendance-list'),
-    path('schools/<str:school_pk>/student-attendances/',
-         student_attendance_views.StudentAttendanceList.as_view(), name='school-student-attendance-list'),
     path('student-attendances/<str:student_attendance_pk>/',
          student_attendance_views.StudentAttendanceDetail.as_view(), name='student-attendance-list'),
 

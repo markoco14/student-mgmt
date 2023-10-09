@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'rest_framework',
+    'drf_yasg',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     
@@ -65,6 +66,19 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10  # This sets the default page size.
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+      'Basic': {
+            'type': 'basic'
+      },
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
 }
 
 SIMPLE_JWT = {

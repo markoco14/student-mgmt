@@ -1,11 +1,18 @@
+"""
+all school related models
+"""
+
 from django.db import models
 from schedule.models import Weekday
-from users.models import Teacher, User
+from users.models import User
 
 # Create your models here.
 
 
 class School(models.Model):
+    """
+    School model
+    """
     name = models.CharField(max_length=50)
     owner_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='owner_id')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -16,6 +23,9 @@ class School(models.Model):
 
 
 class SchoolUser(models.Model):
+    """
+    School user model, who has access to what schools
+    """
     school = models.ForeignKey(School, db_column='school', related_name='school_users', on_delete=models.CASCADE)
     user = models.ForeignKey(User, db_column='user', related_name='schools', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -31,6 +41,9 @@ class SchoolUser(models.Model):
     
 
 class Role(models.Model):
+    """
+    Role model, what roles are available at schools
+    """
     name = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -39,6 +52,9 @@ class Role(models.Model):
         return self.name
     
 class SchoolAccessPermission(models.Model):
+    """
+    School access permission model, who can access the school and what can they do
+    """
     school_id = models.ForeignKey(School, db_column='school_id', related_name="access_permissions", on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, db_column="user_id", related_name="access_permissions", on_delete=models.CASCADE)
     role_id = models.ForeignKey(Role, db_column="role_id", related_name="access_permissions", on_delete=models.CASCADE)
@@ -49,6 +65,9 @@ class SchoolAccessPermission(models.Model):
         return f"{self.user_id.first_name} {self.user_id.last_name} ({self.user_id.id}) can access {self.school_id.name} as {self.role_id.name}"
     
 class SchoolDay(models.Model):
+    """
+    School day model. what days are the schools open.
+    """
     school = models.ForeignKey(School, related_name='days', on_delete=models.CASCADE)
     day = models.ForeignKey(Weekday, on_delete=models.CASCADE)
 

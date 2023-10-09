@@ -1,11 +1,15 @@
-from api.serializers.school_serializers import SchoolAccessPermissionSerializer
-from api.serializers.serializers import AdminSerializer, SchoolUserSerializer, TeacherSerializer, UserSerializer
+"""
+holds all user related views
+"""
+
+from api.serializers.serializers import AdminSerializer, TeacherSerializer, UserSerializer
 from api.serializers.user_serializers import ChangePasswordSerializer, UserProfileSerializer
-from schools.models import Role
-from users.models import Teacher, User
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from schools.models import Role
+from schools.school_serializers import SchoolAccessPermissionSerializer
+from users.models import Teacher, User
 
 
 @api_view(['GET'])
@@ -78,30 +82,27 @@ def changePassword(request, user_pk):
 
 # TEACHER VIEWS
 
-# GET ALL TEACHERS
 @api_view(['GET'])
 def listTeachers(request):
-    teachers = Teacher.objects.all()
-    serializer = TeacherSerializer(teachers, many=True)
-
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-def listSchoolTeachers(request, school_pk):
     teacher_role = Role.objects.get(name='Teacher')
-    teacher_users = User.objects.filter(
-        access_permissions__school_id=school_pk, access_permissions__role_id=teacher_role)
+    school = request.query_params.get('school')
+    if school:
+        teacher_users = User.objects.filter(access_permissions__role_id=teacher_role, access_permissions__school_id=school)
+    else:
+        teacher_users = User.objects.filter(access_permissions__role_id=teacher_role)
     serializer = UserSerializer(teacher_users, many=True)
 
     return Response(serializer.data)
 
 
 @api_view(['GET'])
-def listSchoolAdmins(request, school_pk):
+def listAdmins(request):
     admin_role = Role.objects.get(name='Admin')
-    admin_users = User.objects.filter(
-        access_permissions__school_id=school_pk, access_permissions__role_id=admin_role)
+    school = request.query_params.get('school')
+    if school:
+        admin_users = User.objects.filter(access_permissions__role_id=admin_role, access_permissions__school_id=school)
+    else:
+        admin_users = User.objects.filter(access_permissions__role_id=admin_role)
     serializer = UserSerializer(admin_users, many=True)
 
     return Response(serializer.data)

@@ -14,7 +14,7 @@ class LevelList(APIView):
     List all Levels, or create a new one.
     """ 
 
-    def get(self, request, school_pk=None, format=None):
+    def get(self, request, format=None):
         levels = Level.objects.all().order_by('order')
 
         # Fetch query parameters
@@ -22,8 +22,10 @@ class LevelList(APIView):
         page = request.query_params.get('page', None)
 
         # Filter by school
-        if school_pk:
-            levels = levels.filter(school__id=school_pk)
+
+        school = request.query_params.get('school')
+        if school:
+            levels = levels.filter(school__id=school)
 
         if page is not None:
 

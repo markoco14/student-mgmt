@@ -1,3 +1,7 @@
+"""
+all school related apps
+"""
+
 from django.apps import AppConfig
 
 

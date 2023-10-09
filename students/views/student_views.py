@@ -136,10 +136,11 @@ class StudentList(APIView):
     List all Units, or create a new one.
     """
 
-    def get(self, request, school_pk=None, format=None):
+    def get(self, request, format=None):
         students = Student.objects.all().order_by('last_name')
 
         # Fetch query parameters
+        school = request.query_params.get('school', None)
         first_name = request.query_params.get('first_name', None)
         last_name = request.query_params.get('last_name', None)
         age = request.query_params.get('age', None)
@@ -155,8 +156,8 @@ class StudentList(APIView):
         per_page = request.query_params.get('per_page', 15)
 
         # Filter by school (hierachical url)
-        if school_pk:
-            students = students.filter(school_id=school_pk)
+        if school:
+            students = students.filter(school_id=school)
 
         # Further filter by query params
         if first_name:
