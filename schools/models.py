@@ -26,8 +26,21 @@ class SchoolUser(models.Model):
     """
     School user model, who has access to what schools
     """
+
+    # Role Choices
+    ROLE_OWNER = "owner"
+    ROLE_ADMIN = "admin"
+    ROLE_TEACHER = "teacher"
+
+    ROLE_CHOICES = [
+        (ROLE_OWNER, "OWNER"),
+        (ROLE_ADMIN, "ADMIN"),
+        (ROLE_TEACHER, "TEACHER"),
+    ]
+
     school = models.ForeignKey(School, db_column='school', related_name='school_users', on_delete=models.CASCADE)
     user = models.ForeignKey(User, db_column='user', related_name='schools', on_delete=models.CASCADE)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default=ROLE_TEACHER)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -38,6 +51,7 @@ class SchoolUser(models.Model):
     
     def __str__(self):
         return f"{self.user.first_name} (id: {self.user.id}) can access {self.school.name} (id: {self.school.id})"
+    
     
 
 class Role(models.Model):
