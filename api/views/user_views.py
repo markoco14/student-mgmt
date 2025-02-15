@@ -40,9 +40,13 @@ def getUserProfileById(request, user_pk):
 def addUser(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
+        user = serializer.save()
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response(serializer.data)
+    response_user = UserProfileSerializer(user)
+    
+    return Response(response_user.data, status=status.HTTP_201_CREATED)
 
 # PARTIAL UPDATE USER
 
