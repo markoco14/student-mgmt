@@ -121,11 +121,8 @@ def list_user_schools(request):
     list schools users can access
     """
     user = user_utils.get_current_user(email=request.user)
-    # user = User.objects.filter(email=request.user).first()
-    # if not user:
-    #     raise Exception({"detail": "User not found"})
-    # print(user)
-    schools = School.objects.filter(access_permissions__user_id=user.id).distinct()
+
+    schools = School.objects.filter(school_users__user_id=user.id).distinct()
     serializer = SchoolSerializer(schools, many=True)
 
     return Response(serializer.data)
