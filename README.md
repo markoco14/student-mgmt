@@ -27,7 +27,11 @@ cp .env.example .env
 fill in your database info
 
 python manage.py migrate
+python manage.py createsuperuser # this gives you access to the django admin section
+choose an email: admin1@adminmail.com
+choose a password: admin1234
 python manage.py runserver
 ```
 
 Visit localhost:8000 and you should see the Django Rest Framework screen
+Visit localhost:8000/admin and you should see the admin login screen
