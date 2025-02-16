@@ -62,7 +62,7 @@ def add_school(request):
         return Response("School serializer not valid")
 
     school_user = {
-        "school": school.data['id'],
+        "school": school.id,
         "user": request.data.get('owner_id'),
         "role": SchoolUser.ROLE_OWNER,
     }
