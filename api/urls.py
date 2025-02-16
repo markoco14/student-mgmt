@@ -35,29 +35,7 @@ urlpatterns = [
          user_views.updateUser, name="update-user"),
     path('users/<str:user_pk>/change-password/',
          user_views.changePassword, name="change-password"),
-
-
-
-
-    #
-    # REPORT ROUTES
-    #
-    path('reports/', report_views.listReports, name="list-reports"),
-    path('classes/<str:class_pk>/reports/date/<str:date_pk>/',
-         report_views.getReportByClassAndDate, name="get-report-by-date"),
-    path('reports/create/', report_views.createReportAndReportDetails,
-         name="create-report"),
-    path('reports/<str:pk>/delete/',
-         report_views.deleteReport, name="delete-report"),
-
-
-    # REPORT DETAILS ROUTES
-    path('reports/<str:report_pk>/details/',
-         report_views.listReportsDetailsByReportId, name="get-report-details"),
-    # path('reports/details/create/', report_views.createReportDetails, name="create-report-details"),
-    path('reports/details/<str:detail_pk>/',
-         report_views.updateReportDetails, name="delete-report-details"),
-    # path('reports/details/<str:detail_pk>/delete/', report_views.deleteReportDetails, name="delete-report-details"),
+         
 
     # SCHEDULE ROUTES
     path('weekdays/', schedule_views.getWeekdays, name='weekday'),

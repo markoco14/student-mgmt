@@ -1,5 +1,5 @@
 from django.db import models
-from assessment.models.assessment_model import Assessment
+# from assessment.models.assessment_model import Assessment
 from schedule.models import Weekday
 from curriculum.models import Level
 
@@ -74,12 +74,12 @@ class ClassAssessment(models.Model):
     """
 
     class_id = models.ForeignKey(ClassEntity, db_column='class_id', related_name='assessments', on_delete=models.PROTECT)
-    assessment_id = models.ForeignKey(Assessment, db_column='assessment_id', related_name='classes', on_delete=models.PROTECT)
+    # assessment_id = models.ForeignKey(Assessment, db_column='assessment_id', related_name='classes', on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.class_id.name} (id:{self.class_id.id}) given Assessment {self.assessment_id.id}: {self.assessment_id.name}"
+        return f"{self.class_id.name} (id:{self.class_id.id})"
 
     class Meta:
         db_table = 'classes_class_assessments'

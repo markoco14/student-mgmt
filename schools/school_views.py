@@ -1,7 +1,6 @@
 """
 holds all school related api views
 """
-
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -13,7 +12,7 @@ from schools.school_serializers import *
 # SchoolTeacherSerializer
 from schools.models import School, SchoolDay, SchoolUser
 from users import utils as user_utils
-from users.models import Teacher, User
+from users.models import Teacher
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 
@@ -47,31 +46,33 @@ def get_school_by_id(request, school_pk):
 
 
 # ADD NEW SCHOOL
-
-
 @api_view(['POST'])
 def add_school(request):
     """
     create a new school
     """
-    owner = request.data['owner_id']
-    serializer = SchoolSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        school = serializer.data['id']
-        school_user = {
-            "school_id": school,
-            "user_id": owner,
-            "role_id": 1,
-        }
-        
-        school_owner_access_serializer = SchoolAccessPermissionSerializer(data=school_user)
-        if school_owner_access_serializer.is_valid():
-            school_owner_access_serializer.save()
-        else:
-            return Response('school user serializer not valid')
+    school_serializer = SchoolSerializer(data=request.data)
+    if school_serializer.is_valid():
+        school_serializer.save()
+    else:
+        return Response("School serializer not valid")
+
+    school_user = {
+        "school": school_serializer.data['id'],
+        "user": request.data['owner_id'],
+        "role": SchoolUser.ROLE_OWNER,
+    }
     
-    return Response(serializer.data)
+    school_user_serializer = SchoolUserSerializer(data=school_user)
+    if school_user_serializer.is_valid():
+        school_user_serializer.save()
+    else:
+        return Response("School user serializer not valid")
+    
+    return Response(
+        data=school_serializer.data,
+        status=status.HTTP_201_CREATED
+        )
 
     # return Response(serializer.data)
 
@@ -120,11 +121,8 @@ def list_user_schools(request):
     list schools users can access
     """
     user = user_utils.get_current_user(email=request.user)
-    # user = User.objects.filter(email=request.user).first()
-    # if not user:
-    #     raise Exception({"detail": "User not found"})
-    # print(user)
-    schools = School.objects.filter(access_permissions__user_id=user.id).distinct()
+
+    schools = School.objects.filter(school_users__user_id=user.id).distinct()
     serializer = SchoolSerializer(schools, many=True)
 
     return Response(serializer.data)
