@@ -65,17 +65,6 @@ class Module(models.Model):
         unique_together = ['name', 'order', 'type', 'subject_level']
         ordering = ['order']
 
-class AssessmentType(models.Model):
-    name = models.CharField(max_length=255) # Homework, In-class Practice, Test, Final Test
-    school = models.ForeignKey(School, related_name="assessment_types", on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return f"({self.id}): {self.name} in {self.school.name}"
-    class Meta:
-        db_table = 'curriculum_assessment_type'
-        unique_together = ['name', 'school']
 
 class Assessment(models.Model):
     # Status Choices
@@ -94,7 +83,6 @@ class Assessment(models.Model):
     name = models.CharField(max_length=255) # Homework 1, Test 2, Final Test, will be a combo of type and order
     description = models.TextField(blank=True) # Students will be tested on....
     module = models.ForeignKey(Module, related_name="assessments", on_delete=models.PROTECT) # Reading Level 5 Unit 4, Phonics Level 2 Unit 8 ...
-    type = models.ForeignKey(AssessmentType, related_name="assessments", on_delete=models.PROTECT) # Homework, In-class Practice, Test, Final Test
     order = models.PositiveIntegerField() # 1, 2, 3.. used to keep the assessments in correct order
     max_score = models.PositiveIntegerField() # Out of 8, 10, 12
     status = models.IntegerField(choices=STATUS_CHOICES, default=DRAFT)
@@ -108,7 +96,7 @@ class Assessment(models.Model):
 
     class Meta:
         db_table = 'curriculum_assessment'
-        unique_together = ['order', 'module', 'type']
+        unique_together = ['order', 'module']
         ordering = ['order']
 
 

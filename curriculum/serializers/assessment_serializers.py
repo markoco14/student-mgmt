@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from curriculum.models import Assessment, AssessmentType, Module
+from curriculum.models import Assessment, Module
 from curriculum.serializers.curriculum_serializers import ModuleSerializer, SubjectLevelListSerializer, SubjectLevelSerializer
 
 
@@ -20,11 +20,6 @@ class ModuleAssessmentPageSerializer(serializers.ModelSerializer):
         model = Module
         fields = '__all__'
 
-
-class AssessmentTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AssessmentType
-        fields = '__all__'
 
 class AssessmentSerializer(serializers.ModelSerializer):
     class Meta:
