@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from api.serializers.serializers import StudentSerializer
-from assessment.serializers.assessment_serializer import AssessmentSerializer
+# from assessment.serializers.assessment_serializer import AssessmentSerializer
 from classes.models import ClassAssessment, ClassDay, ClassEntity, ClassStudent
 
 
@@ -49,7 +49,7 @@ class ClassAssessmentSerializer(serializers.ModelSerializer):
 
 class ClassAssessmentDetailSerializer(serializers.ModelSerializer):
     class_entity = ClassEntitySerializer(source='class_id')
-    assessment = AssessmentSerializer(source='assessment_id')
+    # assessment = AssessmentSerializer(source='assessment_id')
 
     class Meta:
         model = ClassAssessment

@@ -66,38 +66,38 @@ class Module(models.Model):
         ordering = ['order']
 
 
-class Assessment(models.Model):
-    # Status Choices
-    ACTIVE = 0
-    INACTIVE = 1
-    DRAFT = 2
-    ARCHIVED = 3  # Optionally, if you'd like a status between active and inactive
+# class Assessment(models.Model):
+#     # Status Choices
+#     ACTIVE = 0
+#     INACTIVE = 1
+#     DRAFT = 2
+#     ARCHIVED = 3  # Optionally, if you'd like a status between active and inactive
 
-    STATUS_CHOICES = [
-        (ACTIVE, 'Active'),
-        (INACTIVE, 'Inactive'),
-        (DRAFT, 'Draft'),
-        (ARCHIVED, 'Archived'),  # Optional
-    ]
+#     STATUS_CHOICES = [
+#         (ACTIVE, 'Active'),
+#         (INACTIVE, 'Inactive'),
+#         (DRAFT, 'Draft'),
+#         (ARCHIVED, 'Archived'),  # Optional
+#     ]
 
-    name = models.CharField(max_length=255) # Homework 1, Test 2, Final Test, will be a combo of type and order
-    description = models.TextField(blank=True) # Students will be tested on....
-    module = models.ForeignKey(Module, related_name="assessments", on_delete=models.PROTECT) # Reading Level 5 Unit 4, Phonics Level 2 Unit 8 ...
-    order = models.PositiveIntegerField() # 1, 2, 3.. used to keep the assessments in correct order
-    max_score = models.PositiveIntegerField() # Out of 8, 10, 12
-    status = models.IntegerField(choices=STATUS_CHOICES, default=DRAFT)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    #is_level?
-    #level null if is_level false 
+#     name = models.CharField(max_length=255) # Homework 1, Test 2, Final Test, will be a combo of type and order
+#     description = models.TextField(blank=True) # Students will be tested on....
+#     module = models.ForeignKey(Module, related_name="assessments", on_delete=models.PROTECT) # Reading Level 5 Unit 4, Phonics Level 2 Unit 8 ...
+#     order = models.PositiveIntegerField() # 1, 2, 3.. used to keep the assessments in correct order
+#     max_score = models.PositiveIntegerField() # Out of 8, 10, 12
+#     status = models.IntegerField(choices=STATUS_CHOICES, default=DRAFT)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+#     #is_level?
+#     #level null if is_level false 
 
-    def __str__(self):
-        return f"({self.id}): {self.name} in {self.module.name}"
+#     def __str__(self):
+#         return f"({self.id}): {self.name} in {self.module.name}"
 
-    class Meta:
-        db_table = 'curriculum_assessment'
-        unique_together = ['order', 'module']
-        ordering = ['order']
+#     class Meta:
+#         db_table = 'curriculum_assessment'
+#         unique_together = ['order', 'module']
+#         ordering = ['order']
 
 
 
