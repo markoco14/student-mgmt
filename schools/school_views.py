@@ -51,26 +51,34 @@ def add_school(request):
     """
     create a new school
     """
+    print("DEBUG: Received Data", request.data)
+
     school_serializer = SchoolSerializer(data=request.data)
     if school_serializer.is_valid():
-        school_serializer.save()
+        school = school_serializer.save()
+        print("DEBUG: School Created", school)
     else:
+        print("ERROR: School serializer not valid", school_serializer.errors)
         return Response("School serializer not valid")
 
     school_user = {
-        "school": school_serializer.data['id'],
-        "user": request.data['owner_id'],
+        "school": school.data['id'],
+        "user": request.data.get('owner_id'),
         "role": SchoolUser.ROLE_OWNER,
     }
     
+    print("DEBUG: Creating SchoolUser", school_user)
+
     school_user_serializer = SchoolUserSerializer(data=school_user)
     if school_user_serializer.is_valid():
         school_user_serializer.save()
+        print("DEBUG: SchoolUser Created")
     else:
+        print("ERROR: School user serializer not valid", school_user_serializer.errors) 
         return Response("School user serializer not valid")
     
     return Response(
-        data=school_serializer.data,
+        data=school,
         status=status.HTTP_201_CREATED
         )
 
