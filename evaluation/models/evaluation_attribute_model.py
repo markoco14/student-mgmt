@@ -41,33 +41,33 @@ class TextEvaluationAttribute(EvaluationAttribute):
 
 
 
-class RangeEvaluationAttribute(EvaluationAttribute):
-    """
-    A model that allows teachers to rate student performance numerically. Teachers can choose
-    the scale by which they want to rate students, ie; 1-3, 1-5, 1-7
+# class RangeEvaluationAttribute(EvaluationAttribute):
+#     """
+#     A model that allows teachers to rate student performance numerically. Teachers can choose
+#     the scale by which they want to rate students, ie; 1-3, 1-5, 1-7
 
-    -min_value: the lowest possible value. usually 1.
-    -max_value: the highest possible value. Schools can choose but usually an odd number like 3, 5, 7, 9.
-    -descriptions: an array of descriptions that explain what each number represents
-    """
-    min_value = models.PositiveIntegerField(default=1)
-    max_value = models.PositiveIntegerField()
-    descriptions = models.JSONField(null=True, blank=True) # a description for each numeric value in the range of what it means to the school
+#     -min_value: the lowest possible value. usually 1.
+#     -max_value: the highest possible value. Schools can choose but usually an odd number like 3, 5, 7, 9.
+#     -descriptions: an array of descriptions that explain what each number represents
+#     """
+#     min_value = models.PositiveIntegerField(default=1)
+#     max_value = models.PositiveIntegerField()
+#     descriptions = models.JSONField(null=True, blank=True) # a description for each numeric value in the range of what it means to the school
 
-    def save(self, *args, **kwargs):
-        # check the max value is higher than the min value
-        if self.max_value <= self.min_value:
-            raise ValueError(f"max_value ({self.max_value}) must be greater than min_value ({self.min_value})")
+#     def save(self, *args, **kwargs):
+#         # check the max value is higher than the min value
+#         if self.max_value <= self.min_value:
+#             raise ValueError(f"max_value ({self.max_value}) must be greater than min_value ({self.min_value})")
 
         
-        if self.descriptions:
-            expected_count = self.max_value - self.min_value + 1
-            if len(self.descriptions) != expected_count:
-                raise ValueError(f"Number of descriptions ({len(self.descriptions)}) does not match the range size ({expected_count})")
+#         if self.descriptions:
+#             expected_count = self.max_value - self.min_value + 1
+#             if len(self.descriptions) != expected_count:
+#                 raise ValueError(f"Number of descriptions ({len(self.descriptions)}) does not match the range size ({expected_count})")
         
-        super().save(*args, **kwargs)
+#         super().save(*args, **kwargs)
 
 
-    class Meta:
-        db_table = "evaluation_range_evaluation_attributes"
-        verbose_name_plural = 'Range evaluation attributes'
+#     class Meta:
+#         db_table = "evaluation_range_evaluation_attributes"
+#         verbose_name_plural = 'Range evaluation attributes'
