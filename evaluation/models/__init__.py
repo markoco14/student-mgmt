@@ -1,2 +1,2 @@
 from .evaluation_data_type_model import EvaluationDataType
-from .evaluation_attribute_model import EvaluationAttribute
+
