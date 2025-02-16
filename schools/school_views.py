@@ -78,7 +78,7 @@ def add_school(request):
         return Response("School user serializer not valid")
     
     return Response(
-        data=school_serializer,
+        data=school_serializer.data,
         status=status.HTTP_201_CREATED
         )
 
