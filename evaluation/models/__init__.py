@@ -1,2 +1,0 @@
-from .evaluation_data_type_model import EvaluationDataType
-
