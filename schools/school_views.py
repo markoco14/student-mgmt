@@ -85,13 +85,20 @@ def add_school(request):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_school(request, school_pk):
     """
     delete a school
     """
-    school = School.objects.get(id=school_pk)
-    school.delete()
-
+    if not request.user:
+        return Response({"detail": "User not found."})
+    
+    try:
+        school = School.objects.get(id=school_pk)
+        school.delete()
+    except School.DoesNotExist as e:
+        return Response({"detail": "Could not find school to delete."})
+    
     return Response({"message": "School successfully deleted."})
 
 # UPDATE SCHOOL
