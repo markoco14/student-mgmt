@@ -43,34 +43,35 @@ def get_school_by_id(request, school_pk):
 
 # ADD NEW SCHOOL
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def add_school(request):
     """
     create a new school
     """
-    print("DEBUG: Received Data", request.data)
+    if not request.user:
+        return Response({"detail": "User not found."})
 
-    school_serializer = SchoolSerializer(data=request.data)
+    school_serializer = SchoolSerializer(data={
+        "name": request.data["name"],
+        "owner_id": request.user.id
+        })
+
     if school_serializer.is_valid():
         school = school_serializer.save()
-        print("DEBUG: School Created", school)
     else:
-        print("ERROR: School serializer not valid", school_serializer.errors)
         return Response("School serializer not valid")
 
     school_user = {
         "school": school.id,
-        "user": request.data.get('owner_id'),
+        "user": request.user.id,
         "role": SchoolUser.ROLE_OWNER,
     }
-    
-    print("DEBUG: Creating SchoolUser", school_user)
 
     school_user_serializer = SchoolUserSerializer(data=school_user)
+
     if school_user_serializer.is_valid():
         school_user_serializer.save()
-        print("DEBUG: SchoolUser Created")
     else:
-        print("ERROR: School user serializer not valid", school_user_serializer.errors) 
         return Response("School user serializer not valid")
     
     return Response(
