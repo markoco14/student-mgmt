@@ -53,7 +53,7 @@ def add_school(request):
 
     school_serializer = SchoolSerializer(data={
         "name": request.data["name"],
-        "owner_id": request.user.id
+        "owner": request.user.id
         })
 
     if school_serializer.is_valid():
@@ -91,14 +91,18 @@ def delete_school(request, school_pk):
     delete a school
     """
     if not request.user:
-        return Response({"detail": "User not found."})
+        return Response({"detail": "User not found."}, status=status.HTTP_401_UNAUTHORIZED)
     
     try:
         school = School.objects.get(id=school_pk)
-        school.delete()
     except School.DoesNotExist as e:
-        return Response({"detail": "Could not find school to delete."})
+        return Response({"detail": "Could not find school to delete."}, status=status.HTTP_404_NOT_FOUND)
     
+    if school.owner.id != request.user.id:
+        return Response({"detail": "Permission denied."}, status=status.HTTP_401_UNAUTHORIZED)
+
+    school.delete()
+
     return Response({"message": "School successfully deleted."})
 
 # UPDATE SCHOOL
