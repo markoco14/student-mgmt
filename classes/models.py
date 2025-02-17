@@ -13,7 +13,7 @@ from users.models import User
 class ClassEntity(models.Model):
     name = models.CharField(max_length=200)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    level = models.ForeignKey(Level, related_name="classes", on_delete=models.PROTECT)
+    level = models.ForeignKey(Level, related_name="classes", on_delete=models.CASCADE)
     days = models.ManyToManyField(SchoolDay, through='ClassDay', related_name="classes")
     teacher = models.ForeignKey(User, related_name="classes", on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
