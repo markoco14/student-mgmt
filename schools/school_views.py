@@ -1,20 +1,16 @@
 """
 holds all school related api views
 """
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView
-from schools.school_serializers import *
-# SchoolAccessPermissionSerializer,
-# SchoolDayListSerializer,
-# SchoolDaySerializer,
-# SchoolSerializer,
-# SchoolTeacherSerializer
-from schools.models import School, SchoolDay, SchoolUser
-from users import utils as user_utils
-from users.models import Teacher
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from schools.models import School, SchoolDay, SchoolUser
+from schools.school_serializers import *
+from users.models import Teacher
 
 
 # GET ALL SCHOOLS
@@ -116,21 +112,19 @@ def update_school(request, school_pk):
 
 #
 #
-#
 # SCHOOL USER ACCESS ROUTES
-# THESE ROUTES ANSWER WHO CAN ACCESS THE SCHOOLS
-# AND TO WHAT LEVEL CAN THEY ACCESS THE SCHOOLS
-#
 #
 #
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_user_schools(request):
     """
     list schools users can access
     """
-    user = user_utils.get_current_user(email=request.user)
-
-    schools = School.objects.filter(school_users__user_id=user.id).distinct()
+    if not request.user:
+        return Response({"detail": "User not found."})
+    
+    schools = School.objects.filter(school_users__user_id=request.user.id).distinct()
     serializer = SchoolSerializer(schools, many=True)
 
     return Response(serializer.data)

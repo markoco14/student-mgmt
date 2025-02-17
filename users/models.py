@@ -34,7 +34,7 @@ class User(AbstractUser):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.email
+        return f"User: {self.id} - Name: {self.first_name} {self.last_name} - Email: {self.email}"
 
 class OwnerManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
