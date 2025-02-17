@@ -109,15 +109,29 @@ def delete_school(request, school_pk):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_school(request, school_pk):
     """
     update school requiring all data
     """
-    school = School.objects.get(id=school_pk)
+    if not request.user:
+        return Response({"detail": "User not found."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    try:
+        school = School.objects.get(id=school_pk)
+    except School.DoesNotExist as e:
+        return Response({"detaiil": "Coult not find school to update."}, status=status.HTTP_404_NOT_FOUND)
+    
+    if school.owner.id != request.user.id:
+        return Response({"detail": "Permission denied."}, status=status.HTTP_401_UNAUTHORIZED)
+    
     serializer = SchoolSerializer(
         instance=school, data=request.data, partial=True)
+    
     if serializer.is_valid():
         serializer.save()
+    else:
+        return Response({"detail": "School serializer invalid."})
 
     return Response(serializer.data)
 
