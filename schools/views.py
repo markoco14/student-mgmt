@@ -1,20 +1,16 @@
 """
 holds all school related api views
 """
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView
-from schools.school_serializers import *
-# SchoolAccessPermissionSerializer,
-# SchoolDayListSerializer,
-# SchoolDaySerializer,
-# SchoolSerializer,
-# SchoolTeacherSerializer
-from schools.models import School, SchoolDay, SchoolUser
-from users import utils as user_utils
-from users.models import Teacher
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from schools.models import School, SchoolDay, SchoolUser
+from schools.school_serializers import *
+from users.models import Teacher
 
 
 # GET ALL SCHOOLS
@@ -25,6 +21,9 @@ def list_schools(request):
     """
     list all schools
     """
+    if not request.user.is_superuser:
+        return Response({"detail": "Permission denied."})
+    
     schools = School.objects.all()
     serializer = SchoolSerializer(schools, many=True)
 
@@ -39,6 +38,9 @@ def get_school_by_id(request, school_pk):
     """
     get a single school by id
     """
+    if not request.user:
+        return Response({"detail": "User not found."}, status=status.HTTP_401_UNAUTHORIZED)
+    
     schools = School.objects.get(id=school_pk)
     serializer = SchoolSerializer(schools, many=False)
 
@@ -47,35 +49,51 @@ def get_school_by_id(request, school_pk):
 
 # ADD NEW SCHOOL
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def add_school(request):
     """
     create a new school
     """
-    print("DEBUG: Received Data", request.data)
+    if not request.user:
+        return Response(
+            {"detail": "User not found."},
+            status=status.HTTP_401_UNAUTHORIZED
+            )
+    
+    if request.user.membership != "OWNER":
+        return Response(
+            {"detail": "You don't have permission to create schools. Please change your membership if you want to create your own school."},
+            status=status.HTTP_401_UNAUTHORIZED
+            )
 
-    school_serializer = SchoolSerializer(data=request.data)
+    school_serializer = SchoolSerializer(data={
+        "name": request.data["name"],
+        "owner": request.user.id
+        })
+
     if school_serializer.is_valid():
         school = school_serializer.save()
-        print("DEBUG: School Created", school)
     else:
-        print("ERROR: School serializer not valid", school_serializer.errors)
-        return Response("School serializer not valid")
+        return Response(
+            {"detail": "School serializer not valid"},
+            status=status.HTTP_400_BAD_REQUEST
+            )
 
     school_user = {
         "school": school.id,
-        "user": request.data.get('owner_id'),
+        "user": request.user.id,
         "role": SchoolUser.ROLE_OWNER,
     }
-    
-    print("DEBUG: Creating SchoolUser", school_user)
 
     school_user_serializer = SchoolUserSerializer(data=school_user)
+
     if school_user_serializer.is_valid():
         school_user_serializer.save()
-        print("DEBUG: SchoolUser Created")
     else:
-        print("ERROR: School user serializer not valid", school_user_serializer.errors) 
-        return Response("School user serializer not valid")
+        return Response(
+            {"detail": "School user serializer not valid"},
+            status=status.HTTP_400_BAD_REQUEST
+            )
     
     return Response(
         data=school_serializer.data,
@@ -88,11 +106,22 @@ def add_school(request):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_school(request, school_pk):
     """
     delete a school
     """
-    school = School.objects.get(id=school_pk)
+    if not request.user:
+        return Response({"detail": "User not found."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    try:
+        school = School.objects.get(id=school_pk)
+    except School.DoesNotExist as e:
+        return Response({"detail": "Could not find school to delete."}, status=status.HTTP_404_NOT_FOUND)
+    
+    if school.owner.id != request.user.id:
+        return Response({"detail": "Permission denied."}, status=status.HTTP_401_UNAUTHORIZED)
+
     school.delete()
 
     return Response({"message": "School successfully deleted."})
@@ -101,36 +130,48 @@ def delete_school(request, school_pk):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_school(request, school_pk):
     """
     update school requiring all data
     """
-    school = School.objects.get(id=school_pk)
+    if not request.user:
+        return Response({"detail": "User not found."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    try:
+        school = School.objects.get(id=school_pk)
+    except School.DoesNotExist as e:
+        return Response({"detaiil": "Coult not find school to update."}, status=status.HTTP_404_NOT_FOUND)
+    
+    if school.owner.id != request.user.id:
+        return Response({"detail": "Permission denied."}, status=status.HTTP_401_UNAUTHORIZED)
+    
     serializer = SchoolSerializer(
         instance=school, data=request.data, partial=True)
+    
     if serializer.is_valid():
         serializer.save()
+    else:
+        return Response({"detail": "School serializer invalid."})
 
     return Response(serializer.data)
 
 
 #
 #
-#
 # SCHOOL USER ACCESS ROUTES
-# THESE ROUTES ANSWER WHO CAN ACCESS THE SCHOOLS
-# AND TO WHAT LEVEL CAN THEY ACCESS THE SCHOOLS
-#
 #
 #
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_user_schools(request):
     """
     list schools users can access
     """
-    user = user_utils.get_current_user(email=request.user)
-
-    schools = School.objects.filter(school_users__user_id=user.id).distinct()
+    if not request.user:
+        return Response({"detail": "User not found."})
+    
+    schools = School.objects.filter(school_users__user_id=request.user.id).distinct()
     serializer = SchoolSerializer(schools, many=True)
 
     return Response(serializer.data)
