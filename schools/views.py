@@ -38,6 +38,9 @@ def get_school_by_id(request, school_pk):
     """
     get a single school by id
     """
+    if not request.user:
+        return Response({"detail": "User not found."}, status=status.HTTP_401_UNAUTHORIZED)
+    
     schools = School.objects.get(id=school_pk)
     serializer = SchoolSerializer(schools, many=False)
 
@@ -52,10 +55,16 @@ def add_school(request):
     create a new school
     """
     if not request.user:
-        return Response({"detail": "User not found."})
+        return Response(
+            {"detail": "User not found."},
+            status=status.HTTP_401_UNAUTHORIZED
+            )
     
     if request.user.membership != "OWNER":
-        return Response({"detail": "You don't have permission to create schools. Please change your membership if you want to create your own school."})
+        return Response(
+            {"detail": "You don't have permission to create schools. Please change your membership if you want to create your own school."},
+            status=status.HTTP_401_UNAUTHORIZED
+            )
 
     school_serializer = SchoolSerializer(data={
         "name": request.data["name"],
@@ -65,7 +74,10 @@ def add_school(request):
     if school_serializer.is_valid():
         school = school_serializer.save()
     else:
-        return Response("School serializer not valid")
+        return Response(
+            {"detail": "School serializer not valid"},
+            status=status.HTTP_400_BAD_REQUEST
+            )
 
     school_user = {
         "school": school.id,
@@ -78,7 +90,10 @@ def add_school(request):
     if school_user_serializer.is_valid():
         school_user_serializer.save()
     else:
-        return Response("School user serializer not valid")
+        return Response(
+            {"detail": "School user serializer not valid"},
+            status=status.HTTP_400_BAD_REQUEST
+            )
     
     return Response(
         data=school_serializer.data,
