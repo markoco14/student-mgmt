@@ -30,11 +30,6 @@ class User(AbstractUser):
 
     membership = models.CharField(max_length=10, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_STAFF)
 
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.membership = self.base_membership
-        return super().save(*args, **kwargs)
-
     def __str__(self):
         return f"User: {self.id} - Name: {self.first_name} {self.last_name} - Email: {self.email}"
 
