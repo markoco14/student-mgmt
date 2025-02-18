@@ -21,6 +21,9 @@ def list_schools(request):
     """
     list all schools
     """
+    if not request.user.is_superuser:
+        return Response({"detail": "Permission denied."})
+    
     schools = School.objects.all()
     serializer = SchoolSerializer(schools, many=True)
 
