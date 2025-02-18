@@ -53,6 +53,9 @@ def add_school(request):
     """
     if not request.user:
         return Response({"detail": "User not found."})
+    
+    if request.user.membership != "OWNER":
+        return Response({"detail": "You don't have permission to create schools. Please change your membership if you want to create your own school."})
 
     school_serializer = SchoolSerializer(data={
         "name": request.data["name"],
