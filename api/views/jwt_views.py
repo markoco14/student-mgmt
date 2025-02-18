@@ -8,15 +8,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        permission_queryset = SchoolAccessPermission.objects.filter(user_id=user.id)
-        permissions = []
-        for permission in permission_queryset:
-            permissions.append(permission.role_id.id)
-
         # Add custom claims
         token['name'] = user.first_name
-        token['role'] = user.role
-        token['permissions'] = permissions
+        token['membership'] = user.membership
         token['email'] = user.email
         # ...
 
