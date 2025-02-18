@@ -19,18 +19,20 @@ class User(AbstractUser):
 
     objects = CustomUserManager()
 
-    class Roles(models.TextChoices):
-        OWNER = "OWNER", "Owner"
-        ADMIN = "ADMIN", "Admin"
-        TEACHER = "TEACHER", "Teacher"
+    MEMBERSHIP_OWNER = "OWNER"
+    MEMBERSHIP_STAFF = "STAFF"
 
-    base_role = Roles.OWNER
+    # (Variable name, Readable value)
+    MEMBERSHIP_CHOICES = [
+        (MEMBERSHIP_OWNER, "Owner"),
+        (MEMBERSHIP_STAFF, "Staff")
+    ]
 
-    role = models.CharField(_("Role"), max_length=50, choices=Roles.choices, default=base_role)
+    membership = models.CharField(max_length=10, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_STAFF)
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.role = self.base_role
+            self.membership = self.base_membership
         return super().save(*args, **kwargs)
 
     def __str__(self):
@@ -41,7 +43,7 @@ class OwnerManager(models.Manager):
         return super().get_queryset(*args, **kwargs).filter(role=User.Roles.OWNER)
     
 class Owner(User):
-    base_role = User.Roles.OWNER
+    base_membership = User.MEMBERSHIP_OWNER
     objects = OwnerManager()
 
     class Meta:
@@ -52,7 +54,7 @@ class TeacherManager(models.Manager):
         return super().get_queryset(*args, **kwargs).filter(role=User.Roles.TEACHER)
 
 class Teacher(User):
-    base_role = User.Roles.TEACHER
+    base_membership = User.MEMBERSHIP_STAFF
     objects = TeacherManager()
 
     class Meta:
@@ -64,7 +66,7 @@ class AdminManager(models.Manager):
         return super().get_queryset(*args, **kwargs).filter(role=User.Roles.ADMIN)
 
 class Admin(User):
-    base_role = User.Roles.ADMIN
+    base_membership = User.MEMBERSHIP_STAFF
     objects = AdminManager()
 
     class Meta:
