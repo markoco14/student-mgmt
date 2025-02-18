@@ -37,8 +37,11 @@ def getUserProfileById(request, user_pk):
 
 
 @api_view(['POST'])
-def addUser(request):
-    serializer = UserSerializer(data=request.data)
+def addOwnerMembershipUser(request):
+    data = request.data.copy()
+    data["membership"] = User.MEMBERSHIP_OWNER
+    serializer = UserSerializer(data=data)
+
     if serializer.is_valid():
         user = serializer.save()
     else:
