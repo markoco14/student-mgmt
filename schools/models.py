@@ -83,10 +83,31 @@ class SchoolDay(models.Model):
     School day model. what days are the schools open.
     """
     school = models.ForeignKey(School, related_name='days', on_delete=models.CASCADE)
-    day = models.ForeignKey(Weekday, on_delete=models.CASCADE)
+
+    # Role Choices
+    MONDAY = "MONDAY"
+    TUESDAY = "TUESDAY"
+    WEDNESDAY = "WEDNESDAY"
+    THURSDAY = "THURSDAY"
+    FRIDAY = "FRIDAY"
+    SATURDAY = "SATURDAY"
+    SUNDAY = "SUNDAY"
+
+    DAY_CHOICES = [
+        (MONDAY, "Monday"),
+        (TUESDAY, "Tuesday"),
+        (WEDNESDAY, "Wednesday"),
+        (THURSDAY, "Thursday"),
+        (FRIDAY, "Friday"),
+        (SATURDAY, "Saturday"),
+        (SUNDAY, "Sunday")
+    ]
+
+    # day = models.ForeignKey(Weekday, on_delete=models.CASCADE)
+    day = models.CharField(max_length=9, choices=DAY_CHOICES, default=MONDAY)
 
     def __str__(self):
-        return f"School day (id: {self.id}) @ {self.school.name} (id: {self.school.id}) open on {self.day.day}"
+        return f"School day (id: {self.id}) @ {self.school.name} (id: {self.school.id})."
     
     class Meta:
         db_table = 'schools_school_days'
