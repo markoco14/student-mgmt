@@ -16,7 +16,7 @@ class School(models.Model):
     School model
     """
     name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=120, unique=True, null=True)
+    slug = models.SlugField(max_length=120, unique=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, db_column='owner_id')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
