@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from reports.models import Report, ReportDetails
 from classes.models import ClassStudent
-from ..serializers.serializers import ReportDetailsSerializer, ReportSerializer
+from reports.report_serializers import ReportDetailsSerializer, ReportSerializer
 from django.core.exceptions import ObjectDoesNotExist
 
 #

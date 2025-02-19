@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from schools.models import School, SchoolDay, SchoolUser
-from schools.school_serializers import *
+from schools.serializers import *
 from users.models import Teacher
 
 
