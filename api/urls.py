@@ -15,7 +15,7 @@ from .views import schedule_views
 
 urlpatterns = [
     # GREETING ROUTE
-    path('', views.helloWorld, name="hello-world"),
+    path('', views.healthCheck, name="health-check"),
 
     # AUTH ROUTES
     path('token/', jwt_views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),

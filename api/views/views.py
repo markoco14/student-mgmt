@@ -6,8 +6,8 @@ from rest_framework.decorators import api_view
 
 
 @api_view(['GET'])
-def helloWorld(request):
+def healthCheck(request):
 
-    return Response({"message": "Hello World"})
+    return Response({"message": "Healthy"})
      
 
