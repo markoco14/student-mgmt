@@ -1,8 +1,10 @@
 """
 all school related models
 """
+import uuid
 
 from django.db import models
+from django.utils.text import slugify
 from schedule.models import Weekday
 from users.models import User
 
@@ -13,7 +15,8 @@ class School(models.Model):
     """
     School model
     """
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=120, unique=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, db_column='owner_id')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
