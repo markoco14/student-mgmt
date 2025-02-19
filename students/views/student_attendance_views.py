@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from rest_framework.exceptions import NotFound
-from api.serializers.student_serializers import StudentSerializer
+from students.student_serializers import StudentSerializer
 from students.models.student import Student
 from students.models.student_attendence_model import StudentAttendance
 
