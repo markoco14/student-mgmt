@@ -2,7 +2,7 @@ from typing import List
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from api.serializers.serializers import StudentSerializer
+from api.serializers.student_serializers import StudentSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.decorators import api_view
 from classes.models import ClassEntity

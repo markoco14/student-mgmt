@@ -1,8 +1,6 @@
 from rest_framework import serializers
-from students.models import Student
-from schools.models import School, SchoolUser
 from users.models import Admin, Teacher, User
-from reports.models import Report, ReportDetails
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -43,30 +41,4 @@ class AdminSerializer(serializers.ModelSerializer):
 
 
 
-
-
-class StudentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Student
-        fields = '__all__'
-
-
-class ReportSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Report
-        fields = '__all__'
-
-
-class ReportDetailsSerializer(serializers.ModelSerializer):
-    student_info = serializers.SerializerMethodField()
-
-    class Meta:
-        model = ReportDetails
-        fields = '__all__'
-
-    def get_student_info(self, obj):
-        student = Student.objects.get(id=obj.student_id)
-        serializer = StudentSerializer(student, many=False)
-        return serializer.data
 

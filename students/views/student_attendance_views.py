@@ -5,10 +5,9 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from rest_framework.exceptions import NotFound
-from api.serializers.serializers import StudentSerializer
+from api.serializers.student_serializers import StudentSerializer
 from students.models.student import Student
 from students.models.student_attendence_model import StudentAttendance
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from students.serializers.student_attendance_serializers import StudentAttendanceDetailSerializer, StudentAttendanceSerializer, StudentWithAttendanceSerializer
 from students.student_utils import create_attendance_records

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.serializers.serializers import StudentSerializer
+from api.serializers.student_serializers import StudentSerializer
 from students.models.student import Student
 from students.models.student_attendence_model import StudentAttendance
 

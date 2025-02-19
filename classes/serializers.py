@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.serializers.serializers import StudentSerializer
+from api.serializers.student_serializers import StudentSerializer
 # from assessment.serializers.assessment_serializer import AssessmentSerializer
 from classes.models import ClassAssessment, ClassDay, ClassEntity, ClassStudent
 
