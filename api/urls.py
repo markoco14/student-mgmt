@@ -10,7 +10,7 @@ from rest_framework_simplejwt.views import (
 
 from .views import views
 from .views import jwt_views
-from .views import schedule_views
+from schedule import views as schedule_views
 
 
 urlpatterns = [
