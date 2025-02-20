@@ -65,9 +65,10 @@ def add_school(request):
             {"detail": "You don't have permission to create schools. Please change your membership if you want to create your own school."},
             status=status.HTTP_401_UNAUTHORIZED
             )
-
+    
     school_serializer = SchoolSerializer(data={
         "name": request.data["name"],
+        "slug": request.data["slug"],
         "owner": request.user.id
         })
 
