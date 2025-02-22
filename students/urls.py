@@ -7,6 +7,7 @@ urlpatterns = [
     # STUDENT ROUTES
     # path('students/', student_views.StudentList.as_view(), name='student-list'),
     path('students/', views.list_students, name="student-list"),
+    path('students/new', views.new_student, name="student-new"),
 
 
 
