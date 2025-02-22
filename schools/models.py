@@ -22,7 +22,7 @@ class School(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.name} (id: {self.id}) Owner: {self.owner_id.first_name} {self.owner_id.last_name} (id: {self.owner_id.id})"
+        return f"{self.name} (id: {self.id}) Owner: {self.owner.first_name} {self.owner.last_name} (id: {self.owner.id})"
 
 
 class SchoolUser(models.Model):
