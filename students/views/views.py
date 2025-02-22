@@ -117,11 +117,14 @@ def edit_student(request, student_pk):
         - only allow owner membership
         - only if student exists
         - only allow those with school access is owner or admin
-    Body **all optional:
+    Editable fields (optional):
         - first_name
         - last_name
         - age
         - gender 0 = male and 1 = female
+        - photo_url
+    Uneditable fields:
+        - school
     """
     if not request.user.is_authenticated:
         return Response({"detail": "Unauthenticated"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -130,6 +133,8 @@ def edit_student(request, student_pk):
     if request.user.membership != User.MEMBERSHIP_OWNER:
         return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
     
+    if not request.data:
+        return Response({"detail": "No data in request"}, status=status.HTTP_400_BAD_REQUEST)
     # check if student exists
     db_student = Student.objects.filter(id=student_pk).first()
     if not db_student:
@@ -140,17 +145,25 @@ def edit_student(request, student_pk):
     if not school_user:
         return Response({"detail": "No access granted."})
     
-    if db_student.first_name != request.data["first_name"]:
+    first_name = request.data.get("first_name", None)
+    if first_name:
         db_student.first_name = request.data["first_name"]
 
-    if db_student.last_name != request.data["last_name"]:
+    last_name = request.data.get("last_name", None)
+    if last_name:
         db_student.last_name = request.data["last_name"]
 
-    if db_student.age != request.data["age"]:
+    age = request.data.get("age", None)
+    if age:
         db_student.age = request.data["age"]
     
-    if db_student.gender != request.data["gender"]:
+    gender = request.data.get("gender", None)
+    if gender:
         db_student.gender = request.data["gender"]
+
+    photo_url = request.data.get("photo_url", None)
+    if photo_url:
+        db_student.photo_url = request.data["photo_url"]
     
     db_student.save()
 
