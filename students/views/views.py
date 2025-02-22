@@ -1,6 +1,7 @@
 """
 holds all student related api views
 """
+import time
 from typing import List
 
 from rest_framework import status, request
@@ -26,7 +27,7 @@ def list_students(request: request) -> List[Student]:
         - if no school selected, only show internally (is_superuser for now, include is_admin later)
         - if school selected, only allow if user has access to that school
     Query params:
-        - school: returns only students for that school
+        - school: the school slug from the page url path, passed as query param
     """
     if not request.user.is_authenticated:
         return Response({"detail": "Unauthenticated"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -40,11 +41,11 @@ def list_students(request: request) -> List[Student]:
         
         students = Student.objects.all()
     else:
-        school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=school).first()
+        school_user = SchoolUser.objects.filter(user=request.user.id).filter(school__slug=school).first()
         if not school_user:
             return Response({"detail": "No access granted."})
         
-        students = Student.objects.filter(school=school).all()
+        students = Student.objects.filter(school__slug=school).all()
     
 
     serializer = StudentSerializer(students, many=True)
