@@ -9,13 +9,10 @@ from schools import views
 urlpatterns = [
     # SCHOOL ROUTES
     path('schools/', views.list_schools, name="list-schools"),
-    path('schools/<str:school_pk>/get/',
-         views.get_school_by_id, name="get-school-by-id"),
+    path('schools/<str:school_pk>/get/', views.get_school_by_id, name="get-school-by-id"),
     path('schools/add/', views.add_school, name="add-school"),
-    path('schools/<str:school_pk>/update/',
-         views.update_school, name="update-school"),
-    path('schools/<str:school_pk>/delete/',
-         views.delete_school, name="delete-school"),
+    path('schools/<str:school_pk>/update/', views.update_school, name="update-school"),
+    path('schools/<str:school_pk>/delete/', views.delete_school, name="delete-school"),
 
     # SCHOOL DAY ROUTES
     path('school-days/',
