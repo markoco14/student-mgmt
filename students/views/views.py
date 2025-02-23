@@ -1,7 +1,6 @@
 """
 holds all student related api views
 """
-import time
 from typing import List
 
 from rest_framework import status, request
@@ -14,7 +13,6 @@ from schools.serializers import *
 from students.models.student import Student
 from students.serializers.serializers import StudentSerializer
 from users.models import User
-
 
 
 @api_view(['GET'])
@@ -63,11 +61,10 @@ def new_student(request: request) -> Student:
         - only owner membership for now, later allow staff
         - only if user (owner) has access permission to that school
     Body:
-        first_name
-        last_name
+        firstName
+        lastName
         age
-        gender 0 = male and 1 = female
-        photo_url** optional
+        gender (0 = male and 1 = female)
         school
     """
     if not request.user.is_authenticated:
@@ -78,18 +75,22 @@ def new_student(request: request) -> Student:
         return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
     
     # we need to only allow if the user has access, regardless of membership
-    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=request.data["school"]).first()
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school__slug=request.data["schoolSlug"]).first()
     if not school_user:
         return Response({"detail": "No access granted."})
 
-    student_serializer = StudentSerializer(data=request.data)
+    student_data = request.data.copy()
+    student_data.pop("schoolSlug", None)
+    student_data["schoolID"] = school_user.school.id
+    
+    student_serializer = StudentSerializer(data=student_data)
 
     if student_serializer.is_valid():
         student_serializer.save()
     else:
-        return Response({"detail": "Something is wrong with the request data"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(student_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    return Response(student_serializer.data)
+    return Response(student_serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])
