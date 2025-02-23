@@ -120,11 +120,11 @@ def edit_student(request, student_pk):
         - only if student exists
         - only allow those with school access is owner or admin
     Editable fields (optional):
-        - first_name
-        - last_name
+        - firstName
+        - lastName
         - age
         - gender 0 = male and 1 = female
-        - photo_url
+        - photoUrl
     Uneditable fields:
         - school
     """
@@ -147,13 +147,13 @@ def edit_student(request, student_pk):
     if not school_user:
         return Response({"detail": "No access granted."})
     
-    first_name = request.data.get("first_name", None)
+    first_name = request.data.get("firstName", None)
     if first_name:
-        db_student.first_name = request.data["first_name"]
+        db_student.first_name = request.data["firstName"]
 
-    last_name = request.data.get("last_name", None)
+    last_name = request.data.get("lastName", None)
     if last_name:
-        db_student.last_name = request.data["last_name"]
+        db_student.last_name = request.data["lastName"]
 
     age = request.data.get("age", None)
     if age:
@@ -163,9 +163,9 @@ def edit_student(request, student_pk):
     if gender:
         db_student.gender = request.data["gender"]
 
-    photo_url = request.data.get("photo_url", None)
+    photo_url = request.data.get("photoUrl", None)
     if photo_url:
-        db_student.photo_url = request.data["photo_url"]
+        db_student.photo_url = request.data["photoUrl"]
     
     db_student.save()
 
