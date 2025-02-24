@@ -32,6 +32,20 @@ def list_schools(request):
 
 # GET SCHOOL BY SCHOOL ID
 
+@api_view(['GET'])
+def get_school_by_slug(request, school_slug):
+    """
+    get a single school by id
+    """
+    if not request.user:
+        return Response({"detail": "User not found."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    schools = School.objects.get(slug=school_slug)
+    serializer = SchoolSerializer(schools, many=False)
+
+    return Response(serializer.data)
+
+
 
 @api_view(['GET'])
 def get_school_by_id(request, school_pk):
