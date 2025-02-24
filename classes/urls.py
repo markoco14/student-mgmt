@@ -5,7 +5,9 @@ from classes.views import class_assessment_views, classes_views, class_students_
 urlpatterns = [
     # CLASS ROUTES
     path("classes/", views.list_classes, name="class-list"),
-    path("classes/new/", views.new_class, name="class-new")
+    path("classes/new/", views.new_class, name="class-new"),
+    
+    path("classes/<str:class_pk>/edit/", views.update_class, name="class-edit")
     # path('classes/', classes_views.ClassEntityList.as_view(), name="class-list"),
     # path('classes/<str:class_entity_pk>/', classes_views.ClassEntityDetail.as_view(), name='class-detail'),
 	
