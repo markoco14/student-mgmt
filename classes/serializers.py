@@ -5,18 +5,18 @@ from classes.models import ClassAssessment, ClassDay, ClassEntity, ClassStudent
 
 
 class ClassEntitySerializer(serializers.ModelSerializer):
-    class_list = serializers.SerializerMethodField()
+    # class_list = serializers.SerializerMethodField()
 
     class Meta:
         model = ClassEntity
-        fields = '__all__'
+        fields = ['id', 'school', 'name', 'level', 'teacher', 'days']
 
-    def get_class_list(self, obj):
-        print(obj)
-        class_list = ClassStudent.objects.filter(class_id=obj.id)
-        serializer = ClassStudentSerializer(class_list, many=True)
+    # def get_class_list(self, obj):
+    #     print(obj)
+    #     class_list = ClassStudent.objects.filter(class_id=obj.id)
+    #     serializer = ClassStudentSerializer(class_list, many=True)
 
-        return serializer.data
+    #     return serializer.data
     
 class ClassEntityWriteSerializer(serializers.ModelSerializer):
     
