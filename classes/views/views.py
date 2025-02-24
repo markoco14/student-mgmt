@@ -135,4 +135,30 @@ def update_class(request, class_pk):
     class_serializer = ClassEntitySerializer(db_class, many=False)
     
     return Response(class_serializer.data)
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_class(request, class_pk):
+    """
+    Deletes a class
+    """
+    if not request.user.is_authenticated:
+        return Response({"detail": "Unauthenticated"}, status=status.HTTP_401_UNAUTHORIZED)
     
+    # only allow with owner membership for now, later need to allow staff
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    db_class = ClassEntity.objects.filter(id=class_pk).first()
+    if not db_class:
+        return Response({"detail": "Class not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    school_access = SchoolUser.objects.filter(user=request.user.id).filter(school=db_class.school)
+    if not school_access:
+        return Response({"detail": "You can't access classes for this school"})
+    
+    db_class.delete()
+
+    return Response({"detail": "Success"}, status=status.HTTP_204_NO_CONTENT)
+
