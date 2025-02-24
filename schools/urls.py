@@ -14,6 +14,8 @@ urlpatterns = [
     path('schools/<str:school_pk>/update/', views.update_school, name="update-school"),
     path('schools/<str:school_pk>/delete/', views.delete_school, name="delete-school"),
 
+    path('schools/slug/<str:school_slug>/', views.get_school_by_slug, name="get-school-by-slug"),
+
     # SCHOOL DAY ROUTES
     path('school-days/',
          views.SchoolDayList.as_view(), name='school-day-list'),
