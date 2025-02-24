@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from schools.models import School
 from students.serializers.serializers import StudentSerializer
 # from assessment.serializers.assessment_serializer import AssessmentSerializer
 from classes.models import ClassAssessment, ClassDay, ClassEntity, ClassStudent
@@ -6,10 +7,10 @@ from classes.models import ClassAssessment, ClassDay, ClassEntity, ClassStudent
 
 class ClassEntitySerializer(serializers.ModelSerializer):
     # class_list = serializers.SerializerMethodField()
-
+    schoolID = serializers.PrimaryKeyRelatedField(source="school", queryset=School.objects.all())
     class Meta:
         model = ClassEntity
-        fields = ['id', 'school', 'name', 'level', 'teacher', 'days']
+        fields = ['id', 'schoolID', 'name', 'level', 'teacher', 'days']
 
     # def get_class_list(self, obj):
     #     print(obj)
