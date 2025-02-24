@@ -75,13 +75,11 @@ def new_student(request: request) -> Student:
         return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
     
     # we need to only allow if the user has access, regardless of membership
-    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school__slug=request.data["schoolSlug"]).first()
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=request.data["schoolID"]).first()
     if not school_user:
         return Response({"detail": "No access granted."})
 
     student_data = request.data.copy()
-    student_data.pop("schoolSlug", None)
-    student_data["schoolID"] = school_user.school.id
     
     student_serializer = StudentSerializer(data=student_data)
 
