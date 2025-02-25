@@ -13,6 +13,7 @@ urlpatterns = [
     path('levels/', new_level_views.list_levels, name='level-list'),
     path('levels/new/', new_level_views.new_level, name="level-new"),
 	path('levels/<str:level_pk>/', level_views.LevelDetail.as_view(), name='level-detail'),
+	path('levels/<str:level_pk>/delete', new_level_views.delete_level, name='level-delete'),
     
     # SUBJECT-LEVEL URI PATHS
     path('subject-levels/', subject_level_views.SubjectLevelList.as_view(),
