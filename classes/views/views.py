@@ -67,14 +67,19 @@ def new_class(request):
     school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=request.data["schoolID"]).first()
     if not school_user:
         return Response({"detail": "No access granted."})
-
-    if isinstance(request.data["days"], str):
-        days_list = ast.literal_eval(request.data["days"])
-    else:
-        days_list = request.data["days"]
-
+    
     class_data = request.data.copy()
-    class_data["days"] = days_list
+
+    days = request.data.get("days", None)
+    if days:
+        if isinstance(days, str):
+            days_list = ast.literal_eval(days)
+        else:
+            days_list = days
+
+        class_data["days"] = days_list
+    else:
+        class_data["days"] = []
 
     class_serializer = ClassEntitySerializer(data=class_data)
 
