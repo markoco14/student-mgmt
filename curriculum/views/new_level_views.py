@@ -67,6 +67,46 @@ def new_level(request):
     return Response(level_serializer.data)
 
 
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def edit_level(request, level_pk):
+    """
+    Save a new level for the school
+    """
+    if not request.user.is_authenticated:
+        return Response({"detail": "Unauthorized."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # only allow with owner membership for now, later need to allow staff
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # we need to only allow if the user has access, regardless of membership
+    try:
+        level = Level.objects.filter(id=level_pk).get()
+    except Level.DoesNotExist:
+        return Response({"detail": "Level not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=level.school).first()
+    if not school_user:
+        return Response({"detail": "No access granted."})
+
+    name = request.data.get("name", None)
+    if name:
+        level.name = name
+
+    order = request.data.get("order", None)
+    if order:
+        level.order = order
+
+    try:
+        level.save()
+    except Exception as e:
+        return Response({"detail": "Something went wrong with our server. Please try again."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    level_serializer = LevelSerializer(level, many=False)
+
+    return Response(level_serializer.data)
+
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
 def delete_level(request, level_pk):
