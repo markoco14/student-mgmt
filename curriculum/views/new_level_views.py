@@ -66,6 +66,33 @@ def new_level(request):
     
     return Response(level_serializer.data)
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def show_level(request, level_pk):
+    """
+    Show level details
+    """
+    if not request.user.is_authenticated:
+        return Response({"detail": "Unauthorized."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # only allow with owner membership for now, later need to allow staff
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # we need to only allow if the user has access, regardless of membership
+    try:
+        level = Level.objects.filter(id=level_pk).get()
+    except Level.DoesNotExist:
+        return Response({"detail": "Level not found."}, status=status.HTTP_404_NOT_FOUND)
+    
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=level.school).first()
+    if not school_user:
+        return Response({"detail": "No access granted."})
+    
+    level_serializer = LevelSerializer(level, many=False)
+
+    return Response(level_serializer.data)
+
 
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
