@@ -42,3 +42,31 @@ def list_subjects(request):
     subject_serializer = SubjectSerializer(subjects, many=True)
 
     return Response(subject_serializer.data)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def new_subject(request):
+    """
+    Save a new subject for the school
+    """
+    if not request.user.is_authenticated:
+        return Response({"detail": "Unauthorized."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # only allow with owner membership for now, later need to allow staff
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # we need to only allow if the user has access, regardless of membership
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=request.data["schoolID"]).first()
+    if not school_user:
+        return Response({"detail": "No access granted."})
+    
+    subject_serializer = SubjectSerializer(data=request.data)
+
+    if subject_serializer.is_valid():
+        subject_serializer.save()
+    else:
+        return Response(subject_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response(subject_serializer.data)

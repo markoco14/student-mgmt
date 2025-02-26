@@ -8,6 +8,7 @@ urlpatterns = [
 
 	# SUBJECT URI PATHS
 	path('subjects/', subject_views.list_subjects, name="subject-list"),
+	path('subjects/new/', subject_views.new_subject, name="subject-new"),
 	path('subjects/<str:subject_pk>/', old_subject_views.SubjectDetail.as_view(), name="subject-detail"),
 	
     # LEVEL URI PATHS

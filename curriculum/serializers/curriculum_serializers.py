@@ -9,9 +9,10 @@ class LevelSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'schoolID', 'order']
         
 class SubjectSerializer(serializers.ModelSerializer):
+    schoolID = serializers.PrimaryKeyRelatedField(source="school", queryset=School.objects.all())
     class Meta:
         model = Subject
-        fields = '__all__'
+        fields = ['id', 'name', 'schoolID']
 
 
 class SubjectLevelSerializer(serializers.ModelSerializer):
