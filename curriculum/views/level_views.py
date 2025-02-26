@@ -1,106 +1,165 @@
-from rest_framework.response import Response
+"""
+holds all level related api views
+"""
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from curriculum.models.level_model import Level
 from curriculum.serializers.curriculum_serializers import LevelSerializer
-from rest_framework.exceptions import NotFound
-from rest_framework.views import APIView
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from schools.models import SchoolUser
+from users.models import User
 
 
-from curriculum.models import Level
-
-
-class LevelList(APIView):
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def list_levels(request):
     """
-    List all Levels, or create a new one.
-    """ 
-
-    def get(self, request, format=None):
-        levels = Level.objects.all().order_by('order')
-
-        # Fetch query parameters
-        per_page = request.query_params.get('per_page', 15)
-        page = request.query_params.get('page', None)
-
-        # Filter by school
-
-        school = request.query_params.get('school')
-        if school:
-            levels = levels.filter(school__id=school)
-
-        if page is not None:
-
-            try:
-                page = int(page)
-            except ValueError:
-                return Response({"detail": "Page number needs to be an integer greater than 0"})
-            
-
-            paginator = Paginator(levels, per_page)
-
-            try:
-                levels = paginator.page(page)
-            except PageNotAnInteger:
-                levels = paginator.page(1)
-            except EmptyPage:
-                levels = paginator.page(paginator.num_pages)
-
-            serializer = LevelSerializer(levels, many=True)
-
-            return Response({
-                'count': paginator.count,
-                'total_pages': paginator.num_pages,
-                'current_page': int(page),
-                'per_page': int(per_page),
-                'next': levels.next_page_number() if levels.has_next() else None,
-                'previous': levels.previous_page_number() if levels.has_previous() else None,
-                'results': serializer.data
-            })
-
-
-        serializer = LevelSerializer(levels, many=True)
-        return Response(serializer.data)
-    
-    def post(self, request, format=None):
-        serializer = LevelSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-class LevelDetail(APIView):
+    Returns a list of classes.
     """
-    Retrieve, update or delete a Level.
-    """
-
-    def get_object(self, level_pk):
-        try:
-            return Level.objects.get(id=level_pk)
-        except Level.DoesNotExist:
-            raise NotFound(detail="Object with this ID not found.")
-
-    def get(self, request, level_pk, format=None):
-        level = self.get_object(level_pk)
-        serializer = LevelSerializer(level)
-        return Response(serializer.data)
-
-    def put(self, request, level_pk, format=None):
-        level = self.get_object(level_pk)
-        serializer = LevelSerializer(level, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if not request.user.is_authenticated:
+        return Response({"detail": "Unauthorized."}, status=status.HTTP_401_UNAUTHORIZED)
     
-     # Partially update a specific entry by primary key
-    def patch(self, request, level_pk):
-        level = self.get_object(level_pk)
-        serializer = LevelSerializer(level, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    school = request.query_params.get("school")
+    if not school:
+        if not request.user.is_superuser:
+            return Response({"detail": "Access denied."})
+    
+        levels = Level.objects.all()
+    else:
+        school_user = SchoolUser.objects.filter(user=request.user.id).filter(school__slug=school).first()
+        if not school_user:
+            return Response({"detail": "You don't have permission to list these classes"}, status=status.HTTP_401_UNAUTHORIZED)
 
-    def delete(self, request, level_pk, format=None):
-        level = self.get_object(level_pk)
+        levels = Level.objects.filter(school=school_user.school).all()
+
+    level_serializer = LevelSerializer(levels, many=True)
+
+    return Response(level_serializer.data)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def new_level(request):
+    """
+    Save a new level for the school
+    """
+    if not request.user.is_authenticated:
+        return Response({"detail": "Unauthorized."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # only allow with owner membership for now, later need to allow staff
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # we need to only allow if the user has access, regardless of membership
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=request.data["schoolID"]).first()
+    if not school_user:
+        return Response({"detail": "No access granted."})
+    
+    level_serializer = LevelSerializer(data=request.data)
+
+    if level_serializer.is_valid():
+        level_serializer.save()
+    else:
+        return Response(level_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response(level_serializer.data)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def show_level(request, level_pk):
+    """
+    Show level details
+    """
+    if not request.user.is_authenticated:
+        return Response({"detail": "Unauthorized."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # only allow with owner membership for now, later need to allow staff
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # we need to only allow if the user has access, regardless of membership
+    try:
+        level = Level.objects.filter(id=level_pk).get()
+    except Level.DoesNotExist:
+        return Response({"detail": "Level not found."}, status=status.HTTP_404_NOT_FOUND)
+    
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=level.school).first()
+    if not school_user:
+        return Response({"detail": "No access granted."})
+    
+    level_serializer = LevelSerializer(level, many=False)
+
+    return Response(level_serializer.data)
+
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def edit_level(request, level_pk):
+    """
+    Save a new level for the school
+    """
+    if not request.user.is_authenticated:
+        return Response({"detail": "Unauthorized."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # only allow with owner membership for now, later need to allow staff
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # we need to only allow if the user has access, regardless of membership
+    try:
+        level = Level.objects.filter(id=level_pk).get()
+    except Level.DoesNotExist:
+        return Response({"detail": "Level not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=level.school).first()
+    if not school_user:
+        return Response({"detail": "No access granted."})
+
+    name = request.data.get("name", None)
+    if name:
+        level.name = name
+
+    order = request.data.get("order", None)
+    if order:
+        level.order = order
+
+    try:
+        level.save()
+    except Exception as e:
+        return Response({"detail": "Something went wrong with our server. Please try again."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    level_serializer = LevelSerializer(level, many=False)
+
+    return Response(level_serializer.data)
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_level(request, level_pk):
+    """
+    Save a new level for the school
+    """
+    if not request.user.is_authenticated:
+        return Response({"detail": "Unauthorized."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # only allow with owner membership for now, later need to allow staff
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # we need to only allow if the user has access, regardless of membership
+    try:
+        level = Level.objects.filter(id=level_pk).get()
+    except Level.DoesNotExist:
+        return Response({"detail": "Level not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=level.school).first()
+    if not school_user:
+        return Response({"detail": "No access granted."})
+
+    try:
         level.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({"detail": "Something went wrong deleting the level."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    return Response({"detail": "Success"}, status=status.HTTP_204_NO_CONTENT)
