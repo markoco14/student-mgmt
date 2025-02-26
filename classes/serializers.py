@@ -1,22 +1,21 @@
 from rest_framework import serializers
+from schools.models import School
 from students.serializers.serializers import StudentSerializer
-# from assessment.serializers.assessment_serializer import AssessmentSerializer
 from classes.models import ClassAssessment, ClassDay, ClassEntity, ClassStudent
 
 
 class ClassEntitySerializer(serializers.ModelSerializer):
-    class_list = serializers.SerializerMethodField()
-
+    schoolID = serializers.PrimaryKeyRelatedField(source="school", queryset=School.objects.all())
     class Meta:
         model = ClassEntity
-        fields = '__all__'
+        fields = ['id', 'schoolID', 'name', 'level', 'teacher', 'days']
 
-    def get_class_list(self, obj):
-        print(obj)
-        class_list = ClassStudent.objects.filter(class_id=obj.id)
-        serializer = ClassStudentSerializer(class_list, many=True)
+    # def get_class_list(self, obj):
+    #     print(obj)
+    #     class_list = ClassStudent.objects.filter(class_id=obj.id)
+    #     serializer = ClassStudentSerializer(class_list, many=True)
 
-        return serializer.data
+    #     return serializer.data
     
 class ClassEntityWriteSerializer(serializers.ModelSerializer):
     

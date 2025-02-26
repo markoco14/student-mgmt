@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from curriculum.models import Level, Subject, SubjectLevel, Module, ModuleType
+from schools.models import School
 
 class LevelSerializer(serializers.ModelSerializer):
+    schoolID = serializers.PrimaryKeyRelatedField(source="school", queryset=School.objects.all())
     class Meta:
         model = Level
-        fields = '__all__'
+        fields = ['id', 'name', 'schoolID', 'order']
         
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
