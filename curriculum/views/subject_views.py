@@ -91,10 +91,42 @@ def show_subject(request, subject_pk):
     except Subject.DoesNotExist:
         raise NotFound(detail="Object with this ID not found.")
 
-    school_user = SchoolUser.objects.filter(use=request.user.id).filter(school=subject.school).first()
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=subject.school).first()
     if not school_user:
         return Response({"detail": "No access granted."})
     
+    subject_serializer = SubjectSerializer(subject, many=False)
+
+    return Response(subject_serializer.data)
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def edit_subject(request, subject_pk):
+    """
+    Updates a subject
+    """
+    if not request.user.is_authenticated:
+        return Response({"detail": "Unauthorized."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # only allow with owner membership for now, later need to allow staff
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    try:
+        subject = Subject.objects.get(id=subject_pk)
+    except Subject.DoesNotExist:
+        raise NotFound(detail="Object with this ID not found.")
+
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=subject.school).first()
+    if not school_user:
+        return Response({"detail": "No access granted."})
+    
+    name = request.data.get("name", None)
+    if name:
+        subject.name = name
+    
+    subject.save()
+
     subject_serializer = SubjectSerializer(subject, many=False)
 
     return Response(subject_serializer.data)
