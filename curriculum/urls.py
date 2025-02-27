@@ -11,6 +11,7 @@ urlpatterns = [
 	path('subjects/new/', subject_views.new_subject, name="subject-new"),
 	path('subjects/<str:subject_pk>/', subject_views.show_subject, name="subject-detail"),
 	path('subjects/<str:subject_pk>/edit/', subject_views.edit_subject, name="subject-edit"),
+	path('subjects/<str:subject_pk>/delete/', subject_views.delete_subject, name="subject-delete"),
 	
     # LEVEL URI PATHS
     path('levels/', level_views.list_levels, name='level-list'),

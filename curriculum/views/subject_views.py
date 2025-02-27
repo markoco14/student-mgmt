@@ -1,15 +1,15 @@
 """
 holds all subject related api views
 """
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 
-from curriculum.models.level_model import Level
 from curriculum.models.subject_model import Subject
-from curriculum.serializers.curriculum_serializers import LevelSerializer, SubjectSerializer
+from curriculum.serializers.curriculum_serializers import SubjectSerializer
 from schools.models import SchoolUser
 from users.models import User
 
@@ -130,3 +130,28 @@ def edit_subject(request, subject_pk):
     subject_serializer = SubjectSerializer(subject, many=False)
 
     return Response(subject_serializer.data)
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_subject(request, subject_pk):
+    """
+    Deletes a subject
+    """
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_403_FORBIDDEN)
+
+    subject = get_object_or_404(Subject, id=subject_pk)
+
+    allowed_roles = ["admin", "owner"]
+    has_access = SchoolUser.objects.filter(user=request.user, school=subject.school, role__in=allowed_roles).exists()
+    if not has_access:
+        return Response({"detail": "No access granted."}, status=status.HTTP_403_FORBIDDEN)
+    
+    try:
+        subject.delete()
+    except Exception as e:
+        print(f"Error deleting subject {subject.id}: {e}")
+        return Response({"detail": "An error occured while deleting the subject."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    return Response({"detail": "Subject successfully deleted."}, status=status.HTTP_204_NO_CONTENT)
