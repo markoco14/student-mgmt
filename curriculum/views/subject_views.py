@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound
 
 from curriculum.models.level_model import Level
 from curriculum.models.subject_model import Subject
@@ -69,4 +70,31 @@ def new_subject(request):
     else:
         return Response(subject_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    return Response(subject_serializer.data)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def show_subject(request, subject_pk):
+    """
+    Returns a subject.
+    """
+    if not request.user.is_authenticated:
+        return Response({"detail": "Unauthorized."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # only allow with owner membership for now, later need to allow staff
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    try:
+        subject = Subject.objects.get(id=subject_pk)
+    except Subject.DoesNotExist:
+        raise NotFound(detail="Object with this ID not found.")
+
+    school_user = SchoolUser.objects.filter(use=request.user.id).filter(school=subject.school).first()
+    if not school_user:
+        return Response({"detail": "No access granted."})
+    
+    subject_serializer = SubjectSerializer(subject, many=False)
+
     return Response(subject_serializer.data)
