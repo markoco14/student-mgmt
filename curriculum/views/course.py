@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -60,3 +61,25 @@ def new_course(request):
     else:
         return Response(course_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response({"detail": "You made a new course."}, status=status.HTTP_201_CREATED)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def show_course(request, course_pk):
+    """
+    Returns a course for the given course id
+    """
+    # only allow with owner membership for now, later need to allow staff
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    course = get_object_or_404(Course, id=course_pk)
+    
+    # we need to only allow if the user has access, regardless of membership
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=course.subject.school).first()
+    if not school_user:
+        return Response({"detail": "No access granted."})
+    
+    course_serializer = CourseSerializer(course, many=False)
+
+    return Response(course_serializer.data)
