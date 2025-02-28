@@ -5,7 +5,7 @@ from curriculum.models.level import Level
 from curriculum.models.subject import Subject
 
 
-class SubjectLevel(models.Model):
+class Course(models.Model):
     subject = models.ForeignKey(Subject, related_name="levels", on_delete=models.CASCADE)
     level = models.ForeignKey(Level, related_name="subjects", on_delete=models.CASCADE)
     curriculum_description = models.TextField(null=True, blank=True)

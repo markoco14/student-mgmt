@@ -1,5 +1,5 @@
 from django.db import models
-from curriculum.models.course import SubjectLevel
+from curriculum.models.course import Course
 
 from schools.models import School
 
@@ -22,7 +22,7 @@ class ModuleType(models.Model):
         unique_together = ['name', 'school']
 
 class Module(models.Model):
-    subject_level = models.ForeignKey(SubjectLevel, related_name='modules', on_delete=models.PROTECT)
+    subject_level = models.ForeignKey(Course, related_name='modules', on_delete=models.PROTECT)
     name = models.CharField(max_length=255)  # e.g., "Past Simple", "History of Egypt", "Africa"
     type = models.ForeignKey(ModuleType, related_name="modules", on_delete=models.PROTECT)
     parent = models.ForeignKey('self', related_name='children', on_delete=models.SET_NULL, null=True, blank=True)

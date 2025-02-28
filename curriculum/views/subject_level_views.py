@@ -5,7 +5,7 @@ from curriculum.serializers.curriculum_serializers import SubjectLevelListSerial
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 
-from curriculum.models import SubjectLevel
+from curriculum.models import Course
 
 #
 # SUBJECT LEVEL VIEWS
@@ -18,7 +18,7 @@ class SubjectLevelList(APIView):
     """
 
     def get(self, request, format=None):
-        subject_levels = SubjectLevel.objects.all()
+        subject_levels = Course.objects.all()
         school = request.query_params.get('school')
         if school:
             subject_levels = subject_levels.filter(
@@ -47,13 +47,13 @@ class SubjectLevelList(APIView):
 
 class SubjectLevelDetail(APIView):
     """
-    Retrieve, update or delete a SubjectLevel.
+    Retrieve, update or delete a Course.
     """
 
     def get_object(self, subject_level_pk):
         try:
-            return SubjectLevel.objects.get(id=subject_level_pk)
-        except SubjectLevel.DoesNotExist:
+            return Course.objects.get(id=subject_level_pk)
+        except Course.DoesNotExist:
             raise NotFound(detail="Object with this ID not found.")
 
     def get(self, request, subject_level_pk, format=None):
