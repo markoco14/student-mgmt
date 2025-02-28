@@ -1,7 +1,7 @@
 """
 holds all user related views
 """
-
+from rest_framework_simplejwt.tokens import RefreshToken
 from users.serializers import UserSerializer, ChangePasswordSerializer, UserProfileSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -44,9 +44,15 @@ def addOwnerMembershipUser(request):
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    response_user = UserProfileSerializer(user)
+    refresh = RefreshToken.for_user(user)
+    access_token = refresh.access_token
     
-    return Response(response_user.data, status=status.HTTP_201_CREATED)
+    return Response(
+        {
+            "accessToken": str(access_token),
+            "refreshToken": str(refresh)
+        },
+        status=status.HTTP_201_CREATED)
 
 # PARTIAL UPDATE USER
 
