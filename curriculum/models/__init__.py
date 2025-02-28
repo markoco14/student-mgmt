@@ -1,4 +1,5 @@
-from .level_model import Level
-from .subject_model import Subject
-from .subject_level_model import SubjectLevel
-from .models import ModuleType, Module
+from .level import Level
+from .subject import Subject
+from .course import Course
+from .module import Module
+from .module_type import ModuleType
