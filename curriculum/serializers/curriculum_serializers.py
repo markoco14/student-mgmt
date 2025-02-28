@@ -5,11 +5,7 @@ from curriculum.models.module_type import ModuleType
 from curriculum.models.subject import Subject
 from schools.models import School
 
-class LevelSerializer(serializers.ModelSerializer):
-    schoolID = serializers.PrimaryKeyRelatedField(source="school", queryset=School.objects.all())
-    class Meta:
-        model = Level
-        fields = ['id', 'name', 'schoolID', 'order']
+
         
 class SubjectSerializer(serializers.ModelSerializer):
     schoolID = serializers.PrimaryKeyRelatedField(source="school", queryset=School.objects.all())
