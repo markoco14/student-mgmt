@@ -12,6 +12,7 @@ class Course(models.Model):
 
     def __str__(self):
         return f"{self.subject.name} Level {self.level.name} in {self.subject.school.name}"
+    
     class Meta:
         db_table='curriculum_course'
         unique_together=['subject', 'level']

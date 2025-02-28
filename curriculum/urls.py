@@ -1,5 +1,5 @@
 from django.urls import path
-from curriculum.views import assessment_views, curriculum_views, level_views, old_subject_views, subject_level_views, subject_views
+from curriculum.views import course, level_views, subject_views
 from curriculum.views import level_views
 
 
@@ -19,6 +19,10 @@ urlpatterns = [
 	path('levels/<str:level_pk>/', level_views.show_level, name='level-detail'),
 	path('levels/<str:level_pk>/edit', level_views.edit_level, name='level-update'),
 	path('levels/<str:level_pk>/delete', level_views.delete_level, name='level-delete'),
+    
+
+	# COURSES URL PATHS
+    path('courses/', course.list_courses, name='course-list'),
     
     # SUBJECT-LEVEL URI PATHS
     # path('subject-levels/', subject_level_views.SubjectLevelList.as_view(),
