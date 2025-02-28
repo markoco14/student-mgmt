@@ -1,8 +1,8 @@
 # from curriculum.models import Level, Subject
 from django.db import models
-from curriculum.models.level_model import Level
+from curriculum.models.level import Level
 
-from curriculum.models.subject_model import Subject
+from curriculum.models.subject import Subject
 
 
 class SubjectLevel(models.Model):

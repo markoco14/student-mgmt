@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 
-from curriculum.models.subject_model import Subject
+from curriculum.models.subject import Subject
 from curriculum.serializers.curriculum_serializers import SubjectSerializer
 from schools.models import SchoolUser
 from users.models import User
