@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from curriculum.models import Level, Subject, Module, ModuleType
+from curriculum.models.level import Level
+from curriculum.models.module import Module
+from curriculum.models.module_type import ModuleType
+from curriculum.models.subject import Subject
 from schools.models import School
 
 class LevelSerializer(serializers.ModelSerializer):

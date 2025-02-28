@@ -1,25 +1,7 @@
 from django.db import models
 from curriculum.models.course import Course
+from curriculum.models.module_type import ModuleType
 
-from schools.models import School
-
-# Create your models here.
-
-
-    
-
-class ModuleType(models.Model):
-    name = models.CharField(max_length=255) # e.g., "Unit", "Chapter", "Part", "Section", "Page", "Day"
-    school = models.ForeignKey(School, related_name="module_types", on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"({self.id}): {self.name} at ({self.school.id}): {self.school.name}"
-
-    class Meta:
-        db_table = 'curriculum_model_type'
-        unique_together = ['name', 'school']
 
 class Module(models.Model):
     subject_level = models.ForeignKey(Course, related_name='modules', on_delete=models.PROTECT)

@@ -8,7 +8,7 @@ import datetime
 import random
 import pytz  # Import the pytz library
 
-from users.models import User  # Importing Python's random module
+from users.models import User  
 
 
 class Command(BaseCommand):
