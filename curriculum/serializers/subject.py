@@ -7,14 +7,8 @@ from schools.models import School
 
 
         
-
-
-class ModuleSerializer(serializers.ModelSerializer):
+class SubjectSerializer(serializers.ModelSerializer):
+    schoolID = serializers.PrimaryKeyRelatedField(source="school", queryset=School.objects.all())
     class Meta:
-        model = Module
-        fields = '__all__'
-
-class ModuleTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ModuleType
-        fields = '__all__'
+        model = Subject
+        fields = ['id', 'name', 'schoolID']

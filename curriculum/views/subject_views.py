@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 
 from curriculum.models.subject import Subject
-from curriculum.serializers.curriculum_serializers import SubjectSerializer
+from curriculum.serializers.subject import SubjectSerializer
 from schools.models import SchoolUser
 from users.models import User
 
