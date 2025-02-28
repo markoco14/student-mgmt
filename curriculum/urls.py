@@ -23,6 +23,7 @@ urlpatterns = [
 
 	# COURSES URL PATHS
     path('courses/', course.list_courses, name='course-list'),
+    path('courses/new/', course.new_course, name='course-new')
     
     # SUBJECT-LEVEL URI PATHS
     # path('subject-levels/', subject_level_views.SubjectLevelList.as_view(),
