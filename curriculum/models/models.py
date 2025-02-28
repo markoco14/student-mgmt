@@ -1,5 +1,5 @@
 from django.db import models
-from curriculum.models.subject_level import SubjectLevel
+from curriculum.models.course import SubjectLevel
 
 from schools.models import School
 
