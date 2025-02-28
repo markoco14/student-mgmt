@@ -127,3 +127,25 @@ def update_course(request, course_pk) -> Course:
     course_serializer = CourseSerializer(course, many=False)
 
     return Response(course_serializer.data)
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_course(request, course_pk):
+    # only allow with owner membership for now, later need to allow staff
+    if request.user.membership != User.MEMBERSHIP_OWNER:
+        return Response({"detail": "Permission denied"}, status=status.HTTP_403_FORBIDDEN)
+    
+    course = get_object_or_404(Course, id=course_pk)
+    
+    # we need to only allow if the user has access, regardless of membership
+    school_user = SchoolUser.objects.filter(user=request.user.id).filter(school=course.subject.school).first()
+    if not school_user:
+        return Response({"detail": "No access granted."})
+    
+    try:
+        course.delete()
+    except Exception as e:
+        print(f"Error deleting course {course.id}: {e}")
+        return Response({"detail": "Something went wrong deleting this course. Please try again."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    return Response({"detail": "Course deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
