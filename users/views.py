@@ -37,6 +37,7 @@ def getUserProfileById(request, user_pk):
 def addOwnerMembershipUser(request):
     data = request.data.copy()
     data["membership"] = User.MEMBERSHIP_OWNER
+    data["email"] = data["username"]
     serializer = UserSerializer(data=data)
 
     if serializer.is_valid():
